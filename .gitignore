@@ -15,3 +15,7 @@ packages/
 *.xml
 Logfile1.txt
 v3.rezobxplus.webservices/
+LogsAnalyzer.Infrastructure/obj/
+LogsAnalyzer.Tests/obj/
+LogsAnalyzer.UI.WinForms/obj/
+LogsAnalyzer.Analyzers/obj/
