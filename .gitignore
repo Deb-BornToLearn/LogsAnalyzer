@@ -1,0 +1,17 @@
+*.7z
+*.suo
+.vs/
+LogAnalyzer.Analyzers/bin/
+*.log
+LogAnalyzer.Analyzers/obj/
+*.user
+LogAnalyzer.Infrastructure/bin/
+LogAnalyzer.Infrastructure/obj/
+LogAnalyzer.Tests/bin/
+LogAnalyzer.Tests/obj/
+LogAnalyzer.UI.WinForms/bin/
+LogAnalyzer.UI.WinForms/obj/
+packages/
+*.xml
+Logfile1.txt
+v3.rezobxplus.webservices/
