@@ -75,8 +75,13 @@ namespace LogAnalyzer.UI.WinForms {
             var logReader = new LogReader(analyzers);
 
             foreach (string file in logFilesList.Items) {
-                using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read)) {
-                    logReader.ReadSource(file, stream);
+                try {
+                    using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read)) {
+                        logReader.ReadSource(file, stream);
+                    }
+                }
+                catch (Exception exc) {
+                    MessageBox.Show(exc.Message);
                 }
             }
 

@@ -34,6 +34,8 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
         public List<Extra> Extras;
 
         private string utcDatetimeToString(string utcDateTime) {
+            if (string.IsNullOrWhiteSpace(utcDateTime)) return string.Empty;
+
             return DateTimeOffset.Parse(utcDateTime).ToString("dd MMM, yyyy HH:mm:ss");
         }
         public override string ToString() {
@@ -58,11 +60,12 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
             }
 
             if (MiscellaneousTraceData.Any()) {
-                sb.AppendLine("Miscellaneous trace data:");
+                sb.AppendLine("");
+                sb.AppendLine("*** Miscellaneous Trace Data ***");
             }
 
             foreach (var text in MiscellaneousTraceData) {
-                sb.AppendLine(text);
+                sb.AppendLine($"  {text}");
             }
             sb.AppendLine($"---------------------");
             sb.AppendLine($"Source: {Source}");

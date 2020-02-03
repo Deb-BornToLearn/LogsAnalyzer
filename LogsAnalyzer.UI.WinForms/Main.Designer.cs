@@ -29,12 +29,12 @@
             this.logFilesListMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAllLogsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resultsTextbox = new System.Windows.Forms.TextBox();
             this.analyzeButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.removeAllLogsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wordWrapResults = new System.Windows.Forms.CheckBox();
             this.logFilesListMenu.SuspendLayout();
             this.SuspendLayout();
@@ -44,9 +44,10 @@
             this.analyzersList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.analyzersList.FormattingEnabled = true;
-            this.analyzersList.Location = new System.Drawing.Point(49, 416);
+            this.analyzersList.Location = new System.Drawing.Point(18, 174);
+            this.analyzersList.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(1372, 249);
+            this.analyzersList.Size = new System.Drawing.Size(517, 94);
             this.analyzersList.TabIndex = 0;
             // 
             // logFilesList
@@ -55,11 +56,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.logFilesList.ContextMenuStrip = this.logFilesListMenu;
             this.logFilesList.FormattingEnabled = true;
-            this.logFilesList.ItemHeight = 31;
-            this.logFilesList.Location = new System.Drawing.Point(49, 75);
+            this.logFilesList.Location = new System.Drawing.Point(18, 31);
+            this.logFilesList.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.logFilesList.Name = "logFilesList";
             this.logFilesList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.logFilesList.Size = new System.Drawing.Size(1372, 252);
+            this.logFilesList.Size = new System.Drawing.Size(517, 108);
             this.logFilesList.TabIndex = 0;
             // 
             // logFilesListMenu
@@ -70,42 +71,51 @@
             this.removeLogFileMenuItem,
             this.removeAllLogsMenuItem});
             this.logFilesListMenu.Name = "logFilesListMenu";
-            this.logFilesListMenu.Size = new System.Drawing.Size(245, 148);
+            this.logFilesListMenu.Size = new System.Drawing.Size(135, 70);
             this.logFilesListMenu.Opened += new System.EventHandler(this.logFilesListMenu_Opened);
             // 
             // addLogFileMenuItem
             // 
             this.addLogFileMenuItem.Name = "addLogFileMenuItem";
-            this.addLogFileMenuItem.Size = new System.Drawing.Size(244, 48);
+            this.addLogFileMenuItem.Size = new System.Drawing.Size(134, 22);
             this.addLogFileMenuItem.Text = "Add...";
             this.addLogFileMenuItem.Click += new System.EventHandler(this.addLogFileMenuItem_Click);
             // 
             // removeLogFileMenuItem
             // 
             this.removeLogFileMenuItem.Name = "removeLogFileMenuItem";
-            this.removeLogFileMenuItem.Size = new System.Drawing.Size(244, 48);
+            this.removeLogFileMenuItem.Size = new System.Drawing.Size(134, 22);
             this.removeLogFileMenuItem.Text = "Remove";
             this.removeLogFileMenuItem.Click += new System.EventHandler(this.removeLogFileMenuItem_Click);
+            // 
+            // removeAllLogsMenuItem
+            // 
+            this.removeAllLogsMenuItem.Name = "removeAllLogsMenuItem";
+            this.removeAllLogsMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.removeAllLogsMenuItem.Text = "Remove All";
+            this.removeAllLogsMenuItem.Click += new System.EventHandler(this.removeAllLogsMenuItem_Click);
             // 
             // resultsTextbox
             // 
             this.resultsTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.resultsTextbox.Location = new System.Drawing.Point(49, 743);
+            this.resultsTextbox.Location = new System.Drawing.Point(18, 312);
+            this.resultsTextbox.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.resultsTextbox.Multiline = true;
             this.resultsTextbox.Name = "resultsTextbox";
             this.resultsTextbox.ReadOnly = true;
             this.resultsTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.resultsTextbox.Size = new System.Drawing.Size(1372, 215);
+            this.resultsTextbox.Size = new System.Drawing.Size(517, 92);
             this.resultsTextbox.TabIndex = 3;
             // 
             // analyzeButton
             // 
             this.analyzeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.analyzeButton.Location = new System.Drawing.Point(1116, 987);
+            this.analyzeButton.Location = new System.Drawing.Point(418, 414);
+            this.analyzeButton.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.analyzeButton.Name = "analyzeButton";
-            this.analyzeButton.Size = new System.Drawing.Size(305, 81);
+            this.analyzeButton.Size = new System.Drawing.Size(114, 34);
             this.analyzeButton.TabIndex = 4;
             this.analyzeButton.Text = "Analyze Logs";
             this.analyzeButton.UseVisualStyleBackColor = true;
@@ -114,36 +124,32 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(43, 30);
+            this.label1.Location = new System.Drawing.Point(16, 13);
+            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(122, 32);
+            this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 5;
             this.label1.Text = "Log files";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(43, 369);
+            this.label2.Location = new System.Drawing.Point(16, 155);
+            this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(192, 32);
+            this.label2.Size = new System.Drawing.Size(72, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Log analyzers";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(43, 693);
+            this.label3.Location = new System.Drawing.Point(16, 291);
+            this.label3.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(122, 32);
+            this.label3.Size = new System.Drawing.Size(45, 13);
             this.label3.TabIndex = 7;
             this.label3.Text = "Analysis";
-            // 
-            // removeAllLogsMenuItem
-            // 
-            this.removeAllLogsMenuItem.Name = "removeAllLogsMenuItem";
-            this.removeAllLogsMenuItem.Size = new System.Drawing.Size(244, 48);
-            this.removeAllLogsMenuItem.Text = "Remove All";
-            this.removeAllLogsMenuItem.Click += new System.EventHandler(this.removeAllLogsMenuItem_Click);
             // 
             // wordWrapResults
             // 
@@ -151,9 +157,10 @@
             this.wordWrapResults.AutoSize = true;
             this.wordWrapResults.Checked = true;
             this.wordWrapResults.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.wordWrapResults.Location = new System.Drawing.Point(49, 987);
+            this.wordWrapResults.Location = new System.Drawing.Point(18, 412);
+            this.wordWrapResults.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.wordWrapResults.Name = "wordWrapResults";
-            this.wordWrapResults.Size = new System.Drawing.Size(204, 36);
+            this.wordWrapResults.Size = new System.Drawing.Size(84, 17);
             this.wordWrapResults.TabIndex = 8;
             this.wordWrapResults.Text = "Word wrap?";
             this.wordWrapResults.UseVisualStyleBackColor = true;
@@ -161,9 +168,8 @@
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1479, 1087);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(555, 456);
             this.Controls.Add(this.wordWrapResults);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -172,6 +178,7 @@
             this.Controls.Add(this.resultsTextbox);
             this.Controls.Add(this.analyzersList);
             this.Controls.Add(this.logFilesList);
+            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.Name = "Main";
             this.Text = "Logs Analyzer";
             this.logFilesListMenu.ResumeLayout(false);

@@ -35,19 +35,6 @@ namespace LogsAnalyzer.Analyzers.Bookings {
             public const string NS_EVIIVO = "http://www.eviivo.com/UTSv/2004/01/01";
         }
 
-        public BookingParser() {
-            _miscTraceDataSubtrings.Add("New agent");
-            _miscTraceDataSubtrings.Add("Agent for account");
-            _miscTraceDataSubtrings.Add("Supplements/Extras info for account");
-            _miscTraceDataSubtrings.Add("Duration:");
-            _miscTraceDataSubtrings.Add("Supplement is null");
-            _miscTraceDataSubtrings.Add("AccommodationItem =>");
-            _miscTraceDataSubtrings.Add("AccommodationBookingExtra =>");
-            _miscTraceDataSubtrings.Add("BookingAccommodationBookingExtra =>");
-            _miscTraceDataSubtrings.Add("RatePlanBookingExtra =>");
-            _miscTraceDataSubtrings.Add("set for account");
-        }
-
         public BookingAnalysis BookingAnalysis { get; internal set; }
 
         private StringBuilder _bookingInputBuffer = null;
@@ -56,8 +43,8 @@ namespace LogsAnalyzer.Analyzers.Bookings {
 
         private BookingAnalysis _lastBookingParsed = null;
 
-        private List<string> _miscTraceDataSubtrings = new List<string>();
-
+        //private const string MISC_LOG_PATTERN = @"(.*)\[MTD:.+?\](.*)";
+        private const string MISC_LOG_PATTERN = @"\[MTD:.+?\](.*)";
 
         public bool Accept(string lineText) {
             BookingAnalysis = null;
@@ -97,15 +84,14 @@ namespace LogsAnalyzer.Analyzers.Bookings {
 
         private bool tryParseMiscellaneousTraceData(string lineText, out string parsedMiscTraceData) {
             parsedMiscTraceData = lineText;
-            foreach (var substring in _miscTraceDataSubtrings) {
-                var substrPos = lineText.IndexOf(substring);
-                if (substrPos > -1) {
-                    // Hold this off until log identifiers are predictable.
-                    //parsedMiscTraceData = lineText.Substring(substrPos);
-                    return true;
-                }
+            var m = Regex.Match(lineText, MISC_LOG_PATTERN);
+            //if (m.Success && m.Groups.Count > 2) {
+            //    parsedMiscTraceData = $"{m.Groups[1].Value} {m.Groups[2].Value}";
+            //}
+            if (m.Success && m.Groups.Count > 1) {
+                parsedMiscTraceData = $"{m.Groups[1].Value}";
             }
-            return false;
+            return m.Success;
         }
 
         private bool tryParseBookingOnSameLine(string lineText, out BookingAnalysis outputBooking) {

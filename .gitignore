@@ -19,3 +19,7 @@ LogsAnalyzer.Infrastructure/obj/
 LogsAnalyzer.Tests/obj/
 LogsAnalyzer.UI.WinForms/obj/
 LogsAnalyzer.Analyzers/obj/
+LogsAnalyzer.Analyzers/bin/Debug/LogAnalyzer.Analyzers.dll
+LogsAnalyzer.Analyzers/bin/
+LogsAnalyzer.Infrastructure/bin/
+LogsAnalyzer.UI.WinForms/bin/
