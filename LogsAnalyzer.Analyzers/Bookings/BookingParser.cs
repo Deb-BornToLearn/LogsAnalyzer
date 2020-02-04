@@ -31,6 +31,8 @@ namespace LogsAnalyzer.Analyzers.Bookings {
             public const string IS_NIGHTS_SELECTABLE = "IsNightsSelectable";
             public const string IS_ALLOW_OCCUPANCY_SELECT = "IsAllowOccupancySelect";
             public const string SELECTED_NIGHT = "SelectedNight";
+            public const string FIXED_PRICE = "FixedPrice";
+            public const string FIXED_PRICE_PER_NIGHT = "FixedPricePerNight";
 
             public const string NS_EVIIVO = "http://www.eviivo.com/UTSv/2004/01/01";
         }
@@ -177,6 +179,8 @@ namespace LogsAnalyzer.Analyzers.Bookings {
                 var extra = new Extra {
                     Code = extraNode.Attributes[XmlTokens.EXTRA_CODE]?.Value ?? string.Empty,
                     Name = extraNode.Attributes[XmlTokens.EXTRA_NAME]?.Value ?? string.Empty,
+                    FixedPrice = extraNode.Attributes[XmlTokens.FIXED_PRICE]?.Value ?? string.Empty,
+                    FixedPricePerNight = extraNode.Attributes[XmlTokens.FIXED_PRICE_PER_NIGHT]?.Value ?? string.Empty,
                     AdultPrice = extraNode.Attributes[XmlTokens.ADULT_PRICE]?.Value ?? string.Empty,
                     PerAdultPrice = extraNode.Attributes[XmlTokens.PER_ADULT_PRICE]?.Value ?? string.Empty,
                     PerAdultPricePerNight = extraNode.Attributes[XmlTokens.PER_ADULT_PRICE_PER_NIGHT]?.Value ?? string.Empty,

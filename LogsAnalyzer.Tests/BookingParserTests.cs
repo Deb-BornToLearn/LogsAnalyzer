@@ -462,7 +462,6 @@ namespace LogsAnalyzer.Tests {
             Assert.AreEqual(firstName, parser.BookingAnalysis.CustomerFirstName);
             Assert.AreEqual(lastName, parser.BookingAnalysis.CustomerLastName);
 
-
             inputs = new string[] {
                 $"<{BookingParser.XmlTokens.ROOT_ELEMENT}>",
                 $"<POS>",
@@ -479,17 +478,127 @@ namespace LogsAnalyzer.Tests {
 
             Assert.IsNotNull(parser.BookingAnalysis);
             Assert.IsTrue(string.IsNullOrWhiteSpace(parser.BookingAnalysis.CustomerFirstName));
+
             Assert.IsTrue(string.IsNullOrWhiteSpace(parser.BookingAnalysis.CustomerLastName));
         }
 
         [TestMethod]
         public void itShouldReadExtraDetails() {
-            throw new NotImplementedException();
+            var extraCode = "extra1";
+            var extraName = "TestExtra";
+            var adultPrice = "123.44";
+            var perAdultPrice = "4243.55";
+            var perAdultPricePerNight = "89422";
+            var childPrice = "555.32";
+            var perChildPrice = "73233";
+            var perChildPricePerNight = "30992.3";
+            var isPerNight = "true";
+            var fixedPrice = "43222.343";
+            var fixedPricePerNight = "9834.22";
+            var isNightSelectable = "false";
+            var isAllowOccupancySelect = "true";
+            var selectedNight1 = "2020-01-01";
+            var selectedNight2 = "2020-01-01";
+            var inputs = new string[] {
+                $"<{BookingParser.XmlTokens.ROOT_ELEMENT}>",
+                $"<ProductTypeRsrvs xmlns='{BookingParser.XmlTokens.NS_EVIIVO}'>",
+                $"<ProductTypeRsrv>",
+                $"<ProductType>",
+                $"<Name>dummyProduct</Name>",
+                $"<Supplements>",
+                $"<Supplement Code='{extraCode}' Name='{extraName}' AdultPrice='{adultPrice}' ChildPrice='{childPrice}'",
+                $" FixedPrice='{fixedPrice}' FixedPricePerNight='{fixedPricePerNight}' PricePerUnit='0' PricePerUnitPerNight='0'",
+                $" PerAdultPrice='{perAdultPrice}' PerAdultPricePerNight='{perAdultPricePerNight}'",
+                $" PerChildPrice='{perChildPrice}' OverRidePrice='0' PerChildPricePerNight='{perChildPricePerNight}'",
+                $" IsTaxExempt='true' TaxRate='0' IsAllowOccupancySelect='{isAllowOccupancySelect}' AvailableFromDate='2020-03-01'",
+                $" IsOfferOnMondays='true' IsOfferOnTuesdays='true' IsOfferOnWednesdays='true' IsOfferOnThursdays='true'",
+                $" IsOfferOnFridays='true' IsOfferOnSaturdays='true' IsOfferOnSundays='true' ",
+                $" IsNightsSelectable='{isNightSelectable}' IsPerNight='{isPerNight}'>",
+                $" <SelectedNights>",
+                $" <SelectedNight SelectedNight='{selectedNight1}' />",
+                $" <SelectedNight SelectedNight='{selectedNight2}' />",
+                $" </SelectedNights>",
+                $"</Supplement>",
+                $"</Supplements>",
+                $"</ProductType>",
+                $"</ProductTypeRsrv>",
+                $"</ProductTypeRsrvs>",
+                $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
+            };
+
+            var parser = new BookingParser();
+            foreach (var input in inputs) {
+                parser.Accept(input);
+            }
+
+            Assert.IsNotNull(parser.BookingAnalysis);
+            Assert.AreEqual(1, parser.BookingAnalysis.Extras.Count);
+            var extra = parser.BookingAnalysis.Extras.FirstOrDefault();
+            Assert.IsNotNull(extra);
+            Assert.AreEqual(extraCode, extra.Code);
+            Assert.AreEqual(extraName, extra.Name);
+            Assert.AreEqual(adultPrice, extra.AdultPrice);
+            Assert.AreEqual(perAdultPrice, extra.PerAdultPrice);
+            Assert.AreEqual(perAdultPricePerNight, extra.PerAdultPricePerNight);
+            Assert.AreEqual(childPrice, extra.ChildPrice);
+            Assert.AreEqual(perChildPrice, extra.PerChildPrice);
+            Assert.AreEqual(perChildPricePerNight, extra.PerChildPricePerNight);
+            Assert.AreEqual(isPerNight, extra.IsPerNight);
+            Assert.AreEqual(fixedPrice, extra.FixedPrice);
+            Assert.AreEqual(fixedPricePerNight, extra.FixedPricePerNight);
+            Assert.AreEqual(isNightSelectable, extra.IsNightsSelectable);
+            Assert.AreEqual(isAllowOccupancySelect, extra.IsAllowOccupancySelect);
+            Assert.AreEqual(2, extra.SelectedNights.Count);
+            Assert.AreEqual(selectedNight1, extra.SelectedNights.FirstOrDefault().SelectedNight);
+            Assert.AreEqual(selectedNight2, extra.SelectedNights.LastOrDefault().SelectedNight);
+
+            inputs = new string[] {
+                $"<{BookingParser.XmlTokens.ROOT_ELEMENT}>",
+                $"<POS>",
+                $"<Source>",
+                $"<BookingChannel>",
+                $"</BookingChannel>",
+                $"</Source>",
+                $"</POS>",
+                $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
+            };
+            foreach (var input in inputs) {
+                parser.Accept(input);
+            }
+
+            Assert.IsNotNull(parser.BookingAnalysis);
+            Assert.AreEqual(0, parser.BookingAnalysis.Extras.Count);
         }
 
         [TestMethod]
         public void itShouldReadMiscellaneousTraceData() {
-            throw new NotImplementedException();
+            var traceDataLine1 = "the quick brown fox jumped over the lazy dog";
+            var traceDataLine2 = "the quick brown dog jumped over the lazy fox";
+
+            var inputs = new string[] {
+                $"<{BookingParser.XmlTokens.ROOT_ELEMENT}>",
+                $"<POS>",
+                $"<Source>",
+                $"<BookingChannel>",
+                $"</BookingChannel>",
+                $"</Source>",
+                $"</POS>",
+                $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>",
+                $"asfsasf [MTD:1111] {traceDataLine1}",
+                $"not misc trace data...",
+                $"[noiseeeee] [MTD:1111] {traceDataLine2}"
+            };
+
+            BookingAnalysis ba = null;
+            var parser = new BookingParser();
+            foreach (var input in inputs) {
+                parser.Accept(input);
+                if (parser.BookingAnalysis != null) ba = parser.BookingAnalysis;
+            }
+
+            Assert.IsNotNull(ba);
+            Assert.AreEqual(2, ba.MiscellaneousTraceData.Count);
+            Assert.AreEqual(traceDataLine1, ba.MiscellaneousTraceData.FirstOrDefault().Trim());
         }
 
     }
