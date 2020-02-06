@@ -192,15 +192,20 @@ namespace LogsAnalyzer.Analyzers.Bookings {
                     IsNightsSelectable = extraNode.Attributes[XmlTokens.IS_NIGHTS_SELECTABLE]?.Value ?? NO_VALUE,
                     IsAllowOccupancySelect = extraNode.Attributes[XmlTokens.IS_ALLOW_OCCUPANCY_SELECT]?.Value ?? NO_VALUE
                 };
-                var selectedNightNodes = extraNode.SelectNodes($"descendant::{nsPrefix}SelectedNight", nsMgr);
-                foreach (XmlNode night in selectedNightNodes) {
-                    extra.SelectedNights.Add(new Night {
-                        SelectedNight = night.Attributes[XmlTokens.SELECTED_NIGHT]?.Value ?? NO_VALUE
-                    }); ;
-                }
+                parseSelectedNights(extra, extraNode, nsMgr, nsPrefix);
+
                 booking.Extras.Add(extra);
             }
 
+        }
+
+        private void parseSelectedNights(Extra extra, XmlNode extraNode, XmlNamespaceManager nsMgr, string nsPrefix) {
+            var selectedNightNodes = extraNode.SelectNodes($"descendant::{nsPrefix}SelectedNight", nsMgr);
+            foreach (XmlNode night in selectedNightNodes) {
+                extra.SelectedNights.Add(new Night {
+                    SelectedNight = night.Attributes[XmlTokens.SELECTED_NIGHT]?.Value ?? NO_VALUE
+                }); ;
+            }
         }
 
         private void parseCustomer(BookingAnalysis booking, XmlDocument xmlDoc, XmlNamespaceManager nsMgr, string nsPrefix) {
