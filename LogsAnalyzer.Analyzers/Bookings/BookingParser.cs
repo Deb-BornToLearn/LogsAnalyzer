@@ -1,4 +1,5 @@
 ﻿using LogAnalyzer.Analyzers.Bookings.Models;
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -173,7 +174,6 @@ namespace LogsAnalyzer.Analyzers.Bookings {
         }
 
         private void parseExtras(BookingAnalysis booking, XmlNode productTypeNode, XmlNamespaceManager nsMgr, string nsPrefix) {
-
             var extrasMainNode = productTypeNode?.SelectSingleNode($"descendant::{nsPrefix}Supplements", nsMgr);
             booking.ExtrasTotal = extrasMainNode?.Attributes[XmlTokens.EXTRAS_TOTAL]?.Value ?? string.Empty;
 
@@ -181,30 +181,32 @@ namespace LogsAnalyzer.Analyzers.Bookings {
             if (extraNodes == null) return;
 
             foreach (XmlNode extraNode in extraNodes) {
-                var extra = new Extra {
-                    Code = extraNode.Attributes[XmlTokens.EXTRA_CODE]?.Value ?? string.Empty,
-                    Name = extraNode.Attributes[XmlTokens.EXTRA_NAME]?.Value ?? string.Empty,
-                    FixedPrice = extraNode.Attributes[XmlTokens.FIXED_PRICE]?.Value ?? string.Empty,
-                    FixedPricePerNight = extraNode.Attributes[XmlTokens.FIXED_PRICE_PER_NIGHT]?.Value ?? string.Empty,
-                    AdultPrice = extraNode.Attributes[XmlTokens.ADULT_PRICE]?.Value ?? string.Empty,
-                    PerAdultPrice = extraNode.Attributes[XmlTokens.PER_ADULT_PRICE]?.Value ?? string.Empty,
-                    PerAdultPricePerNight = extraNode.Attributes[XmlTokens.PER_ADULT_PRICE_PER_NIGHT]?.Value ?? string.Empty,
-                    ChildPrice = extraNode.Attributes[XmlTokens.CHILD_PRICE]?.Value ?? string.Empty,
-                    PerChildPrice = extraNode.Attributes[XmlTokens.PER_CHILD_PRICE]?.Value ?? string.Empty,
-                    PerChildPricePerNight = extraNode.Attributes[XmlTokens.PER_CHILD_PRICE_PER_NIGHT]?.Value ?? string.Empty,
-                    IsPerNight = extraNode.Attributes[XmlTokens.IS_PER_NIGHT]?.Value ?? NO_VALUE,
-                    IsNightsSelectable = extraNode.Attributes[XmlTokens.IS_NIGHTS_SELECTABLE]?.Value ?? NO_VALUE,
-                    IsAllowOccupancySelect = extraNode.Attributes[XmlTokens.IS_ALLOW_OCCUPANCY_SELECT]?.Value ?? NO_VALUE
-                };
-
-                parseSelectedNights(extra, extraNode, nsMgr, nsPrefix);
-
+                Extra extra = createExtraFromNode(extraNode);
+                parseSelectedNightsOfExtra(extra, extraNode, nsMgr, nsPrefix);
                 booking.Extras.Add(extra);
             }
 
         }
 
-        private void parseSelectedNights(Extra extra, XmlNode extraNode, XmlNamespaceManager nsMgr, string nsPrefix) {
+        private Extra createExtraFromNode(XmlNode extraNode) {
+            return new Extra {
+                Code = extraNode.Attributes[XmlTokens.EXTRA_CODE]?.Value ?? string.Empty,
+                Name = extraNode.Attributes[XmlTokens.EXTRA_NAME]?.Value ?? string.Empty,
+                FixedPrice = extraNode.Attributes[XmlTokens.FIXED_PRICE]?.Value ?? string.Empty,
+                FixedPricePerNight = extraNode.Attributes[XmlTokens.FIXED_PRICE_PER_NIGHT]?.Value ?? string.Empty,
+                AdultPrice = extraNode.Attributes[XmlTokens.ADULT_PRICE]?.Value ?? string.Empty,
+                PerAdultPrice = extraNode.Attributes[XmlTokens.PER_ADULT_PRICE]?.Value ?? string.Empty,
+                PerAdultPricePerNight = extraNode.Attributes[XmlTokens.PER_ADULT_PRICE_PER_NIGHT]?.Value ?? string.Empty,
+                ChildPrice = extraNode.Attributes[XmlTokens.CHILD_PRICE]?.Value ?? string.Empty,
+                PerChildPrice = extraNode.Attributes[XmlTokens.PER_CHILD_PRICE]?.Value ?? string.Empty,
+                PerChildPricePerNight = extraNode.Attributes[XmlTokens.PER_CHILD_PRICE_PER_NIGHT]?.Value ?? string.Empty,
+                IsPerNight = extraNode.Attributes[XmlTokens.IS_PER_NIGHT]?.Value ?? NO_VALUE,
+                IsNightsSelectable = extraNode.Attributes[XmlTokens.IS_NIGHTS_SELECTABLE]?.Value ?? NO_VALUE,
+                IsAllowOccupancySelect = extraNode.Attributes[XmlTokens.IS_ALLOW_OCCUPANCY_SELECT]?.Value ?? NO_VALUE
+            };
+        }
+
+        private void parseSelectedNightsOfExtra(Extra extra, XmlNode extraNode, XmlNamespaceManager nsMgr, string nsPrefix) {
             var selectedNightNodes = extraNode.SelectNodes($"descendant::{nsPrefix}SelectedNight", nsMgr);
             foreach (XmlNode night in selectedNightNodes) {
                 extra.SelectedNights.Add(new Night {
