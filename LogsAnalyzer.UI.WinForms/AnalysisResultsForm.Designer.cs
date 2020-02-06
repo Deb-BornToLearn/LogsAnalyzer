@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.resultsTextbox = new System.Windows.Forms.RichTextBox();
             this.closeButton = new System.Windows.Forms.Button();
             this.analyzersList = new System.Windows.Forms.CheckedListBox();
@@ -36,6 +37,8 @@
             this.formCaptionTextbox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.setFormCaptionButton = new System.Windows.Forms.Button();
+            this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -44,6 +47,7 @@
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.logFileListContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // resultsTextbox
@@ -71,7 +75,6 @@
             // analyzersList
             // 
             this.analyzersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.analyzersList.Enabled = false;
             this.analyzersList.FormattingEnabled = true;
             this.analyzersList.Location = new System.Drawing.Point(3, 3);
             this.analyzersList.Name = "analyzersList";
@@ -134,8 +137,8 @@
             // 
             // logFilesList
             // 
+            this.logFilesList.ContextMenuStrip = this.logFileListContextMenu;
             this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logFilesList.Enabled = false;
             this.logFilesList.FormattingEnabled = true;
             this.logFilesList.Location = new System.Drawing.Point(3, 3);
             this.logFilesList.Name = "logFilesList";
@@ -193,6 +196,21 @@
             this.setFormCaptionButton.UseVisualStyleBackColor = true;
             this.setFormCaptionButton.Click += new System.EventHandler(this.setFormCaptionButton_Click);
             // 
+            // logFileListContextMenu
+            // 
+            this.logFileListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openContainingFolderCommand});
+            this.logFileListContextMenu.Name = "logFileListContextMenu";
+            this.logFileListContextMenu.Size = new System.Drawing.Size(198, 26);
+            this.logFileListContextMenu.Opened += new System.EventHandler(this.logFileListContextMenu_Opened);
+            // 
+            // openContainingFolderCommand
+            // 
+            this.openContainingFolderCommand.Name = "openContainingFolderCommand";
+            this.openContainingFolderCommand.Size = new System.Drawing.Size(197, 22);
+            this.openContainingFolderCommand.Text = "Open containing folder";
+            this.openContainingFolderCommand.Click += new System.EventHandler(this.openContainingFolderCommand_Click);
+            // 
             // AnalysisResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -212,6 +230,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.logFileListContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -232,5 +251,7 @@
         private System.Windows.Forms.Button setFormCaptionButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox formCaptionTextbox;
+        private System.Windows.Forms.ContextMenuStrip logFileListContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem openContainingFolderCommand;
     }
 }

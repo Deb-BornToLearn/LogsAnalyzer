@@ -4,6 +4,7 @@ using LogsAnalyzer.Infrastructure.Configuration;
 using LogsAnalyzer.Infrastructure.Factory;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
@@ -62,6 +63,17 @@ namespace LogAnalyzer.UI.WinForms {
 
         private void setFormCaptionButton_Click(object sender, EventArgs e) {
             Text = formCaptionTextbox.Text;
+        }
+
+        private void logFileListContextMenu_Opened(object sender, EventArgs e) {
+            openContainingFolderCommand.Enabled = logFilesList.SelectedIndices.Count > 0;
+        }
+
+        private void openContainingFolderCommand_Click(object sender, EventArgs e) {
+            foreach (var item in logFilesList.SelectedItems) {
+                var folder = Path.GetDirectoryName(item as string);
+                Process.Start("explorer.exe", folder);
+            }
         }
     }
 }
