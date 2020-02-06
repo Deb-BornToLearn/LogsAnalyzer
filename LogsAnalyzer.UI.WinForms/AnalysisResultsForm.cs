@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace LogAnalyzer.UI.WinForms {
     public partial class AnalysisResultsForm : Form {
+        // TODO: Add filtering by selected analyzer(s)
+        // TODO: Add filtering by selected log file(s)
+        // TODO: Create AnalysisResultsPresenter
 
         public List<BaseLogAnalyzer> Analyzers;
         public readonly List<AnalyzerConfiguration> AnalyzerConfigurations;
@@ -36,6 +39,7 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void AnalyzeLogs() {
+            // TODO: Run logs analysis in separate thread and provide progress feedback
             var logReader = new LogReader(Analyzers);
             foreach (string file in LogFiles) {
                 try {
