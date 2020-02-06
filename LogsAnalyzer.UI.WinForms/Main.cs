@@ -1,5 +1,4 @@
-﻿using LogsAnalyzer.Infrastructure;
-using LogsAnalyzer.Infrastructure.Analysis;
+﻿using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Configuration;
 using LogsAnalyzer.Infrastructure.Factory;
 using System;
@@ -14,7 +13,6 @@ namespace LogAnalyzer.UI.WinForms {
         public Main() {
             InitializeComponent();
             loadAnalyzersToList();
-            logFilesList.Items.Add(@"C:\JABE\JABELabs\LogAnalyzer\v3.rezobxplus.webservices\reservation.log");
         }
 
         private void loadAnalyzersToList() {
@@ -58,10 +56,9 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void analyzeButton_Click(object sender, EventArgs e) {
-            resultsTextbox.Text = string.Empty;
-
             if (logFilesList.Items.Count == 0) {
-                MessageBox.Show("Please select one or more log files to analyze");
+                MessageBox.Show("Please select one or more log files to analyze by right-clicking on Log files list",
+                                "Select log file(s)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -70,24 +67,26 @@ namespace LogAnalyzer.UI.WinForms {
                 return;
             }
 
-            List<BaseLogAnalyzer> analyzers = loadAnalyzers();
+            List<AnalyzerConfiguration> analyzerConfigurations = getSelectedAnalyzers();
+            List<string> logFiles = getLogFileNames();
+            var resultsForm = new AnalysisResultsForm(analyzerConfigurations, logFiles);
+            resultsForm.Show();
+        }
 
-            var logReader = new LogReader(analyzers);
+        private List<AnalyzerConfiguration> getSelectedAnalyzers() {
+            List<AnalyzerConfiguration> selectedAnalyzers = new List<AnalyzerConfiguration>();
+            foreach (var item in analyzersList.CheckedItems) {
+                selectedAnalyzers.Add(item as AnalyzerConfiguration);
+            }
+            return selectedAnalyzers;
+        }
 
+        private List<string> getLogFileNames() {
+            List<string> logFiles = new List<string>();
             foreach (string file in logFilesList.Items) {
-                try {
-                    using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read)) {
-                        logReader.ReadSource(file, stream);
-                    }
-                }
-                catch (Exception exc) {
-                    MessageBox.Show(exc.Message);
-                }
+                logFiles.Add(file);
             }
-
-            foreach (var analyzer in analyzers) {
-                resultsTextbox.AppendText(analyzer.AnalysesToString());
-            }
+            return logFiles;
         }
 
         private List<BaseLogAnalyzer> loadAnalyzers() {
@@ -115,8 +114,5 @@ namespace LogAnalyzer.UI.WinForms {
             }
         }
 
-        private void wordWrapResults_CheckedChanged(object sender, EventArgs e) {
-            resultsTextbox.WordWrap = wordWrapResults.Checked;
-        }
     }
 }
