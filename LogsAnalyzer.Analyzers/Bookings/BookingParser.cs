@@ -153,6 +153,15 @@ namespace LogsAnalyzer.Analyzers.Bookings {
             booking.ChannelCommission = productTypeNode?.Attributes[XmlTokens.CHANNEL_COMMISSION]?.Value ?? string.Empty;
             booking.PaymentOption = productTypeNode?.Attributes[XmlTokens.PAYMENT_OPTION]?.Value ?? string.Empty;
 
+            parseProduct(booking, productTypeNode, nsPrefix, nsMgr);
+            parseExtras(booking, productTypeNode, nsMgr, nsPrefix);
+
+            var timeSlotNode = productTypeNode?.SelectSingleNode($"descendant::{nsPrefix}TimeSlots/{nsPrefix}TimeSlot", nsMgr);
+            booking.StartDate = timeSlotNode?.Attributes[XmlTokens.START_DATE]?.Value ?? string.Empty;
+            booking.EndDate = timeSlotNode?.Attributes[XmlTokens.END_DATE]?.Value ?? string.Empty;
+        }
+
+        private void parseProduct(BookingAnalysis booking, XmlNode productTypeNode, string nsPrefix, XmlNamespaceManager nsMgr) {
             var productNode = productTypeNode?.SelectSingleNode($"descendant::{nsPrefix}ProductTypeRsrv/{nsPrefix}ProductType", nsMgr);
             booking.ProductId = productNode?.Attributes[XmlTokens.PRODUCT_ID]?.Value ?? string.Empty;
             var productNameNode = productNode?.SelectSingleNode($"descendant::{nsPrefix}Name", nsMgr);
@@ -160,12 +169,6 @@ namespace LogsAnalyzer.Analyzers.Bookings {
 
             var productTotalNode = productTypeNode?.SelectSingleNode($"descendant::{nsPrefix}TotalRate", nsMgr);
             booking.ProductTotal = productTotalNode?.Attributes[XmlTokens.PRODUCT_TOTAL]?.Value ?? string.Empty;
-
-            parseExtras(booking, productTypeNode, nsMgr, nsPrefix);
-
-            var timeSlotNode = productTypeNode?.SelectSingleNode($"descendant::{nsPrefix}TimeSlots/{nsPrefix}TimeSlot", nsMgr);
-            booking.StartDate = timeSlotNode?.Attributes[XmlTokens.START_DATE]?.Value ?? string.Empty;
-            booking.EndDate = timeSlotNode?.Attributes[XmlTokens.END_DATE]?.Value ?? string.Empty;
         }
 
         private void parseExtras(BookingAnalysis booking, XmlNode productTypeNode, XmlNamespaceManager nsMgr, string nsPrefix) {
