@@ -1,6 +1,4 @@
 ﻿using LogAnalyzer.Analyzers.Bookings.Models;
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -153,15 +151,18 @@ namespace LogsAnalyzer.Analyzers.Bookings {
             booking.ChannelCommission = productTypeNode?.Attributes[XmlTokens.CHANNEL_COMMISSION]?.Value ?? string.Empty;
             booking.PaymentOption = productTypeNode?.Attributes[XmlTokens.PAYMENT_OPTION]?.Value ?? string.Empty;
 
-            parseProduct(booking, productTypeNode, nsPrefix, nsMgr);
+            parseProduct(booking, productTypeNode, nsMgr, nsPrefix);
             parseExtras(booking, productTypeNode, nsMgr, nsPrefix);
+            parseStartAndEndDates(booking, productTypeNode, nsMgr, nsPrefix);
+        }
 
+        private void parseStartAndEndDates(BookingAnalysis booking, XmlNode productTypeNode, XmlNamespaceManager nsMgr, string nsPrefix) {
             var timeSlotNode = productTypeNode?.SelectSingleNode($"descendant::{nsPrefix}TimeSlots/{nsPrefix}TimeSlot", nsMgr);
             booking.StartDate = timeSlotNode?.Attributes[XmlTokens.START_DATE]?.Value ?? string.Empty;
             booking.EndDate = timeSlotNode?.Attributes[XmlTokens.END_DATE]?.Value ?? string.Empty;
         }
 
-        private void parseProduct(BookingAnalysis booking, XmlNode productTypeNode, string nsPrefix, XmlNamespaceManager nsMgr) {
+        private void parseProduct(BookingAnalysis booking, XmlNode productTypeNode, XmlNamespaceManager nsMgr, string nsPrefix) {
             var productNode = productTypeNode?.SelectSingleNode($"descendant::{nsPrefix}ProductTypeRsrv/{nsPrefix}ProductType", nsMgr);
             booking.ProductId = productNode?.Attributes[XmlTokens.PRODUCT_ID]?.Value ?? string.Empty;
             var productNameNode = productNode?.SelectSingleNode($"descendant::{nsPrefix}Name", nsMgr);
@@ -195,6 +196,7 @@ namespace LogsAnalyzer.Analyzers.Bookings {
                     IsNightsSelectable = extraNode.Attributes[XmlTokens.IS_NIGHTS_SELECTABLE]?.Value ?? NO_VALUE,
                     IsAllowOccupancySelect = extraNode.Attributes[XmlTokens.IS_ALLOW_OCCUPANCY_SELECT]?.Value ?? NO_VALUE
                 };
+
                 parseSelectedNights(extra, extraNode, nsMgr, nsPrefix);
 
                 booking.Extras.Add(extra);
