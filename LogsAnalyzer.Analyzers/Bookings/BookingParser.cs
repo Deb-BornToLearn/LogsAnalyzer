@@ -48,6 +48,8 @@ namespace LogsAnalyzer.Analyzers.Bookings {
         //private const string MISC_LOG_PATTERN = @"(.*)\[MTD:.+?\](.*)";
         private const string MISC_LOG_PATTERN = @"\[MTD:.+?\](.*)";
 
+        private readonly string SELF_CLOSING_ROOT_ELEMENT_PATTERN = $"<{XmlTokens.ROOT_ELEMENT}[^>]*\\s*/>";
+
         public bool Accept(string lineText) {
             BookingAnalysis = null;
             BookingAnalysis temp;
@@ -97,8 +99,7 @@ namespace LogsAnalyzer.Analyzers.Bookings {
         }
 
         private bool tryParseBookingOnSameLine(string lineText, out BookingAnalysis outputBooking) {
-            var selfEnclosingElementPattern = $"<{XmlTokens.ROOT_ELEMENT}[^>]*\\s*/>";
-            var m = Regex.Match(lineText, selfEnclosingElementPattern);
+            var m = Regex.Match(lineText, SELF_CLOSING_ROOT_ELEMENT_PATTERN);
             outputBooking = m.Success ? parseBooking(m.Groups[0].Value) : null;
             if (m.Success) return true;
 
