@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace LogAnalyzer.UI.WinForms {
@@ -13,6 +14,10 @@ namespace LogAnalyzer.UI.WinForms {
         // TODO: Add filtering by selected analyzer(s)
         // TODO: Add filtering by selected log file(s)
         // TODO: Create AnalysisResultsPresenter
+        public enum FormStateEnum {
+            Ready,
+            AnalyzingLogsInProgress
+        }
 
         public List<BaseLogAnalyzer> Analyzers;
         public readonly List<AnalyzerConfiguration> AnalyzerConfigurations;
@@ -26,7 +31,47 @@ namespace LogAnalyzer.UI.WinForms {
 
             formCaptionTextbox.Text = this.Text;
             populateLists();
-            AnalyzeLogs();
+
+            FormState = FormStateEnum.Ready;
+
+            ThreadStart work = new ThreadStart(() => AnalyzeLogs());
+            var thread = new Thread(work);
+            thread.Start();
+
+        }
+
+        private FormStateEnum _formState;
+        public FormStateEnum FormState {
+            get {
+                return _formState;
+            }
+            protected set {
+                onWillFormStateChange(value);
+                _formState = value;
+                onDidFormStateChanged();
+            }
+        }
+
+        private void onWillFormStateChange(FormStateEnum incomingState) {
+
+        }
+
+        private void onDidFormStateChanged() {
+            var isFormReady = FormState == FormStateEnum.Ready;
+            setEnabled(closeButton, isFormReady);
+            setEnabled(wordWrapCheckbox, isFormReady);
+            setEnabled(tabControl1, isFormReady);
+        }
+
+        delegate void enableControlCallback(Control control, bool enabled);
+        private void setEnabled(Control control, bool enabled) {
+            if (control.InvokeRequired) {
+                var cb = new enableControlCallback(setEnabled);
+                Invoke(cb, control, enabled);
+            }
+            else {
+                control.Enabled = enabled;
+            }
         }
 
         private void populateLists() {
@@ -39,21 +84,66 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void AnalyzeLogs() {
-            // TODO: Run logs analysis in separate thread and provide progress feedback
+            FormState = FormStateEnum.AnalyzingLogsInProgress;
+
             var logReader = new LogReader(Analyzers);
+            int counter = 1, total = LogFiles.Count;
             foreach (string file in LogFiles) {
                 try {
+                    appendText(resultsTextbox, $"Reading logs from {file} ({counter}/{total}) ...{Environment.NewLine}");
                     using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read)) {
                         logReader.ReadSource(file, stream);
                     }
                 }
                 catch (Exception exc) {
-                    MessageBox.Show(exc.Message);
+                    appendText(resultsTextbox, exc.Message);
                 }
+                counter++;
             }
 
+            setText(resultsTextbox, string.Empty);
+
             foreach (var analyzer in Analyzers) {
-                resultsTextbox.AppendText(analyzer.AnalysesToString());
+                appendText(resultsTextbox, analyzer.AnalysesToString());
+            }
+
+            scrollToTop(resultsTextbox);
+
+            FormState = FormStateEnum.Ready;
+        }
+
+        delegate void AppendTextCallback(TextBoxBase textbox, string message);
+        delegate void SetTextCallback(TextBoxBase textbox, string message);
+        delegate void ScrollToTopCallback(TextBoxBase textbox);
+
+        private void scrollToTop(TextBoxBase textbox) {
+            if (textbox.InvokeRequired) {
+                var cb = new ScrollToTopCallback(scrollToTop);
+                Invoke(cb, new object[] { textbox });
+            }
+            else {
+                textbox.SelectionStart = 0;
+                textbox.ScrollToCaret();
+            }
+        }
+
+        private void appendText(TextBoxBase textbox, string text) {
+            if (textbox.InvokeRequired) {
+                AppendTextCallback cb = new AppendTextCallback(appendText);
+                Invoke(cb, new object[] { textbox, text });
+            }
+            else {
+                resultsTextbox.AppendText(text);
+            }
+        }
+
+        private void setText(TextBoxBase textbox, string text) {
+            if (textbox.InvokeRequired) {
+                AppendTextCallback cb = new AppendTextCallback(setText);
+                this.Invoke(cb, new object[] { textbox, text });
+            }
+            else {
+                resultsTextbox.Text = text;
             }
         }
 
