@@ -38,7 +38,12 @@ namespace LogAnalyzer.UI.WinForms {
                         logFilesList.Items.Add(filename);
                     }
                 }
+                if (MessageBox.Show("Start logs analysis now?", "Ready to start analysis", 
+                                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                    runAnalysis();
+                }
             }
+
         }
 
         private void logFilesListMenu_Opened(object sender, EventArgs e) {
@@ -56,6 +61,10 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void analyzeButton_Click(object sender, EventArgs e) {
+            runAnalysis();
+        }
+
+        private void runAnalysis() {
             if (logFilesList.Items.Count == 0) {
                 MessageBox.Show("Please select one or more log files to analyze by right-clicking on Log files list",
                                 "Select log file(s)", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -63,7 +72,8 @@ namespace LogAnalyzer.UI.WinForms {
             }
 
             if (analyzersList.CheckedItems.Count == 0) {
-                MessageBox.Show("Please check one or more analyzers to run");
+                MessageBox.Show("Please check one or more analyzers to run",
+                                "Select analyzer(s)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

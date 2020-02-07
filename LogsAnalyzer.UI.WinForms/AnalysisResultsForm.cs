@@ -22,8 +22,15 @@ namespace LogAnalyzer.UI.WinForms {
         public List<BaseLogAnalyzer> Analyzers;
         public readonly List<AnalyzerConfiguration> AnalyzerConfigurations;
         public readonly List<string> LogFiles;
+
+        delegate void enableControlCallback(Control control, bool enabled);
+        delegate void AppendTextCallback(TextBoxBase textbox, string message);
+        delegate void SetTextCallback(TextBoxBase textbox, string message);
+        delegate void ScrollToTopCallback(TextBoxBase textbox);
+
         public AnalysisResultsForm(List<AnalyzerConfiguration> analyzerConfigurations, List<string> logFiles) {
             InitializeComponent();
+
             AnalyzerConfigurations = analyzerConfigurations;
             var analyzerBuilder = new AnalyzersBuilder(AnalyzerConfigurations);
             Analyzers = analyzerBuilder.BuildAnalyzers();
@@ -63,7 +70,6 @@ namespace LogAnalyzer.UI.WinForms {
             setEnabled(tabControl1, isFormReady);
         }
 
-        delegate void enableControlCallback(Control control, bool enabled);
         private void setEnabled(Control control, bool enabled) {
             if (control.InvokeRequired) {
                 var cb = new enableControlCallback(setEnabled);
@@ -111,10 +117,6 @@ namespace LogAnalyzer.UI.WinForms {
 
             FormState = FormStateEnum.Ready;
         }
-
-        delegate void AppendTextCallback(TextBoxBase textbox, string message);
-        delegate void SetTextCallback(TextBoxBase textbox, string message);
-        delegate void ScrollToTopCallback(TextBoxBase textbox);
 
         private void scrollToTop(TextBoxBase textbox) {
             if (textbox.InvokeRequired) {
