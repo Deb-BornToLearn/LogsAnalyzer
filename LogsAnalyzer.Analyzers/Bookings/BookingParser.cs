@@ -44,7 +44,6 @@ namespace LogsAnalyzer.Analyzers.Bookings {
 
         private BookingAnalysis _lastBookingParsed = null;
 
-        //private const string MISC_LOG_PATTERN = @"(.*)\[MTD:.+?\](.*)";
         private const string MISC_LOG_PATTERN = @"\[MTD:.+?\](.*)";
 
         private readonly string SELF_CLOSING_ROOT_ELEMENT_PATTERN = $"<{XmlTokens.ROOT_ELEMENT}[^>]*\\s*/>";
@@ -88,10 +87,12 @@ namespace LogsAnalyzer.Analyzers.Bookings {
         private bool tryParseMiscellaneousTraceData(string lineText, out string parsedMiscTraceData) {
             parsedMiscTraceData = lineText;
             var m = Regex.Match(lineText, MISC_LOG_PATTERN);
-            //if (m.Success && m.Groups.Count > 2) {
-            //    parsedMiscTraceData = $"{m.Groups[1].Value} {m.Groups[2].Value}";
-            //}
             if (m.Success && m.Groups.Count > 1) {
+                // Check below needed to remove duplicate log entries;
+                // much faster than doing via RegEx: .*^(?!.*Rezobx\+EASWebService).*\[MTD:.+?\](.*)
+                if (parsedMiscTraceData.Contains(@"Rezobx+EASWebService")) {
+                    return false;
+                }
                 parsedMiscTraceData = $"{m.Groups[1].Value}";
             }
             return m.Success;
