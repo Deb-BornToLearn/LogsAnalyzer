@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace LogsAnalyzer.Infrastructure {
     public class LogReader : ILogReader {
+
+        public delegate void ReadProgressEventHandler(LogReader reader, ReadProgressEventArgs args);
+        public event ReadProgressEventHandler OnReadProgress;
+
         public List<StatusReport> Reports { get; protected set; }
         public List<BaseLogAnalyzer> Analyzers { get; protected set; }
         public LogReader(List<BaseLogAnalyzer> analyzers) {
@@ -26,6 +30,7 @@ namespace LogsAnalyzer.Infrastructure {
             using (var lineReader = new StreamReader(source)) {
                 int lineNumber = 1;
                 while (lineReader.Peek() >= 0) {
+                    OnReadProgress?.Invoke(this, new ReadProgressEventArgs(sourceName, lineNumber));
                     var line = lineReader.ReadLine();
                     Analyzers.ForEach(a => analyze(a, line, lineNumber, sourceName));
                     lineNumber++;
@@ -98,4 +103,14 @@ namespace LogsAnalyzer.Infrastructure {
     }
 
     public class NullOrEmptyAnalyzersException : ApplicationException { }
+
+    public class ReadProgressEventArgs : EventArgs {
+        public readonly string SourceName;
+        public readonly long LineNumber;
+        public ReadProgressEventArgs(string sourceNamme, int lineNumber) {
+            SourceName = sourceNamme;
+            LineNumber = lineNumber;
+        }
+    
+    }
 }
