@@ -1,14 +1,18 @@
-﻿using LogsAnalyzer.Infrastructure.Analysis;
+﻿using LogAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure.Analysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace LogAnalyzer.Analyzers.Bookings.Models {
-    public class BookingAnalysis : AnalysisResult {
+    public class BookingAnalysis : BaseAnalysisResult {
+        public List<MiscellaneousTraceDataAnalysis> MiscellaneousTraceData;
         public BookingAnalysis() {
             Extras = new List<Extra>();
+            MiscellaneousTraceData = new List<MiscellaneousTraceDataAnalysis>();
         }
+        public string AccountId;
 
         public string TransactionId;
         public string Timestamp;
@@ -40,7 +44,9 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
         }
         public override string ToString() {
             var sb = new StringBuilder();
+            sb.AppendLine($"Transaction ID: {TransactionId}");
             sb.AppendLine($"Timestamp: {utcDatetimeToString(Timestamp)}");
+            sb.AppendLine($"Account Id: {AccountId}");
             sb.AppendLine($"Customer: {CustomerLastName}, {CustomerFirstName}");
             sb.AppendLine($"Distributor: {DistributorShortName}");
             sb.AppendLine($"Provider: {PrimaryProvider}");
@@ -49,6 +55,8 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
             sb.AppendLine($"Commission: {ChannelCommission}");
             sb.AppendLine($"{ProductName} ({ProductId})");
             sb.AppendLine($"Products: {ProductTotal}, Extras: {ExtrasTotal}");
+            sb.AppendLine($"Source: {Source}");
+            sb.AppendLine($"Lines {StartLineNumber} to {EndLineNumber}");
             foreach (var e in Extras) {
                 sb.AppendLine($"{e.Name} ({e.Code})");
                 sb.AppendLine($"\tAdult Price: {e.AdultPrice}, Per Adult Price: {e.PerAdultPrice}, Per Adult Price Per Night {e.PerAdultPricePerNight}");
@@ -64,13 +72,10 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
                 sb.AppendLine("*** Miscellaneous Trace Data ***");
             }
 
-            foreach (var text in MiscellaneousTraceData) {
-                sb.AppendLine($"  {text}");
+            foreach (var mtd in MiscellaneousTraceData) {
+                sb.AppendLine($"L{mtd.StartLineNumber}:  {mtd.ParsedMiscTraceData}");
             }
-            sb.AppendLine($"---------------------");
-            sb.AppendLine($"Source: {Source}");
-            sb.AppendLine($"Lines {StartLineNumber} to {EndLineNumber}");
-            sb.AppendLine($"Transaction ID: {TransactionId}");
+           
             return sb.ToString();
         }
     }

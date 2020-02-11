@@ -1,5 +1,5 @@
 ﻿using LogAnalyzer.Analyzers.Bookings.Models;
-using LogsAnalyzer.Analyzers.Bookings;
+using LogsAnalyzer.Analyzers.Bookings.Parsers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace LogsAnalyzer.Tests {
 
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
                 Assert.IsNotNull(parser.BookingAnalysis);
             }
         }
@@ -36,7 +36,7 @@ namespace LogsAnalyzer.Tests {
             };
 
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
                 Assert.IsNotNull(parser.BookingAnalysis);
             }
         }
@@ -62,7 +62,7 @@ namespace LogsAnalyzer.Tests {
             var parser = new BookingParser();
             for (var k = 0; k < inputs.Length; k++) {
                 for (var j = 0; j < inputs[k].Length; j++) {
-                    parser.Accept(inputs[k][j]);
+                    parser.Parse(inputs[k][j]);
                     if (j == 0) {
                         Assert.IsNull(parser.BookingAnalysis);
                     }
@@ -81,7 +81,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -93,7 +93,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -119,7 +119,7 @@ namespace LogsAnalyzer.Tests {
             var outputs = new List<BookingAnalysis>();
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
                 if (parser.BookingAnalysis != null) {
                     outputs.Add(parser.BookingAnalysis);
                 }
@@ -142,7 +142,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -154,7 +154,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -178,7 +178,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -195,7 +195,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -221,7 +221,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -239,7 +239,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -265,7 +265,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -283,7 +283,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -313,7 +313,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -332,7 +332,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -364,7 +364,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -383,7 +383,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -411,7 +411,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -430,7 +430,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -455,7 +455,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -473,7 +473,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -528,7 +528,7 @@ namespace LogsAnalyzer.Tests {
 
             var parser = new BookingParser();
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -563,7 +563,7 @@ namespace LogsAnalyzer.Tests {
                 $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>"
             };
             foreach (var input in inputs) {
-                parser.Accept(input);
+                parser.Parse(input);
             }
 
             Assert.IsNotNull(parser.BookingAnalysis);
@@ -572,33 +572,34 @@ namespace LogsAnalyzer.Tests {
 
         [TestMethod]
         public void itShouldReadMiscellaneousTraceData() {
-            var traceDataLine1 = "the quick brown fox jumped over the lazy dog";
-            var traceDataLine2 = "the quick brown dog jumped over the lazy fox";
+            throw new NotImplementedException();
+            //var traceDataLine1 = "the quick brown fox jumped over the lazy dog";
+            //var traceDataLine2 = "the quick brown dog jumped over the lazy fox";
 
-            var inputs = new string[] {
-                $"<{BookingParser.XmlTokens.ROOT_ELEMENT}>",
-                $"<POS>",
-                $"<Source>",
-                $"<BookingChannel>",
-                $"</BookingChannel>",
-                $"</Source>",
-                $"</POS>",
-                $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>",
-                $"asfsasf [MTD:1111] {traceDataLine1}",
-                $"not misc trace data...",
-                $"[noiseeeee] [MTD:1111] {traceDataLine2}"
-            };
+            //var inputs = new string[] {
+            //    $"<{BookingParser.XmlTokens.ROOT_ELEMENT}>",
+            //    $"<POS>",
+            //    $"<Source>",
+            //    $"<BookingChannel>",
+            //    $"</BookingChannel>",
+            //    $"</Source>",
+            //    $"</POS>",
+            //    $"</{BookingParser.XmlTokens.ROOT_ELEMENT}>",
+            //    $"asfsasf [MTD:1111] {traceDataLine1}",
+            //    $"not misc trace data...",
+            //    $"[noiseeeee] [MTD:1111] {traceDataLine2}"
+            //};
 
-            BookingAnalysis ba = null;
-            var parser = new BookingParser();
-            foreach (var input in inputs) {
-                parser.Accept(input);
-                if (parser.BookingAnalysis != null) ba = parser.BookingAnalysis;
-            }
+            //BookingAnalysis ba = null;
+            //var parser = new BookingParser();
+            //foreach (var input in inputs) {
+            //    parser.Parse(input);
+            //    if (parser.BookingAnalysis != null) ba = parser.BookingAnalysis;
+            //}
 
-            Assert.IsNotNull(ba);
-            Assert.AreEqual(2, ba.MiscellaneousTraceData.Count);
-            Assert.AreEqual(traceDataLine1, ba.MiscellaneousTraceData.FirstOrDefault().Trim());
+            //Assert.IsNotNull(ba);
+            //Assert.AreEqual(2, ba.MiscellaneousTraceData.Count);
+            //Assert.AreEqual(traceDataLine1, ba.MiscellaneousTraceData.FirstOrDefault().Trim());
         }
 
     }

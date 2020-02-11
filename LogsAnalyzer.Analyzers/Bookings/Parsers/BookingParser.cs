@@ -1,11 +1,15 @@
 ﻿using LogAnalyzer.Analyzers.Bookings.Models;
+using LogAnalyzer.Analyzers.Bookings.Parsers;
+using LogAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure.Analysis;
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace LogsAnalyzer.Analyzers.Bookings {
-    public class BookingParser {
+namespace LogsAnalyzer.Analyzers.Bookings.Parsers {
+
+    public class BookingParser : IParser<BaseAnalysisResult>{
         public class XmlTokens {
             public const string ROOT_ELEMENT = "UTSv_ProductTypeReservationRQ";
             public const string CLIENT_TRANSACTION_ID = "ClientTransactionId";
@@ -38,6 +42,10 @@ namespace LogsAnalyzer.Analyzers.Bookings {
 
         public BookingAnalysis BookingAnalysis { get; internal set; }
 
+        //public AnalysisResult Output => BookingAnalysis;
+
+        public BaseAnalysisResult Output => BookingAnalysis;
+
         private StringBuilder _bookingInputBuffer = null;
 
         private const string NO_VALUE = "<not specified>";
@@ -48,7 +56,7 @@ namespace LogsAnalyzer.Analyzers.Bookings {
 
         private readonly string SELF_CLOSING_ROOT_ELEMENT_PATTERN = $"<{XmlTokens.ROOT_ELEMENT}[^>]*\\s*/>";
 
-        public bool Accept(string lineText) {
+        public bool Parse(string lineText) {
             BookingAnalysis = null;
             BookingAnalysis temp;
             if (tryParseBookingOnSameLine(lineText, out temp)) {
@@ -74,7 +82,7 @@ namespace LogsAnalyzer.Analyzers.Bookings {
 
                     string parsedMiscTraceData;
                     if (tryParseMiscellaneousTraceData(lineText, out parsedMiscTraceData)) {
-                        _lastBookingParsed.MiscellaneousTraceData.Add(parsedMiscTraceData);
+                        //_lastBookingParsed.MiscellaneousTraceData.Add(parsedMiscTraceData);
                         return true;
                     }
                     return false;
@@ -223,10 +231,6 @@ namespace LogsAnalyzer.Analyzers.Bookings {
             var lastNameNode = xmlDoc.SelectSingleNode($"//{nsPrefix}Customer/{nsPrefix}PersonName/{nsPrefix}Surname", nsMgr);
             booking.CustomerLastName = lastNameNode?.InnerText ?? string.Empty;
         }
-
-
-
-
 
     }
 }

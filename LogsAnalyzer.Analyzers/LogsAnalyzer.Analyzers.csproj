@@ -41,11 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bookings\Models\MiscellaneousTraceDataAnalysis.cs" />
+    <Compile Include="Bookings\Models\NewBookingCreatedAnalysis.cs" />
+    <Compile Include="Bookings\Models\NewBookingInfo.cs" />
+    <Compile Include="Bookings\Parsers\MiscBookingTraceDataParser.cs" />
     <Compile Include="Bookings\Models\Extra.cs" />
+    <Compile Include="Bookings\Parsers\IParser.cs" />
+    <Compile Include="Bookings\Parsers\NewBookingCreatedParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bookings\Models\BookingAnalysis.cs" />
     <Compile Include="Bookings\BookingAnalyzer.cs" />
-    <Compile Include="Bookings\BookingParser.cs" />
+    <Compile Include="Bookings\Parsers\BookingParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LogsAnalyzer.Infrastructure\LogsAnalyzer.Infrastructure.csproj">
