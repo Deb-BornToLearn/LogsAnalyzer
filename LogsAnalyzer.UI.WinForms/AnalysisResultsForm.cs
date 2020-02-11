@@ -28,6 +28,8 @@ namespace LogAnalyzer.UI.WinForms {
         delegate void SetTextCallback(TextBoxBase textbox, string message);
         delegate void ScrollToTopCallback(TextBoxBase textbox);
 
+        private AutoResetEvent _formShownEvent = new AutoResetEvent(false);
+
         public AnalysisResultsForm(List<AnalyzerConfiguration> analyzerConfigurations, List<string> logFiles) {
             InitializeComponent();
 
@@ -90,9 +92,14 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void AnalyzeLogs() {
+            // Wait for form to finish initialization before firing off worker thread;
+            // otherwise, intermittent cross-thread errors will crop up.
+            _formShownEvent.WaitOne();
+
             FormState = FormStateEnum.AnalyzingLogsInProgress;
 
             var logReader = new LogReader(Analyzers);
+            logReader.OnReadProgress += LogReader_OnReadProgress;
             int counter = 1, total = LogFiles.Count;
             foreach (string file in LogFiles) {
                 try {
@@ -116,6 +123,12 @@ namespace LogAnalyzer.UI.WinForms {
             scrollToTop(resultsTextbox);
 
             FormState = FormStateEnum.Ready;
+        }
+
+        private void LogReader_OnReadProgress(LogReader reader, ReadProgressEventArgs args) {
+            if (args.LineNumber % 1000 == 0) {
+                appendText(resultsTextbox, $"Analyzing line {args.LineNumber} ...{Environment.NewLine}");
+            }
         }
 
         private void scrollToTop(TextBoxBase textbox) {
@@ -170,6 +183,10 @@ namespace LogAnalyzer.UI.WinForms {
                 var folder = Path.GetDirectoryName(item as string);
                 Process.Start("explorer.exe", folder);
             }
+        }
+
+        private void AnalysisResultsForm_Shown(object sender, EventArgs e) {
+            _formShownEvent.Set();
         }
     }
 }
