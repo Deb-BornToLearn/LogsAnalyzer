@@ -96,6 +96,8 @@ namespace LogAnalyzer.Analyzers.Bookings {
         }
 
         public override string AnalysesToString() {
+            if (!Bookings.Any()) return "No booking found";
+
             var sb = new StringBuilder();
             var chronoSortedBookings = Bookings.OrderBy(d => d.Timestamp);
             foreach (var booking in chronoSortedBookings) {

@@ -48,6 +48,9 @@
     <Compile Include="Bookings\Models\Extra.cs" />
     <Compile Include="Bookings\Parsers\IParser.cs" />
     <Compile Include="Bookings\Parsers\NewBookingCreatedParser.cs" />
+    <Compile Include="Errors\ErrorsAnalyzer.cs" />
+    <Compile Include="Errors\UnhandledErrors\UnhandledErrorAnalysis.cs" />
+    <Compile Include="Errors\UnhandledErrors\UnhandledErrorsAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bookings\Models\BookingAnalysis.cs" />
     <Compile Include="Bookings\BookingAnalyzer.cs" />

@@ -117,7 +117,7 @@ namespace LogAnalyzer.UI.WinForms {
             setText(resultsTextbox, string.Empty);
 
             foreach (var analyzer in Analyzers) {
-                appendText(resultsTextbox, analyzer.AnalysesToString());
+                appendText(resultsTextbox, $"{analyzer.AnalysesToString()}{Environment.NewLine}");
             }
 
             scrollToTop(resultsTextbox);

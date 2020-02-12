@@ -12,7 +12,7 @@ namespace LogsAnalyzer.Infrastructure.Configuration {
 
         public List<AnalyzerConfiguration> GetAnalyzerConfigurations() {
             var analyzerConfigs = new List<AnalyzerConfiguration>();
-            var analyzerNodes = _rootConfigNode.SelectNodes("//analyzer");
+            var analyzerNodes = _rootConfigNode.SelectNodes("//analyzers/analyzer");
             foreach (XmlNode analyzerNode in analyzerNodes) {
                 var analyzerConfig = createAnalyzerConfig(analyzerNode);
                 analyzerConfigs.Add(analyzerConfig);

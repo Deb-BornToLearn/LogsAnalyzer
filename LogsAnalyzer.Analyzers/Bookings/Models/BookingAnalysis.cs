@@ -1,5 +1,4 @@
 ﻿using LogAnalyzer.Infrastructure.Analysis;
-using LogsAnalyzer.Infrastructure.Analysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
