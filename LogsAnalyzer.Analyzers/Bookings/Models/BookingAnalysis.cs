@@ -72,7 +72,7 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
             }
 
             foreach (var mtd in MiscellaneousTraceData) {
-                sb.AppendLine($"L{mtd.StartLineNumber}:  {mtd.ParsedMiscTraceData}");
+                sb.AppendLine($"Ln {mtd.StartLineNumber}:  {mtd.ParsedMiscTraceData}");
             }
            
             return sb.ToString();

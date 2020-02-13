@@ -1,5 +1,6 @@
 ﻿using LogAnalyzer.Analyzers.Bookings.Models;
 using LogAnalyzer.Infrastructure.Analysis;
+using System;
 using System.Text.RegularExpressions;
 
 namespace LogAnalyzer.Analyzers.Bookings.Parsers {
@@ -44,6 +45,10 @@ namespace LogAnalyzer.Analyzers.Bookings.Parsers {
                     CustomerLastName = m.Groups[2].Value,
                     ClientTransactionId = m.Groups[3].Value
                 };
+                if (string.IsNullOrEmpty(newAccount.ClientTransactionId)) {
+                    newAccount.ClientTransactionId = "AUTO-" + Guid.NewGuid().ToString();
+                }
+
             }
             return m.Success;
         }

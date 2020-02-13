@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\AnalysisResult.cs" />
+    <Compile Include="Analysis\AnalyzerShortCircuitChain.cs" />
     <Compile Include="Analysis\BaseAnalysisResult.cs" />
     <Compile Include="Analysis\BaseLogAnalyzer.cs" />
+    <Compile Include="Configuration\AnalyzerChainConfiguration.cs" />
     <Compile Include="Configuration\AnalyzerConfigurationXmlSource.cs" />
     <Compile Include="Configuration\IConfigurationSource.cs" />
     <Compile Include="Configuration\AnalyzerConfiguration.cs" />

@@ -64,6 +64,7 @@ namespace LogAnalyzer.Analyzers.Bookings {
                     booking.Source = sourceName;
                     booking.StartLineNumber = currentLineNumberStart;
                     booking.EndLineNumber = currentLineNumber;
+
                     Bookings.Add(booking);
                 }
             }
@@ -73,7 +74,14 @@ namespace LogAnalyzer.Analyzers.Bookings {
                                      long currentLineNumberStart, long currentLineNumber, string sourceName) {
             var newAccountCreated = output as NewBookingCreatedAnalysis;
             if (newAccountCreated != null) {
-                var theBooking = Bookings.FirstOrDefault(b => b.TransactionId == newAccountCreated.ClientTransactionId);
+                // Need logic below for times when TransactionId is not in the request.
+                var theBooking = Bookings.FirstOrDefault(b => string.IsNullOrEmpty(b.TransactionId));
+                if (theBooking == null) {
+                    theBooking = Bookings.FirstOrDefault(b => b.TransactionId == newAccountCreated.ClientTransactionId);
+                }
+                else {
+                    theBooking.TransactionId = newAccountCreated.ClientTransactionId;
+                }
                 theBooking.AccountId = newAccountCreated.AccountId;
                 
                 newAccountCreated.MiscTraceDataAnalysis.StartLineNumber = currentLineNumber;

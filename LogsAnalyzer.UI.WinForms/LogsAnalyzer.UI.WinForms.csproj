@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalysisArgs.cs" />
     <Compile Include="AnalysisResultsForm.cs">
       <SubType>Form</SubType>
     </Compile>

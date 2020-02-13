@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using LogAnalyzer.Infrastructure.Configuration;
 
 namespace LogsAnalyzer.Infrastructure.Configuration {
     public class AnalyzerConfigurationXmlSource : IConfigurationSource {
@@ -8,6 +9,22 @@ namespace LogsAnalyzer.Infrastructure.Configuration {
 
         public AnalyzerConfigurationXmlSource(XmlNode rootConfigNode) {
             _rootConfigNode = rootConfigNode;
+        }
+
+        public List<AnalyzerChainConfiguration> GetAnalyzerChainConfigurations() {
+            var analyzerChainConfigurations = new List<AnalyzerChainConfiguration>();
+            var analyzerChainNodes = _rootConfigNode.SelectNodes("//analyzerShortCircuitChain");
+            foreach (XmlNode analyzerChainNode in analyzerChainNodes) {
+                var analyzerChainConfig = new AnalyzerChainConfiguration();
+                analyzerChainConfig.DisplayName = analyzerChainNode.Attributes["displayName"].Value;
+                var analyzerNodes = analyzerChainNode.SelectNodes("descendant::analyzer");
+                foreach (XmlNode analyzerNode in analyzerNodes) {
+                    var analyzerConfig = createAnalyzerConfig(analyzerNode);
+                    analyzerChainConfig.AnalyzerConfigurations.Add(analyzerConfig);
+                }
+                analyzerChainConfigurations.Add(analyzerChainConfig);
+            }
+            return analyzerChainConfigurations;
         }
 
         public List<AnalyzerConfiguration> GetAnalyzerConfigurations() {
@@ -61,6 +78,8 @@ namespace LogsAnalyzer.Infrastructure.Configuration {
             }
             return requestedNode;
         }
+
+     
     }
 
     public class TypeNameNodeNotFoundException : ApplicationException {

@@ -24,7 +24,6 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.analyzersList = new System.Windows.Forms.CheckedListBox();
             this.logFilesList = new System.Windows.Forms.ListBox();
             this.logFilesListMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -33,20 +32,9 @@
             this.analyzeButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.analyzersList = new System.Windows.Forms.TreeView();
             this.logFilesListMenu.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // analyzersList
-            // 
-            this.analyzersList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.analyzersList.FormattingEnabled = true;
-            this.analyzersList.Location = new System.Drawing.Point(18, 189);
-            this.analyzersList.Margin = new System.Windows.Forms.Padding(1);
-            this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(552, 124);
-            this.analyzersList.TabIndex = 0;
             // 
             // logFilesList
             // 
@@ -96,7 +84,7 @@
             // analyzeButton
             // 
             this.analyzeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.analyzeButton.Location = new System.Drawing.Point(456, 324);
+            this.analyzeButton.Location = new System.Drawing.Point(456, 327);
             this.analyzeButton.Margin = new System.Windows.Forms.Padding(1);
             this.analyzeButton.Name = "analyzeButton";
             this.analyzeButton.Size = new System.Drawing.Size(114, 34);
@@ -125,14 +113,25 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Log analyzers";
             // 
+            // analyzersList
+            // 
+            this.analyzersList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.analyzersList.CheckBoxes = true;
+            this.analyzersList.Location = new System.Drawing.Point(18, 185);
+            this.analyzersList.Name = "analyzersList";
+            this.analyzersList.Size = new System.Drawing.Size(552, 135);
+            this.analyzersList.TabIndex = 7;
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(590, 369);
+            this.Controls.Add(this.analyzersList);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.analyzeButton);
-            this.Controls.Add(this.analyzersList);
             this.Controls.Add(this.logFilesList);
             this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "Main";
@@ -144,8 +143,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.CheckedListBox analyzersList;
         private System.Windows.Forms.ListBox logFilesList;
         private System.Windows.Forms.ContextMenuStrip logFilesListMenu;
         private System.Windows.Forms.ToolStripMenuItem addLogFileMenuItem;
@@ -154,6 +151,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripMenuItem removeAllLogsMenuItem;
+        private System.Windows.Forms.TreeView analyzersList;
     }
 }
 

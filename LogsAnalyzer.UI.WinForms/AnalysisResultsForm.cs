@@ -1,6 +1,6 @@
-﻿using LogsAnalyzer.Infrastructure;
+﻿using LogAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure;
 using LogsAnalyzer.Infrastructure.Analysis;
-using LogsAnalyzer.Infrastructure.Configuration;
 using LogsAnalyzer.Infrastructure.Factory;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,9 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         public List<BaseLogAnalyzer> Analyzers;
-        public readonly List<AnalyzerConfiguration> AnalyzerConfigurations;
+        public List<AnalyzerShortCircuitChain> AnalyzerChains;
+
+        public readonly AnalysisArgs AnalysisArgs;
         public readonly List<string> LogFiles;
 
         delegate void enableControlCallback(Control control, bool enabled);
@@ -30,23 +32,41 @@ namespace LogAnalyzer.UI.WinForms {
 
         private AutoResetEvent _formShownEvent = new AutoResetEvent(false);
 
-        public AnalysisResultsForm(List<AnalyzerConfiguration> analyzerConfigurations, List<string> logFiles) {
+        public AnalysisResultsForm(AnalysisArgs analysisArgs, List<string> logFiles) {
             InitializeComponent();
 
-            AnalyzerConfigurations = analyzerConfigurations;
-            var analyzerBuilder = new AnalyzersBuilder(AnalyzerConfigurations);
-            Analyzers = analyzerBuilder.BuildAnalyzers();
+            AnalysisArgs = analysisArgs;
             LogFiles = logFiles;
+            Analyzers = buildAnalyzers(analysisArgs);
+            AnalyzerChains = buildAnalyzerChains(analysisArgs);
 
-            formCaptionTextbox.Text = this.Text;
             populateLists();
-
+            formCaptionTextbox.Text = this.Text;
             FormState = FormStateEnum.Ready;
 
+            runAnalysisThread();
+        }
+
+        private void runAnalysisThread() {
             ThreadStart work = new ThreadStart(() => AnalyzeLogs());
             var thread = new Thread(work);
             thread.Start();
+        }
 
+        private List<AnalyzerShortCircuitChain> buildAnalyzerChains(AnalysisArgs analysisArgs) {
+            var analyzerChains = new List<AnalyzerShortCircuitChain>();
+            foreach (var chainConfig in analysisArgs.AnalyzerChainConfigurations) {
+                var analyzerChain = new AnalyzerShortCircuitChain(chainConfig.DisplayName);
+                var analyzerChainBuilder = new AnalyzersBuilder(chainConfig.AnalyzerConfigurations);
+                analyzerChain.Analyzers.AddRange(analyzerChainBuilder.BuildAnalyzers());
+                analyzerChains.Add(analyzerChain);
+            }
+            return analyzerChains;
+        }
+
+        private List<BaseLogAnalyzer> buildAnalyzers(AnalysisArgs analysisArgs) {
+            var analyzerBuilder = new AnalyzersBuilder(analysisArgs.AnalyzerConfigurations);
+            return analyzerBuilder.BuildAnalyzers();
         }
 
         private FormStateEnum _formState;
@@ -83,9 +103,26 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void populateLists() {
-            foreach (var analyzer in AnalyzerConfigurations) {
-                analyzersList.Items.Add(analyzer, true);
+            foreach (var analyzerConfig in AnalysisArgs.AnalyzerConfigurations) {
+                TreeNode n = new TreeNode(analyzerConfig.DisplayName); ;
+                n.Checked = true;
+                n.Tag = analyzerConfig;
+                analyzersList.Nodes.Add(n);
             }
+            foreach (var analyzerChainConfig in AnalysisArgs.AnalyzerChainConfigurations) {
+                TreeNode mainNode = new TreeNode(analyzerChainConfig.DisplayName);
+                mainNode.Checked = true;
+                mainNode.Tag = analyzerChainConfig;
+                mainNode.Expand();
+                foreach (var analyzerConfig in analyzerChainConfig.AnalyzerConfigurations) {
+                    TreeNode subNode = new TreeNode(analyzerConfig.DisplayName);
+                    subNode.Tag = analyzerConfig;
+                    subNode.Checked = analyzerConfig.Enabled;
+                    mainNode.Nodes.Add(subNode);
+                }
+                analyzersList.Nodes.Add(mainNode);
+            }
+
             foreach (var file in LogFiles) {
                 logFilesList.Items.Add(file, true);
             }
@@ -98,7 +135,7 @@ namespace LogAnalyzer.UI.WinForms {
 
             FormState = FormStateEnum.AnalyzingLogsInProgress;
 
-            var logReader = new LogReader(Analyzers);
+            var logReader = new LogReader(Analyzers, AnalyzerChains);
             logReader.OnReadProgress += LogReader_OnReadProgress;
             int counter = 1, total = LogFiles.Count;
             foreach (string file in LogFiles) {
@@ -116,9 +153,8 @@ namespace LogAnalyzer.UI.WinForms {
 
             setText(resultsTextbox, string.Empty);
 
-            foreach (var analyzer in Analyzers) {
-                appendText(resultsTextbox, $"{analyzer.AnalysesToString()}{Environment.NewLine}");
-            }
+            Analyzers.ForEach(a => appendText(resultsTextbox, $"{a.AnalysesToString()}{Environment.NewLine}"));
+            AnalyzerChains.ForEach(c => c.Analyzers.ForEach(a => appendText(resultsTextbox, $"{a.AnalysesToString()}{Environment.NewLine}")));
 
             scrollToTop(resultsTextbox);
 

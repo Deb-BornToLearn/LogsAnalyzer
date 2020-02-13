@@ -1,4 +1,5 @@
-﻿using LogsAnalyzer.Infrastructure.Analysis;
+﻿using LogAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure.Analysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,20 +13,52 @@ namespace LogsAnalyzer.Infrastructure {
 
         public List<StatusReport> Reports { get; protected set; }
         public List<BaseLogAnalyzer> Analyzers { get; protected set; }
-        public LogReader(List<BaseLogAnalyzer> analyzers) {
-            if (analyzers == null || !analyzers.Any()) throw new NullOrEmptyAnalyzersException(); 
+        public List<AnalyzerShortCircuitChain> AnalyzerShortCircuitChains { get; protected set; }
 
+        public LogReader() {
             Reports = new List<StatusReport>();
-            Analyzers = analyzers;
-            Analyzers.ForEach(a => beginReadAll(a));
+            Analyzers = new List<BaseLogAnalyzer>();
+            AnalyzerShortCircuitChains = new List<AnalyzerShortCircuitChain>();
         }
+
+        public LogReader(List<BaseLogAnalyzer> analyzers) : this() {
+            if (analyzers == null) throw new NullAnalyzersException();
+
+            Analyzers = analyzers;
+            beginReadAll();
+        }
+
+        public LogReader(List<AnalyzerShortCircuitChain> analyzerShortCircuitChains) : this() {
+            if (analyzerShortCircuitChains == null) throw new NullAnalyzerShortCircuitChainException();
+
+            AnalyzerShortCircuitChains = analyzerShortCircuitChains;
+            beginReadAll();
+        }
+
+        public LogReader(List<BaseLogAnalyzer> analyzers, List<AnalyzerShortCircuitChain> analyzerShortCircuitChains) : this() {
+            if (analyzers == null) throw new NullAnalyzersException();
+            if (analyzerShortCircuitChains == null) throw new NullAnalyzerShortCircuitChainException();
+
+            Analyzers = analyzers;
+            AnalyzerShortCircuitChains = analyzerShortCircuitChains;
+            beginReadAll();
+        }
+
+
+        private void beginReadAll() {
+            Analyzers.ForEach(a => beginReadAll(a));
+            AnalyzerShortCircuitChains.ForEach(c => c.Analyzers.ForEach(a => beginReadAll(a)));
+        }
+
 
         public void EndReadAll() {
             Analyzers.ForEach(a => endReadAll(a));
+            AnalyzerShortCircuitChains.ForEach(c => c.Analyzers.ForEach(a => endReadAll(a)));
         }
 
         public void ReadSource(string sourceName, Stream source) {
             Analyzers.ForEach(a => beginRead(a, sourceName));
+            AnalyzerShortCircuitChains.ForEach(c => c.Analyzers.ForEach(a => beginRead(a, sourceName)));
 
             using (var lineReader = new StreamReader(source)) {
                 int lineNumber = 1;
@@ -33,11 +66,21 @@ namespace LogsAnalyzer.Infrastructure {
                     OnReadProgress?.Invoke(this, new ReadProgressEventArgs(sourceName, lineNumber));
                     var line = lineReader.ReadLine();
                     Analyzers.ForEach(a => analyze(a, line, lineNumber, sourceName));
+                    
+                    foreach (var analyzerChain in AnalyzerShortCircuitChains) { 
+                        foreach(var analyzer in analyzerChain.Analyzers) {
+                            if (analyze(analyzer, line, lineNumber, sourceName)){
+                                continue;
+                            }
+                        }
+                    }
+
                     lineNumber++;
                 }
             }
 
             Analyzers.ForEach(a => endRead(a, sourceName));
+            AnalyzerShortCircuitChains.ForEach(c => c.Analyzers.ForEach(a => endRead(a, sourceName)));
         }
 
 
@@ -66,12 +109,13 @@ namespace LogsAnalyzer.Infrastructure {
             }
         }
 
-        private void analyze(ILogAnalyzer a, string line, int lineNumber, string sourceName) {
+        private bool analyze(ILogAnalyzer a, string line, int lineNumber, string sourceName) {
             try {
-                a.Analyze(line, lineNumber, sourceName);
+                return a.Analyze(line, lineNumber, sourceName);
             }
             catch {
                 // Just suppress exception and do nothing; too costly to do anything here.
+                return false;
             }
         }
 
@@ -102,7 +146,8 @@ namespace LogsAnalyzer.Infrastructure {
         }
     }
 
-    public class NullOrEmptyAnalyzersException : ApplicationException { }
+    public class NullAnalyzersException : ApplicationException { }
+    public class NullAnalyzerShortCircuitChainException : ApplicationException { }
 
     public class ReadProgressEventArgs : EventArgs {
         public readonly string SourceName;
@@ -111,6 +156,6 @@ namespace LogsAnalyzer.Infrastructure {
             SourceName = sourceNamme;
             LineNumber = lineNumber;
         }
-    
+
     }
 }

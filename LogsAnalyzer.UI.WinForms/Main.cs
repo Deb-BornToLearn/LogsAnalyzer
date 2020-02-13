@@ -1,4 +1,5 @@
-﻿using LogsAnalyzer.Infrastructure.Analysis;
+﻿using LogAnalyzer.Infrastructure.Configuration;
+using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Configuration;
 using LogsAnalyzer.Infrastructure.Factory;
 using System;
@@ -22,7 +23,25 @@ namespace LogAnalyzer.UI.WinForms {
             var analyzersConfigurationSource = new AnalyzerConfigurationXmlSource(xmlDoc);
             var analyzerConfigs = analyzersConfigurationSource.GetAnalyzerConfigurations();
             foreach (var analyzerConfig in analyzerConfigs) {
-                analyzersList.Items.Add(analyzerConfig, true);
+                var node = new TreeNode(analyzerConfig.DisplayName);
+                node.Tag = analyzerConfig;
+                node.Checked = true;
+                analyzersList.Nodes.Add(node);
+            }
+
+            var analyzerChainConfigs = analyzersConfigurationSource.GetAnalyzerChainConfigurations();
+            foreach (var analyzerChainConfig in analyzerChainConfigs) {
+                TreeNode node = new TreeNode(analyzerChainConfig.DisplayName);
+                node.Tag = analyzerChainConfig;
+                node.Checked = true;
+                node.Expand();
+                foreach (var analyzerConfig in analyzerChainConfig.AnalyzerConfigurations) {
+                    var subNode = new TreeNode(analyzerConfig.DisplayName);
+                    subNode.Tag = analyzerConfig;
+                    subNode.Checked = true;
+                    node.Nodes.Add(subNode);
+                }
+                analyzersList.Nodes.Add(node);
             }
         }
 
@@ -71,24 +90,44 @@ namespace LogAnalyzer.UI.WinForms {
                 return;
             }
 
-            if (analyzersList.CheckedItems.Count == 0) {
+            if (!isAnyAnalyzerSelected(analyzersList)) {
                 MessageBox.Show("Please check one or more analyzers to run",
                                 "Select analyzer(s)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            List<AnalyzerConfiguration> analyzerConfigurations = getSelectedAnalyzers();
+            AnalysisArgs analyzerConfigurations = getSelectedAnalyzers();
             List<string> logFiles = getLogFileNames();
             var resultsForm = new AnalysisResultsForm(analyzerConfigurations, logFiles);
             resultsForm.Show();
         }
 
-        private List<AnalyzerConfiguration> getSelectedAnalyzers() {
-            List<AnalyzerConfiguration> selectedAnalyzers = new List<AnalyzerConfiguration>();
-            foreach (var item in analyzersList.CheckedItems) {
-                selectedAnalyzers.Add(item as AnalyzerConfiguration);
+        private bool isAnyAnalyzerSelected(TreeView tvw) {
+            foreach (TreeNode node in tvw.Nodes) {
+                if (node.Checked) return true;
             }
-            return selectedAnalyzers;
+            return false;
+        }
+
+        private AnalysisArgs getSelectedAnalyzers() {
+            var analysisArgs = new AnalysisArgs();
+            List<AnalyzerConfiguration> selectedAnalyzers = new List<AnalyzerConfiguration>();
+            foreach (TreeNode item in analyzersList.Nodes) {
+                if (item.Checked) {
+                    if (item.Tag.GetType() == typeof(AnalyzerConfiguration)) {
+                        analysisArgs.AnalyzerConfigurations.Add(item.Tag as AnalyzerConfiguration);
+                    }
+                    else if (item.Tag.GetType() == typeof(AnalyzerChainConfiguration)) {
+                        var analyzerChainConfig = (AnalyzerChainConfiguration)item.Tag;
+                        foreach (TreeNode subNode in item.Nodes) {
+                            var analyzerConfig = (AnalyzerConfiguration)subNode.Tag;
+                            analyzerConfig.Enabled = subNode.Checked;
+                        }
+                        analysisArgs.AnalyzerChainConfigurations.Add(analyzerChainConfig);
+                    }
+                }
+            }
+            return analysisArgs;
         }
 
         private List<string> getLogFileNames() {
@@ -101,8 +140,10 @@ namespace LogAnalyzer.UI.WinForms {
 
         private List<BaseLogAnalyzer> loadAnalyzers() {
             var analyzerConfigs = new List<AnalyzerConfiguration>();
-            foreach (AnalyzerConfiguration config in analyzersList.CheckedItems) {
-                analyzerConfigs.Add(config);
+            foreach (TreeNode node in analyzersList.Nodes) {
+                if (node.Checked) { 
+                   analyzerConfigs.Add((AnalyzerConfiguration)node.Tag);
+                }
             }
             if (!analyzerConfigs.Any()) {
                 MessageBox.Show("Please select one or more log analyzers to run");
