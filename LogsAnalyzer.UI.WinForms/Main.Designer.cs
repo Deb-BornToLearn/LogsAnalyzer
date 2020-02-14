@@ -123,6 +123,7 @@
             this.analyzersList.Name = "analyzersList";
             this.analyzersList.Size = new System.Drawing.Size(552, 135);
             this.analyzersList.TabIndex = 7;
+            this.analyzersList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.analyzersList_AfterCheck);
             // 
             // Main
             // 

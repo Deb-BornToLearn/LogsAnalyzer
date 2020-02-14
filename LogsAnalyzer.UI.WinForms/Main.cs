@@ -165,5 +165,27 @@ namespace LogAnalyzer.UI.WinForms {
             }
         }
 
+        private void analyzersList_AfterCheck(object sender, TreeViewEventArgs e) {
+            if (eventFiredViaCode(e)) return;
+
+            foreach (TreeNode childNode in e.Node.Nodes) {
+                childNode.Checked = e.Node.Checked;
+            }
+            if (e.Node.Parent != null) {
+                var shouldCheckParentNode = false;
+                foreach (TreeNode sibling in e.Node.Parent.Nodes) {
+                    if (sibling.Checked) {
+                        shouldCheckParentNode = true;
+                        break;
+                    }
+                }
+                e.Node.Parent.Checked = shouldCheckParentNode;
+            }
+        }
+
+        private bool eventFiredViaCode(TreeViewEventArgs e) {
+            return e.Action == TreeViewAction.Unknown;
+        }
+
     }
 }
