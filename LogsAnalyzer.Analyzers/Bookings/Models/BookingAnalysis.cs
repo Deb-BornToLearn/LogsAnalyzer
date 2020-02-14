@@ -15,6 +15,7 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
 
         public string TransactionId;
         public string Timestamp;
+        public string AmountPaid;
 
         public string DistributorShortName;
         public string ProductId;
@@ -50,6 +51,7 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
             sb.AppendLine($"Distributor: {DistributorShortName}");
             sb.AppendLine($"Provider: {PrimaryProvider}");
             sb.AppendLine($"Commences: {utcDatetimeToString(StartDate)}, Concludes: {utcDatetimeToString(EndDate)}");
+            sb.AppendLine($"Payment Amount: {AmountPaid}");
             sb.AppendLine($"Payment Option: {PaymentOption}");
             sb.AppendLine($"Commission: {ChannelCommission}");
             sb.AppendLine($"{ProductName} ({ProductId})");

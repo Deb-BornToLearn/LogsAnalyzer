@@ -14,6 +14,7 @@ namespace LogsAnalyzer.Analyzers.Bookings.Parsers {
             public const string ROOT_ELEMENT = "UTSv_ProductTypeReservationRQ";
             public const string CLIENT_TRANSACTION_ID = "ClientTransactionId";
             public const string TIMESTAMP = "TimeStamp";
+            public const string PAYMENT_AMOUNT = "AmountPaid";
             public const string DISTRIBUTOR = "CompanyShortName";
             public const string CHANNEL_COMMISSION = "ChannelCommission";
             public const string PAYMENT_OPTION = "PaymentOption";
@@ -135,17 +136,16 @@ namespace LogsAnalyzer.Analyzers.Bookings.Parsers {
             var evPrefix = evNamespace + ":";
 
             var booking = new BookingAnalysis();
-            parseTransactionIdAndTimestamp(booking, xmlDoc);
+            parseHeaderData(booking, xmlDoc);
             parseProviderAndDistributor(booking, xmlDoc, nsMgr, evPrefix);
             parseProductAndExtras(booking, xmlDoc, nsMgr, evPrefix);
             parseCustomer(booking, xmlDoc, nsMgr, evPrefix);
             return booking;
         }
 
-        private void parseTransactionIdAndTimestamp(BookingAnalysis booking, XmlDocument xmlDoc) {
+        private void parseHeaderData(BookingAnalysis booking, XmlDocument xmlDoc) {
             booking.TransactionId = xmlDoc.DocumentElement.Attributes[XmlTokens.CLIENT_TRANSACTION_ID]?.Value ?? string.Empty;
             booking.Timestamp = xmlDoc.DocumentElement.Attributes[XmlTokens.TIMESTAMP]?.Value ?? string.Empty;
-
         }
         private void parseProviderAndDistributor(BookingAnalysis booking, XmlDocument xmlDoc, XmlNamespaceManager nsMgr, string nsPrefix) {
             var firstProviderNode = xmlDoc.SelectSingleNode($"//{nsPrefix}ProviderID_List/{nsPrefix}ID", nsMgr);
@@ -160,6 +160,7 @@ namespace LogsAnalyzer.Analyzers.Bookings.Parsers {
             var productTypeNode = xmlDoc.SelectSingleNode($"//{nsPrefix}ProductTypeRsrvs", nsMgr);
             booking.ChannelCommission = productTypeNode?.Attributes[XmlTokens.CHANNEL_COMMISSION]?.Value ?? string.Empty;
             booking.PaymentOption = productTypeNode?.Attributes[XmlTokens.PAYMENT_OPTION]?.Value ?? string.Empty;
+            booking.AmountPaid = productTypeNode?.Attributes[XmlTokens.PAYMENT_AMOUNT]?.Value ?? string.Empty;
 
             parseProduct(booking, productTypeNode, nsMgr, nsPrefix);
             parseExtras(booking, productTypeNode, nsMgr, nsPrefix);
