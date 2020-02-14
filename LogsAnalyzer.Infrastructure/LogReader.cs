@@ -70,7 +70,7 @@ namespace LogsAnalyzer.Infrastructure {
                     foreach (var analyzerChain in AnalyzerShortCircuitChains) { 
                         foreach(var analyzer in analyzerChain.Analyzers) {
                             if (analyze(analyzer, line, lineNumber, sourceName)){
-                                continue;
+                                break;
                             }
                         }
                     }

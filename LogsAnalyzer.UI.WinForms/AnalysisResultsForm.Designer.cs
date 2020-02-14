@@ -29,6 +29,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.analyzersList = new System.Windows.Forms.TreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.logFilesList = new System.Windows.Forms.CheckedListBox();
             this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -38,7 +39,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.formCaptionTextbox = new System.Windows.Forms.TextBox();
             this.wordWrapCheckbox = new System.Windows.Forms.CheckBox();
-            this.analyzersList = new System.Windows.Forms.TreeView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -56,6 +56,7 @@
             this.resultsTextbox.Location = new System.Drawing.Point(0, 0);
             this.resultsTextbox.Name = "resultsTextbox";
             this.resultsTextbox.ReadOnly = true;
+            this.resultsTextbox.ShowSelectionMargin = true;
             this.resultsTextbox.Size = new System.Drawing.Size(716, 216);
             this.resultsTextbox.TabIndex = 0;
             this.resultsTextbox.Text = "";
@@ -63,7 +64,7 @@
             // 
             // closeButton
             // 
-            this.closeButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.Location = new System.Drawing.Point(619, 396);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(102, 30);
@@ -74,7 +75,9 @@
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.Location = new System.Drawing.Point(12, 12);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -107,19 +110,28 @@
             this.tabPage1.Controls.Add(this.analyzersList);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(708, 119);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Analyzers";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // analyzersList
+            // 
+            this.analyzersList.CheckBoxes = true;
+            this.analyzersList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.analyzersList.Location = new System.Drawing.Point(3, 3);
+            this.analyzersList.Name = "analyzersList";
+            this.analyzersList.Size = new System.Drawing.Size(702, 113);
+            this.analyzersList.TabIndex = 0;
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.logFilesList);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage2.Size = new System.Drawing.Size(768, 132);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(708, 119);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Log files";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -131,7 +143,7 @@
             this.logFilesList.FormattingEnabled = true;
             this.logFilesList.Location = new System.Drawing.Point(3, 3);
             this.logFilesList.Name = "logFilesList";
-            this.logFilesList.Size = new System.Drawing.Size(762, 126);
+            this.logFilesList.Size = new System.Drawing.Size(702, 113);
             this.logFilesList.TabIndex = 0;
             // 
             // logFileListContextMenu
@@ -157,8 +169,8 @@
             this.tabPage3.Controls.Add(this.formCaptionTextbox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage3.Size = new System.Drawing.Size(768, 132);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(708, 119);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Options";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -191,7 +203,7 @@
             // 
             // wordWrapCheckbox
             // 
-            this.wordWrapCheckbox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.wordWrapCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.wordWrapCheckbox.AutoSize = true;
             this.wordWrapCheckbox.Location = new System.Drawing.Point(12, 396);
             this.wordWrapCheckbox.Name = "wordWrapCheckbox";
@@ -200,15 +212,6 @@
             this.wordWrapCheckbox.Text = "Word Wrap";
             this.wordWrapCheckbox.UseVisualStyleBackColor = true;
             this.wordWrapCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapCheckbox_CheckedChanged);
-            // 
-            // analyzersList
-            // 
-            this.analyzersList.CheckBoxes = true;
-            this.analyzersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.analyzersList.Location = new System.Drawing.Point(3, 3);
-            this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(702, 113);
-            this.analyzersList.TabIndex = 0;
             // 
             // AnalysisResultsForm
             // 
