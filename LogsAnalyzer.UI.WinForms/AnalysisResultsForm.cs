@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -57,7 +58,7 @@ namespace LogAnalyzer.UI.WinForms {
             var analyzerChains = new List<AnalyzerShortCircuitChain>();
             foreach (var chainConfig in analysisArgs.AnalyzerChainConfigurations) {
                 var analyzerChain = new AnalyzerShortCircuitChain(chainConfig.DisplayName);
-                var analyzerChainBuilder = new AnalyzersBuilder(chainConfig.AnalyzerConfigurations);
+                var analyzerChainBuilder = new AnalyzersBuilder(chainConfig.AnalyzerConfigurations.Where(ac => ac.Enabled).ToList());
                 analyzerChain.Analyzers.AddRange(analyzerChainBuilder.BuildAnalyzers());
                 analyzerChains.Add(analyzerChain);
             }
