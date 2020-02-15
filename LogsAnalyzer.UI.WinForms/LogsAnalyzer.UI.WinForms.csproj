@@ -53,6 +53,9 @@
     <Compile Include="AnalysisResultsForm.Designer.cs">
       <DependentUpon>AnalysisResultsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\BaseLogSourceListController.cs" />
+    <Compile Include="Controllers\LogSourceTreeViewController.cs" />
+    <Compile Include="Controllers\TreeViewAfterCheckController.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +106,9 @@
       <Project>{92523437-b5f4-42cd-aa74-12cbcfbb53e6}</Project>
       <Name>LogsAnalyzer.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LogFileCollection.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

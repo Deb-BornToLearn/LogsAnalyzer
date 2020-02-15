@@ -1,4 +1,5 @@
-﻿using LogAnalyzer.Infrastructure.Analysis;
+﻿using LogAnalyzer.Infrastructure;
+using LogAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure;
 using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Factory;
@@ -33,11 +34,11 @@ namespace LogAnalyzer.UI.WinForms {
 
         private AutoResetEvent _formShownEvent = new AutoResetEvent(false);
 
-        public AnalysisResultsForm(AnalysisArgs analysisArgs, List<string> logFiles) {
+        public AnalysisResultsForm(AnalysisArgs analysisArgs, LogSourceDefinition logSources) {
             InitializeComponent();
 
             AnalysisArgs = analysisArgs;
-            LogFiles = logFiles;
+            LogFiles = logSources.SourceFiles;
             Analyzers = buildAnalyzers(analysisArgs);
             AnalyzerChains = buildAnalyzerChains(analysisArgs);
 
