@@ -42,21 +42,39 @@ namespace LogAnalyzer.UI.WinForms.Controllers {
             return Path.GetDirectoryName(filename) == folderName;
         }
 
-        internal override void AddFolder(string folder) {
+        internal override void AddFolder(string folder, bool addFiles) {
             if (isFolderInList(folder)) return;
 
-            var filesInFolder = Directory.GetFiles(folder);
             var folderNode = createNode(folder, ItemType.Folder);
             ListView.Nodes.Add(folderNode);
 
-            foreach (var file in filesInFolder) {
-                var childFileNode = createNode(file, ItemType.File);
-                folderNode.Nodes.Add(childFileNode);
+            if (addFiles) {
+                var filesInFolder = Directory.GetFiles(folder);
+                foreach (var file in filesInFolder) {
+                    var childFileNode = createNode(file, ItemType.File);
+                    folderNode.Nodes.Add(childFileNode);
+                }
+                removeDescendantsInList(folderNode);
+            }
+            else {
+                moveDescendantsInList(folderNode);
             }
 
-            removeDescendantsInList(folderNode);
-
             folderNode.Expand();
+        }
+
+        private void moveDescendantsInList(TreeNode folderNode) {
+            List<TreeNode> nodesToMove = new List<TreeNode>();
+            foreach (TreeNode node in ListView.Nodes) {
+                if (isFileNode(node) && isDirectDescendantOf(node.Text, folderNode.Text)) {
+                    nodesToMove.Add(node);
+                }
+            }
+
+            nodesToMove.ForEach(n => {
+                ListView.Nodes.Remove(n);
+                folderNode.Nodes.Add(n);
+            });
         }
 
         private void removeDescendantsInList(TreeNode folderNode) {

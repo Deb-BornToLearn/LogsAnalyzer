@@ -31,7 +31,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.analyzersList = new System.Windows.Forms.TreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.logFilesList = new System.Windows.Forms.CheckedListBox();
             this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -39,6 +38,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.formCaptionTextbox = new System.Windows.Forms.TextBox();
             this.wordWrapCheckbox = new System.Windows.Forms.CheckBox();
+            this.logFilesList = new System.Windows.Forms.TreeView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -136,16 +136,6 @@
             this.tabPage2.Text = "Log files";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // logFilesList
-            // 
-            this.logFilesList.ContextMenuStrip = this.logFileListContextMenu;
-            this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logFilesList.FormattingEnabled = true;
-            this.logFilesList.Location = new System.Drawing.Point(3, 3);
-            this.logFilesList.Name = "logFilesList";
-            this.logFilesList.Size = new System.Drawing.Size(702, 113);
-            this.logFilesList.TabIndex = 0;
-            // 
             // logFileListContextMenu
             // 
             this.logFileListContextMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
@@ -213,6 +203,14 @@
             this.wordWrapCheckbox.UseVisualStyleBackColor = true;
             this.wordWrapCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapCheckbox_CheckedChanged);
             // 
+            // logFilesList
+            // 
+            this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logFilesList.Location = new System.Drawing.Point(3, 3);
+            this.logFilesList.Name = "logFilesList";
+            this.logFilesList.Size = new System.Drawing.Size(702, 113);
+            this.logFilesList.TabIndex = 0;
+            // 
             // AnalysisResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -248,7 +246,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.CheckedListBox logFilesList;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button setFormCaptionButton;
         private System.Windows.Forms.Label label1;
@@ -256,5 +253,6 @@
         private System.Windows.Forms.ContextMenuStrip logFileListContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderCommand;
         private System.Windows.Forms.TreeView analyzersList;
+        private System.Windows.Forms.TreeView logFilesList;
     }
 }

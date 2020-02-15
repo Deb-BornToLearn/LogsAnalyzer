@@ -1,5 +1,6 @@
 ﻿using LogAnalyzer.Infrastructure;
 using LogAnalyzer.Infrastructure.Analysis;
+using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure;
 using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Factory;
@@ -21,11 +22,14 @@ namespace LogAnalyzer.UI.WinForms {
             AnalyzingLogsInProgress
         }
 
+        private BaseLogSourceListController<TreeView> _logSourceListController;
+
         public List<BaseLogAnalyzer> Analyzers;
         public List<AnalyzerShortCircuitChain> AnalyzerChains;
 
         public readonly AnalysisArgs AnalysisArgs;
         public readonly List<string> LogFiles;
+        public readonly LogSourceDefinition LogSources;
 
         delegate void enableControlCallback(Control control, bool enabled);
         delegate void AppendTextCallback(TextBoxBase textbox, string message);
@@ -36,9 +40,13 @@ namespace LogAnalyzer.UI.WinForms {
 
         public AnalysisResultsForm(AnalysisArgs analysisArgs, LogSourceDefinition logSources) {
             InitializeComponent();
+            
+            _logSourceListController = new LogSourceTreeViewController<TreeView>(logFilesList);
 
             AnalysisArgs = analysisArgs;
             LogFiles = logSources.SourceFiles;
+            LogSources = logSources;
+
             Analyzers = buildAnalyzers(analysisArgs);
             AnalyzerChains = buildAnalyzerChains(analysisArgs);
 
@@ -125,9 +133,13 @@ namespace LogAnalyzer.UI.WinForms {
                 analyzersList.Nodes.Add(mainNode);
             }
 
-            foreach (var file in LogFiles) {
-                logFilesList.Items.Add(file, true);
-            }
+            LogFiles.ForEach(f => _logSourceListController.AddFile(f));
+            LogSources.SourceFolders.ForEach(f => _logSourceListController.AddFolder(f, false));
+
+            //foreach (var file in LogFiles) {
+            //    _logSourceListController.AddFile(file);
+            //}
+
         }
 
         private void AnalyzeLogs() {
@@ -213,12 +225,12 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void logFileListContextMenu_Opened(object sender, EventArgs e) {
-            openContainingFolderCommand.Enabled = logFilesList.SelectedIndices.Count > 0;
+            openContainingFolderCommand.Enabled = logFilesList.SelectedNode != null;
         }
 
         private void openContainingFolderCommand_Click(object sender, EventArgs e) {
-            foreach (var item in logFilesList.SelectedItems) {
-                var folder = Path.GetDirectoryName(item as string);
+            if (logFilesList.SelectedNode != null) { 
+                var folder = Path.GetDirectoryName(logFilesList.SelectedNode.Text);
                 Process.Start("explorer.exe", folder);
             }
         }

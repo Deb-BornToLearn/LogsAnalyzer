@@ -169,7 +169,7 @@ namespace LogAnalyzer.UI.WinForms {
             var selectFolderDialog = createOpenFolderDialog();
             if (selectFolderDialog.ShowDialog() == DialogResult.OK) {
                 var folder = Path.GetDirectoryName(selectFolderDialog.FileName);
-                _logSourceListController.AddFolder(folder);
+                _logSourceListController.AddFolder(folder, true);
             }
         }
 
