@@ -1,7 +1,4 @@
 ﻿using LogAnalyzer.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace LogAnalyzer.UI.WinForms.Controllers {
     public abstract class BaseLogSourceListController<T> {

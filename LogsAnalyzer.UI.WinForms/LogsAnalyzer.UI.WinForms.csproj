@@ -53,6 +53,8 @@
     <Compile Include="AnalysisResultsForm.Designer.cs">
       <DependentUpon>AnalysisResultsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\AnalyzerListTreeViewController.cs" />
+    <Compile Include="Controllers\BaseLogAnalyzerListController.cs" />
     <Compile Include="Controllers\BaseLogSourceListController.cs" />
     <Compile Include="Controllers\LogSourceTreeViewController.cs" />
     <Compile Include="Controllers\TreeViewAfterCheckController.cs" />

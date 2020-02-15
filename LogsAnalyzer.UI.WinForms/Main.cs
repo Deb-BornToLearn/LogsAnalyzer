@@ -1,5 +1,4 @@
-﻿using LogAnalyzer.Infrastructure.Configuration;
-using LogAnalyzer.UI.WinForms.Controllers;
+﻿using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Configuration;
 using LogsAnalyzer.Infrastructure.Factory;
@@ -14,41 +13,32 @@ namespace LogAnalyzer.UI.WinForms {
     public partial class Main : Form {
 
         private BaseLogSourceListController<TreeView> _logSourceListController;
+        private BaseLogAnalyzerListController<TreeView> _logAnalyzerListController;
         private TreeViewAfterCheckController _treeviewAfterCheckController;
+
         public Main() {
             InitializeComponent();
-            loadAnalyzersToList();
             _logSourceListController = new LogSourceTreeViewController<TreeView>(logFilesList);
+            _logAnalyzerListController = new LogAnalyzerListTreeViewController<TreeView>(analyzersList);
             _treeviewAfterCheckController = new TreeViewAfterCheckController();
+
+            loadAnalyzersToList();
         }
 
         private void loadAnalyzersToList() {
+            var analyzersConfigurationSource = loadConfigurationSource();
+            var analyzerConfigs = analyzersConfigurationSource.GetAnalyzerConfigurations();
+            _logAnalyzerListController.AddAnalyzers(analyzerConfigs);
+
+            var analyzerChainConfigs = analyzersConfigurationSource.GetAnalyzerChainConfigurations();
+            _logAnalyzerListController.AddAnalyzerChains(analyzerChainConfigs);
+        }
+
+        private IConfigurationSource loadConfigurationSource() {
             var configFile = Path.Combine(Application.StartupPath, "LogAnalyzer.config");
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(configFile);
-            var analyzersConfigurationSource = new AnalyzerConfigurationXmlSource(xmlDoc);
-            var analyzerConfigs = analyzersConfigurationSource.GetAnalyzerConfigurations();
-            foreach (var analyzerConfig in analyzerConfigs) {
-                var node = new TreeNode(analyzerConfig.DisplayName);
-                node.Tag = analyzerConfig;
-                node.Checked = true;
-                analyzersList.Nodes.Add(node);
-            }
-
-            var analyzerChainConfigs = analyzersConfigurationSource.GetAnalyzerChainConfigurations();
-            foreach (var analyzerChainConfig in analyzerChainConfigs) {
-                TreeNode node = new TreeNode(analyzerChainConfig.DisplayName);
-                node.Tag = analyzerChainConfig;
-                node.Checked = true;
-                node.Expand();
-                foreach (var analyzerConfig in analyzerChainConfig.AnalyzerConfigurations) {
-                    var subNode = new TreeNode(analyzerConfig.DisplayName);
-                    subNode.Tag = analyzerConfig;
-                    subNode.Checked = true;
-                    node.Nodes.Add(subNode);
-                }
-                analyzersList.Nodes.Add(node);
-            }
+            return new AnalyzerConfigurationXmlSource(xmlDoc);
         }
 
         private void addLogFileMenuItem_Click(object sender, EventArgs e) {
@@ -95,69 +85,33 @@ namespace LogAnalyzer.UI.WinForms {
                 return;
             }
 
-            if (!isAnyAnalyzerSelected(analyzersList)) {
+            if (!_logAnalyzerListController.IsAnyAnalyzerSelected()) {
                 MessageBox.Show("Please check one or more analyzers to run",
                                 "Select analyzer(s)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            AnalysisArgs analyzerConfigurations = getSelectedAnalyzers();
+            AnalysisArgs analysisArgs = _logAnalyzerListController.BuildAnalysisArgs();
             var logSources = _logSourceListController.GetSelectedLogSources();
-            var resultsForm = new AnalysisResultsForm(analyzerConfigurations, logSources);
+            var resultsForm = new AnalysisResultsForm(analysisArgs, logSources);
             resultsForm.Show();
-        }
-
-        private bool isAnyAnalyzerSelected(TreeView tvw) {
-            foreach (TreeNode node in tvw.Nodes) {
-                if (node.Checked) return true;
-            }
-            return false;
-        }
-
-        private AnalysisArgs getSelectedAnalyzers() {
-            var analysisArgs = new AnalysisArgs();
-            List<AnalyzerConfiguration> selectedAnalyzers = new List<AnalyzerConfiguration>();
-            foreach (TreeNode item in analyzersList.Nodes) {
-                if (item.Checked) {
-                    if (item.Tag.GetType() == typeof(AnalyzerConfiguration)) {
-                        analysisArgs.AnalyzerConfigurations.Add(item.Tag as AnalyzerConfiguration);
-                    }
-                    else if (item.Tag.GetType() == typeof(AnalyzerChainConfiguration)) {
-                        var analyzerChainConfig = (AnalyzerChainConfiguration)item.Tag;
-                        foreach (TreeNode subNode in item.Nodes) {
-                            var analyzerConfig = (AnalyzerConfiguration)subNode.Tag;
-                            analyzerConfig.Enabled = subNode.Checked;
-                        }
-                        analysisArgs.AnalyzerChainConfigurations.Add(analyzerChainConfig);
-                    }
-                }
-            }
-            return analysisArgs;
         }
 
 
         private List<BaseLogAnalyzer> loadAnalyzers() {
-            var analyzerConfigs = new List<AnalyzerConfiguration>();
-            foreach (TreeNode node in analyzersList.Nodes) {
-                if (node.Checked) {
-                    analyzerConfigs.Add((AnalyzerConfiguration)node.Tag);
-                }
-            }
+            var analyzerConfigs = _logAnalyzerListController.GetSelectedAnalyzerConfigurations();
             if (!analyzerConfigs.Any()) {
                 MessageBox.Show("Please select one or more log analyzers to run");
                 return null;
             }
 
             var analyzerBuilder = new AnalyzersBuilder(analyzerConfigs);
-
             return analyzerBuilder.BuildAnalyzers();
         }
 
         private void removeAllLogsMenuItem_Click(object sender, EventArgs e) {
             _logSourceListController.RemoveAllItems();
         }
-
-
 
         private void saveSelectedCollectionFileMenuItem_Click(object sender, EventArgs e) {
             //foreach (string selectedFile in logFilesList.SelectedItems) { 

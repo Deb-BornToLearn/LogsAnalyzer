@@ -23,12 +23,12 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private BaseLogSourceListController<TreeView> _logSourceListController;
+        private BaseLogAnalyzerListController<TreeView> _logAnalyzerListController;
 
         public List<BaseLogAnalyzer> Analyzers;
         public List<AnalyzerShortCircuitChain> AnalyzerChains;
 
         public readonly AnalysisArgs AnalysisArgs;
-        public readonly List<string> LogFiles;
         public readonly LogSourceDefinition LogSources;
 
         delegate void enableControlCallback(Control control, bool enabled);
@@ -40,11 +40,11 @@ namespace LogAnalyzer.UI.WinForms {
 
         public AnalysisResultsForm(AnalysisArgs analysisArgs, LogSourceDefinition logSources) {
             InitializeComponent();
-            
+
             _logSourceListController = new LogSourceTreeViewController<TreeView>(logFilesList);
+            _logAnalyzerListController = new LogAnalyzerListTreeViewController<TreeView>(analyzersList);
 
             AnalysisArgs = analysisArgs;
-            LogFiles = logSources.SourceFiles;
             LogSources = logSources;
 
             Analyzers = buildAnalyzers(analysisArgs);
@@ -113,33 +113,15 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void populateLists() {
-            foreach (var analyzerConfig in AnalysisArgs.AnalyzerConfigurations) {
-                TreeNode n = new TreeNode(analyzerConfig.DisplayName); ;
-                n.Checked = true;
-                n.Tag = analyzerConfig;
-                analyzersList.Nodes.Add(n);
-            }
-            foreach (var analyzerChainConfig in AnalysisArgs.AnalyzerChainConfigurations) {
-                TreeNode mainNode = new TreeNode(analyzerChainConfig.DisplayName);
-                mainNode.Checked = true;
-                mainNode.Tag = analyzerChainConfig;
-                mainNode.Expand();
-                foreach (var analyzerConfig in analyzerChainConfig.AnalyzerConfigurations) {
-                    TreeNode subNode = new TreeNode(analyzerConfig.DisplayName);
-                    subNode.Tag = analyzerConfig;
-                    subNode.Checked = analyzerConfig.Enabled;
-                    mainNode.Nodes.Add(subNode);
-                }
-                analyzersList.Nodes.Add(mainNode);
-            }
+            _logAnalyzerListController.AddAnalyzers(AnalysisArgs.AnalyzerConfigurations);
+            _logAnalyzerListController.AddAnalyzerChains(AnalysisArgs.AnalyzerChainConfigurations);
 
-            LogFiles.ForEach(f => _logSourceListController.AddFile(f));
+            LogSources.SourceFiles.ForEach(f => _logSourceListController.AddFile(f));
+            addSourceFoldersWithoutGettingFilesFromFileSystem();
+        }
+
+        private void addSourceFoldersWithoutGettingFilesFromFileSystem() {
             LogSources.SourceFolders.ForEach(f => _logSourceListController.AddFolder(f, false));
-
-            //foreach (var file in LogFiles) {
-            //    _logSourceListController.AddFile(file);
-            //}
-
         }
 
         private void AnalyzeLogs() {
@@ -151,8 +133,8 @@ namespace LogAnalyzer.UI.WinForms {
 
             var logReader = new LogReader(Analyzers, AnalyzerChains);
             logReader.OnReadProgress += LogReader_OnReadProgress;
-            int counter = 1, total = LogFiles.Count;
-            foreach (string file in LogFiles) {
+            int counter = 1, total = LogSources.SourceFiles.Count;
+            foreach (string file in LogSources.SourceFiles) {
                 try {
                     appendText(resultsTextbox, $"Reading logs from {file} ({counter}/{total}) ...{Environment.NewLine}");
                     using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read)) {
@@ -229,7 +211,8 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void openContainingFolderCommand_Click(object sender, EventArgs e) {
-            if (logFilesList.SelectedNode != null) { 
+            //_logSourceListController.GetSelectedText() ???
+            if (logFilesList.SelectedNode != null) {
                 var folder = Path.GetDirectoryName(logFilesList.SelectedNode.Text);
                 Process.Start("explorer.exe", folder);
             }
