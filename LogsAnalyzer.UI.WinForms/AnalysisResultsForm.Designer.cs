@@ -31,14 +31,15 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.analyzersList = new System.Windows.Forms.TreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
+            this.logFilesList = new System.Windows.Forms.TreeView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.setFormCaptionButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.formCaptionTextbox = new System.Windows.Forms.TextBox();
+            this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
             this.wordWrapCheckbox = new System.Windows.Forms.CheckBox();
-            this.logFilesList = new System.Windows.Forms.TreeView();
+            this.resultsTreeView = new System.Windows.Forms.TreeView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -46,8 +47,8 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.logFileListContextMenu.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.logFileListContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // resultsTextbox
@@ -57,7 +58,7 @@
             this.resultsTextbox.Name = "resultsTextbox";
             this.resultsTextbox.ReadOnly = true;
             this.resultsTextbox.ShowSelectionMargin = true;
-            this.resultsTextbox.Size = new System.Drawing.Size(716, 216);
+            this.resultsTextbox.Size = new System.Drawing.Size(716, 130);
             this.resultsTextbox.TabIndex = 0;
             this.resultsTextbox.Text = "";
             this.resultsTextbox.WordWrap = false;
@@ -89,8 +90,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.resultsTextbox);
-            this.splitContainer1.Size = new System.Drawing.Size(716, 365);
-            this.splitContainer1.SplitterDistance = 145;
+            this.splitContainer1.Size = new System.Drawing.Size(716, 221);
+            this.splitContainer1.SplitterDistance = 87;
             this.splitContainer1.TabIndex = 3;
             // 
             // tabControl1
@@ -102,7 +103,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(716, 145);
+            this.tabControl1.Size = new System.Drawing.Size(716, 87);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
@@ -111,7 +112,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(708, 119);
+            this.tabPage1.Size = new System.Drawing.Size(708, 61);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Analyzers";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -122,7 +123,7 @@
             this.analyzersList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.analyzersList.Location = new System.Drawing.Point(3, 3);
             this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(702, 113);
+            this.analyzersList.Size = new System.Drawing.Size(702, 55);
             this.analyzersList.TabIndex = 0;
             // 
             // tabPage2
@@ -136,21 +137,13 @@
             this.tabPage2.Text = "Log files";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // logFileListContextMenu
+            // logFilesList
             // 
-            this.logFileListContextMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
-            this.logFileListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openContainingFolderCommand});
-            this.logFileListContextMenu.Name = "logFileListContextMenu";
-            this.logFileListContextMenu.Size = new System.Drawing.Size(198, 26);
-            this.logFileListContextMenu.Opened += new System.EventHandler(this.logFileListContextMenu_Opened);
-            // 
-            // openContainingFolderCommand
-            // 
-            this.openContainingFolderCommand.Name = "openContainingFolderCommand";
-            this.openContainingFolderCommand.Size = new System.Drawing.Size(197, 22);
-            this.openContainingFolderCommand.Text = "Open containing folder";
-            this.openContainingFolderCommand.Click += new System.EventHandler(this.openContainingFolderCommand_Click);
+            this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logFilesList.Location = new System.Drawing.Point(3, 3);
+            this.logFilesList.Name = "logFilesList";
+            this.logFilesList.Size = new System.Drawing.Size(702, 113);
+            this.logFilesList.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -191,6 +184,22 @@
             this.formCaptionTextbox.Size = new System.Drawing.Size(264, 20);
             this.formCaptionTextbox.TabIndex = 0;
             // 
+            // logFileListContextMenu
+            // 
+            this.logFileListContextMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
+            this.logFileListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openContainingFolderCommand});
+            this.logFileListContextMenu.Name = "logFileListContextMenu";
+            this.logFileListContextMenu.Size = new System.Drawing.Size(198, 26);
+            this.logFileListContextMenu.Opened += new System.EventHandler(this.logFileListContextMenu_Opened);
+            // 
+            // openContainingFolderCommand
+            // 
+            this.openContainingFolderCommand.Name = "openContainingFolderCommand";
+            this.openContainingFolderCommand.Size = new System.Drawing.Size(197, 22);
+            this.openContainingFolderCommand.Text = "Open containing folder";
+            this.openContainingFolderCommand.Click += new System.EventHandler(this.openContainingFolderCommand_Click);
+            // 
             // wordWrapCheckbox
             // 
             this.wordWrapCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -203,19 +212,19 @@
             this.wordWrapCheckbox.UseVisualStyleBackColor = true;
             this.wordWrapCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapCheckbox_CheckedChanged);
             // 
-            // logFilesList
+            // resultsTreeView
             // 
-            this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logFilesList.Location = new System.Drawing.Point(3, 3);
-            this.logFilesList.Name = "logFilesList";
-            this.logFilesList.Size = new System.Drawing.Size(702, 113);
-            this.logFilesList.TabIndex = 0;
+            this.resultsTreeView.Location = new System.Drawing.Point(12, 250);
+            this.resultsTreeView.Name = "resultsTreeView";
+            this.resultsTreeView.Size = new System.Drawing.Size(709, 124);
+            this.resultsTreeView.TabIndex = 5;
             // 
             // AnalysisResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(740, 438);
+            this.Controls.Add(this.resultsTreeView);
             this.Controls.Add(this.wordWrapCheckbox);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.closeButton);
@@ -229,9 +238,9 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.logFileListContextMenu.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.logFileListContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -254,5 +263,6 @@
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderCommand;
         private System.Windows.Forms.TreeView analyzersList;
         private System.Windows.Forms.TreeView logFilesList;
+        private System.Windows.Forms.TreeView resultsTreeView;
     }
 }

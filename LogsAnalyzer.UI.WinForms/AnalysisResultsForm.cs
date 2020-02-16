@@ -4,6 +4,7 @@ using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure;
 using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Factory;
+using LogsAnalyzer.Renderers.WinForms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -153,6 +154,12 @@ namespace LogAnalyzer.UI.WinForms {
             AnalyzerChains.ForEach(c => c.Analyzers.ForEach(a => appendText(resultsTextbox, $"{a.AnalysesToString()}{Environment.NewLine}")));
 
             scrollToTop(resultsTextbox);
+
+            foreach (var a in Analyzers) {
+                foreach (var r in a.Results) {
+                    Debug.Print(r.GetType().ToString());
+                }
+            }
 
             FormState = FormStateEnum.Ready;
         }

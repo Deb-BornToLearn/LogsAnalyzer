@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using LogAnalyzer.Infrastructure.Analysis;
+using System.Collections.Generic;
 using System.Text;
 
 namespace LogsAnalyzer.Infrastructure.Analysis {
     public abstract class BaseLogAnalyzer : ILogAnalyzer {
-        public List<AnalysisResult> Results { get; protected set; }
+        public List<BaseAnalysisResult> Results { get; protected set; }
         public BaseLogAnalyzer() {
-            Results = new List<AnalysisResult>();
+            Results = new List<BaseAnalysisResult>();
         }
         public abstract bool Analyze(string lineText, long lineNumber, string sourceName);
 

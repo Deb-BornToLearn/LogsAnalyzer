@@ -26,6 +26,18 @@ namespace LogAnalyzer.Analyzers.Bookings.Models {
         public string StartDate;
         public string EndDate;
 
+        public string StartDateUTC {
+            get {
+                return utcDatetimeToString(StartDate);
+            }
+        }
+
+        public string EndDateUTC {
+            get {
+                return utcDatetimeToString(EndDate);
+            }
+        }
+
         public string PrimaryProvider;
         public int ProviderCount;
 

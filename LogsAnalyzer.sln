@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogsAnalyzer.UI.WinForms", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogsAnalyzer.Tests", "LogsAnalyzer.Tests\LogsAnalyzer.Tests.csproj", "{037960C0-64CB-4286-9E7F-14A35F6AF28E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogsAnalyzer.Renderers.WinForms", "LogsAnalyzer.Renderers.WinForms\LogsAnalyzer.Renderers.WinForms.csproj", "{83FD6C93-5072-4675-8FE1-F760EA66D77F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{037960C0-64CB-4286-9E7F-14A35F6AF28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{037960C0-64CB-4286-9E7F-14A35F6AF28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{037960C0-64CB-4286-9E7F-14A35F6AF28E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83FD6C93-5072-4675-8FE1-F760EA66D77F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83FD6C93-5072-4675-8FE1-F760EA66D77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83FD6C93-5072-4675-8FE1-F760EA66D77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83FD6C93-5072-4675-8FE1-F760EA66D77F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
