@@ -92,28 +92,6 @@ namespace LogAnalyzer.UI.WinForms.Controllers {
             return ListView.Nodes.OfType<TreeNode>().Any(n => n.Text == folder);
         }
 
-        internal override LogSourceDefinition GetSelectedLogSources() {
-            var logSourceDefinition = new LogSourceDefinition();
-            foreach (TreeNode node in ListView.Nodes) {
-                if (node.Checked && isFileNode(node)) {
-                    logSourceDefinition.SourceFiles.Add(node.Text);
-                }
-                if (node.Checked && isFolderNode(node)) {
-                    var hasSelectedFile = false;
-                    foreach (TreeNode fileNode in node.Nodes) {
-                        if (fileNode.Checked) {
-                            hasSelectedFile = true;
-                            logSourceDefinition.SourceFiles.Add(fileNode.Text);
-                        }
-                    }
-                    if (hasSelectedFile) {
-                        logSourceDefinition.SourceFolders.Add(node.Text);
-                    }
-                }
-            }
-            return logSourceDefinition;
-        }
-
         internal override bool HasFile() {
             return ListView.Nodes.Count > 0;
         }
@@ -170,6 +148,33 @@ namespace LogAnalyzer.UI.WinForms.Controllers {
                 Checked = true,
                 Tag = itemType
             };
+        }
+
+        internal override LogSourceDefinition BuildLogSourceDefinition() {
+            return buildLogSourceDefinition(false);
+        }
+
+        internal override LogSourceDefinition BuildLogSourceDefinitionFromSelection() {
+            return buildLogSourceDefinition(true);
+        }
+        private LogSourceDefinition buildLogSourceDefinition(bool selectedOnly) {
+            var logSourceDefinition = new LogSourceDefinition();
+            foreach (TreeNode node in ListView.Nodes) {
+                if (selectedOnly && !node.Checked) continue;
+
+                if (isFileNode(node)) {
+                    logSourceDefinition.SourceFiles.Add(node.Text);
+                }
+                else if (isFolderNode(node)) {
+                    logSourceDefinition.SourceFolders.Add(node.Text);
+                }
+            }
+            return logSourceDefinition;
+        }
+
+        internal override void AddLogSourceDefinition(LogSourceDefinition logSourceDefinition) {
+            logSourceDefinition.SourceFiles.ForEach(f => AddFile(f));
+            logSourceDefinition.SourceFolders.ForEach(f => AddFolder(f, true));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using LogAnalyzer.UI.WinForms.Controllers;
+﻿using LogAnalyzer.Infrastructure;
+using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Configuration;
 using LogsAnalyzer.Infrastructure.Factory;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace LogAnalyzer.UI.WinForms {
     public partial class Main : Form {
@@ -42,10 +44,12 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void addLogFileMenuItem_Click(object sender, EventArgs e) {
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
+            var openFileDialog = new OpenFileDialog {
+                Multiselect = true,
+                FilterIndex = 2
+            };
 
-            openFileDialog.Filter = "All files (*.*)|*.*|Log files (*.log)|*.log|Text files (*.txt)|*.txt";
+            openFileDialog.Filter = "All files (*.*)|*.*|Log files (*.log)|*.log*|Text files (*.txt)|*.txt";
             var result = openFileDialog.ShowDialog();
             if (result == DialogResult.OK) {
                 foreach (var filename in openFileDialog.FileNames) {
@@ -57,7 +61,6 @@ namespace LogAnalyzer.UI.WinForms {
                     runAnalysis();
                 }
             }
-
         }
 
         private void logFilesListMenu_Opened(object sender, EventArgs e) {
@@ -92,7 +95,7 @@ namespace LogAnalyzer.UI.WinForms {
             }
 
             AnalysisArgs analysisArgs = _logAnalyzerListController.BuildAnalysisArgs();
-            var logSources = _logSourceListController.GetSelectedLogSources();
+            var logSources = _logSourceListController.BuildLogSourceDefinitionFromSelection();
             var resultsForm = new AnalysisResultsForm(analysisArgs, logSources);
             resultsForm.Show();
         }
@@ -113,11 +116,7 @@ namespace LogAnalyzer.UI.WinForms {
             _logSourceListController.RemoveAllItems();
         }
 
-        private void saveSelectedCollectionFileMenuItem_Click(object sender, EventArgs e) {
-            //foreach (string selectedFile in logFilesList.SelectedItems) { 
 
-            //}
-        }
 
         private void addFolderMenuItem_Click(object sender, EventArgs e) {
             var selectFolderDialog = createOpenFolderDialog();
@@ -142,6 +141,53 @@ namespace LogAnalyzer.UI.WinForms {
 
         private void analyzersList_AfterCheck(object sender, TreeViewEventArgs e) {
             _treeviewAfterCheckController.OnAfterCheck(sender, e);
+        }
+        private void saveSelectedCollectionFileMenuItem_Click(object sender, EventArgs e) {
+            createLogDefinitionFile(_logSourceListController.BuildLogSourceDefinitionFromSelection);
+        }
+
+        private void saveAllToCollectionMenuItem_Click(object sender, EventArgs e) {
+            createLogDefinitionFile(_logSourceListController.BuildLogSourceDefinition);
+        }
+
+        private void createLogDefinitionFile(Func<LogSourceDefinition> buildLogSourceDefinitionFunc) {
+            var openFileDialog = new OpenFileDialog {
+                CheckFileExists = false,
+                FileName = "New Log Definition.xml"
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                LogSourceDefinition logSourceDefinition = buildLogSourceDefinitionFunc();
+                serializeLogSourceDefinition(logSourceDefinition, openFileDialog.FileName);
+            }
+        }
+
+        private void serializeLogSourceDefinition(LogSourceDefinition logSourceDefinition, string filename) {
+            XmlSerializer serializer = new XmlSerializer(typeof(LogSourceDefinition));
+            StreamWriter writer = new StreamWriter(filename);
+            serializer.Serialize(writer, logSourceDefinition);
+            writer.Close();
+        }
+
+        private void addLogsCollectionFileMenuItem_Click(object sender, EventArgs e) {
+            var openFileDialog = new OpenFileDialog {
+                Filter = "All files (*.*)|*.*|Log definition files (*.xml)|*.xml",
+                FilterIndex = 2
+            };
+            var result = openFileDialog.ShowDialog();
+            if (result == DialogResult.OK) {
+                var serializer = new XmlSerializer(typeof(LogSourceDefinition));
+                var fileStream = new FileStream(openFileDialog.FileName, FileMode.Open);
+                LogSourceDefinition logDefinition = null;
+                try {
+                    logDefinition = (LogSourceDefinition)serializer.Deserialize(fileStream);
+                    _logSourceListController.AddLogSourceDefinition(logDefinition);
+                }
+                catch (Exception exc) {
+                    MessageBox.Show($"File {openFileDialog.FileName} is not a valid log source definition file. {exc.Message}.",
+                                     "Invalid log source definition file", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+            }
         }
     }
 }

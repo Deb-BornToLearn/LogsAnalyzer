@@ -42,6 +42,7 @@ namespace LogsAnalyzer.Infrastructure.Configuration {
             setTypeActivationName(analyzerConfig, analyzerNode);
             setDisplayName(analyzerConfig, analyzerNode);
             setCtorArgs(analyzerConfig, analyzerNode);
+            analyzerConfig.Enabled = true;
             return analyzerConfig;
         }
 

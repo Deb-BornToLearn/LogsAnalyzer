@@ -9,12 +9,14 @@ namespace LogAnalyzer.UI.WinForms.Controllers {
         }
 
         public abstract void AddFile(string filename);
+        internal abstract void AddFolder(string folder, bool addFiles);
+        internal abstract void AddLogSourceDefinition(LogSourceDefinition logDefinition);
         internal abstract bool HasFile();
         internal abstract bool HasSelectedFile();
         internal abstract void RemoveSelectedItems();
-        internal abstract LogSourceDefinition GetSelectedLogSources();
         internal abstract void RemoveAllItems();
-        internal abstract void AddFolder(string folder, bool addFiles);
+        internal abstract LogSourceDefinition BuildLogSourceDefinition();
+        internal abstract LogSourceDefinition BuildLogSourceDefinitionFromSelection();
     }
 
     public enum ItemType {
