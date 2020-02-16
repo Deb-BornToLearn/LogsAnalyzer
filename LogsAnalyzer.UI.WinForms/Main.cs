@@ -101,7 +101,7 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
 
-        private List<BaseLogAnalyzer> loadAnalyzers() {
+        private List<ILogAnalyzer> loadAnalyzers() {
             var analyzerConfigs = _logAnalyzerListController.GetSelectedAnalyzerConfigurations();
             if (!analyzerConfigs.Any()) {
                 MessageBox.Show("Please select one or more log analyzers to run");

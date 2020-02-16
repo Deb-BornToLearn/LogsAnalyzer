@@ -4,9 +4,9 @@ using System.Text;
 
 namespace LogsAnalyzer.Infrastructure.Analysis {
     public abstract class BaseLogAnalyzer : ILogAnalyzer {
-        public List<BaseAnalysisResult> Results { get; protected set; }
+        public virtual List<BaseAnalysisResult> Results { get; }
         public BaseLogAnalyzer() {
-            Results = new List<BaseAnalysisResult>();
+        
         }
         public abstract bool Analyze(string lineText, long lineNumber, string sourceName);
 

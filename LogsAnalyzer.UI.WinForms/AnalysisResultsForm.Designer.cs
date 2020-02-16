@@ -40,6 +40,8 @@
             this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
             this.wordWrapCheckbox = new System.Windows.Forms.CheckBox();
             this.resultsTreeView = new System.Windows.Forms.TreeView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.filterButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -58,7 +60,7 @@
             this.resultsTextbox.Name = "resultsTextbox";
             this.resultsTextbox.ReadOnly = true;
             this.resultsTextbox.ShowSelectionMargin = true;
-            this.resultsTextbox.Size = new System.Drawing.Size(716, 130);
+            this.resultsTextbox.Size = new System.Drawing.Size(716, 54);
             this.resultsTextbox.TabIndex = 0;
             this.resultsTextbox.Text = "";
             this.resultsTextbox.WordWrap = false;
@@ -90,8 +92,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.resultsTextbox);
-            this.splitContainer1.Size = new System.Drawing.Size(716, 221);
-            this.splitContainer1.SplitterDistance = 87;
+            this.splitContainer1.Size = new System.Drawing.Size(716, 146);
+            this.splitContainer1.SplitterDistance = 88;
             this.splitContainer1.TabIndex = 3;
             // 
             // tabControl1
@@ -103,7 +105,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(716, 87);
+            this.tabControl1.Size = new System.Drawing.Size(716, 88);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
@@ -112,7 +114,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(708, 61);
+            this.tabPage1.Size = new System.Drawing.Size(708, 62);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Analyzers";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -123,7 +125,7 @@
             this.analyzersList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.analyzersList.Location = new System.Drawing.Point(3, 3);
             this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(702, 55);
+            this.analyzersList.Size = new System.Drawing.Size(702, 56);
             this.analyzersList.TabIndex = 0;
             // 
             // tabPage2
@@ -132,7 +134,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(708, 119);
+            this.tabPage2.Size = new System.Drawing.Size(708, 61);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Log files";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -142,7 +144,7 @@
             this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logFilesList.Location = new System.Drawing.Point(3, 3);
             this.logFilesList.Name = "logFilesList";
-            this.logFilesList.Size = new System.Drawing.Size(702, 113);
+            this.logFilesList.Size = new System.Drawing.Size(702, 55);
             this.logFilesList.TabIndex = 0;
             // 
             // tabPage3
@@ -153,7 +155,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(708, 119);
+            this.tabPage3.Size = new System.Drawing.Size(708, 61);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Options";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -214,16 +216,35 @@
             // 
             // resultsTreeView
             // 
-            this.resultsTreeView.Location = new System.Drawing.Point(12, 250);
+            this.resultsTreeView.Location = new System.Drawing.Point(12, 192);
             this.resultsTreeView.Name = "resultsTreeView";
-            this.resultsTreeView.Size = new System.Drawing.Size(709, 124);
+            this.resultsTreeView.Size = new System.Drawing.Size(709, 169);
             this.resultsTreeView.TabIndex = 5;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(12, 165);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(195, 20);
+            this.textBox1.TabIndex = 6;
+            // 
+            // filterButton
+            // 
+            this.filterButton.Location = new System.Drawing.Point(213, 163);
+            this.filterButton.Name = "filterButton";
+            this.filterButton.Size = new System.Drawing.Size(75, 23);
+            this.filterButton.TabIndex = 7;
+            this.filterButton.Text = "Filter";
+            this.filterButton.UseVisualStyleBackColor = true;
+            this.filterButton.Click += new System.EventHandler(this.filterButton_Click);
             // 
             // AnalysisResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(740, 438);
+            this.Controls.Add(this.filterButton);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.resultsTreeView);
             this.Controls.Add(this.wordWrapCheckbox);
             this.Controls.Add(this.splitContainer1);
@@ -264,5 +285,7 @@
         private System.Windows.Forms.TreeView analyzersList;
         private System.Windows.Forms.TreeView logFilesList;
         private System.Windows.Forms.TreeView resultsTreeView;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button filterButton;
     }
 }

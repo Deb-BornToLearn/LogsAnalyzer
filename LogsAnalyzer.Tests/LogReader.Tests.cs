@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using LogAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure;
 using LogsAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure.Factory;
 using LogsAnalyzer.Tests.Mocks.LogAnalyzers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,9 +15,9 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldCallBeginReadAllOfAnalyzersBeforeReadingLogs() {
             var mockAnalyzer = new MockAnalyzer();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
-            var logReader = new LogReader(analyzers);   
+            var logReader = new LogReader(analyzers);
 
             using (var stream = toStream("This is a test")) {
                 logReader.ReadSource("source1", stream);
@@ -27,7 +29,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldCallEndReadAllOfAnalyzersAfterReadingAllLogs() {
             var mockAnalyzer = new MockAnalyzer();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -43,7 +45,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldCallBeginReadOfAnalyzersBeforeAnalyzing() {
             var mockAnalyzer = new MockAnalyzer();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -57,7 +59,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldCallEndReadOfAnalyzersAfterReadingSource() {
             var mockAnalyzer = new MockAnalyzer();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -71,7 +73,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldReadAllLinesFromSourceAndPassCorrectLineNumberToAnalyzers() {
             var mockAnalyzer = new MockAnalyzer();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -94,7 +96,7 @@ namespace LogsAnalyzer.Tests {
             var mockAnalyzer1 = new MockAnalyzer();
             var mockAnalyzer2 = new MockAnalyzer();
 
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer1);
             analyzers.Add(mockAnalyzer2);
 
@@ -120,7 +122,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldCallEndReadSourceOfAnalyzersBeforeCallingBeginReadOfNewSource() {
             var mockAnalyzer = new MockAnalyzer();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -142,7 +144,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldHandleExceptionInBeginReadAll() {
             var mockAnalyzer = new MockAnalyzerThrowingException();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -156,7 +158,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldHandleExceptionInBeginRead() {
             var mockAnalyzer = new MockAnalyzerThrowingException();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -170,7 +172,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldHandleExceptionInAnalyze() {
             var mockAnalyzer = new MockAnalyzerThrowingException();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -184,7 +186,7 @@ namespace LogsAnalyzer.Tests {
         [TestMethod]
         public void itShouldHandleExceptionInEndReadAll() {
             var mockAnalyzer = new MockAnalyzerThrowingException();
-            var analyzers = new List<BaseLogAnalyzer>();
+            var analyzers = new List<ILogAnalyzer>();
             analyzers.Add(mockAnalyzer);
             var logReader = new LogReader(analyzers);
 
@@ -194,6 +196,19 @@ namespace LogsAnalyzer.Tests {
             }
 
             // Implied assertion: No unhandled exception at this point.
+        }
+
+        [TestMethod]
+        public void reflectionTest() {
+            var typeName = "LogAnalyzer.Analyzers, LogAnalyzer.Analyzers.Bookings.BookingAnalyzer`1[LogAnalyzer.Analyzers.Bookings.Models.BookingAnalysis]";
+            var fte = new FullTypeNameEntry(typeName);
+            try {
+                var y = Activator.CreateInstance(fte.AssemblyName, fte.TypeName);
+            }
+            catch (Exception exc) {
+                System.Diagnostics.Debug.Print(exc.Message);
+            }
+
         }
 
         #region private

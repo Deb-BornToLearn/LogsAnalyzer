@@ -10,8 +10,7 @@ using System.Text;
 
 namespace LogAnalyzer.Analyzers.Bookings {
     public class BookingAnalyzer : BaseLogAnalyzer {
-        protected List<BookingAnalysis> Bookings = new List<BookingAnalysis>();
-
+        public List<BookingAnalysis> Bookings = new List<BookingAnalysis>();
         protected List<IParser<BaseAnalysisResult>> Parsers = new List<IParser<BaseAnalysisResult>>();
 
         protected Dictionary<Type, Action<BaseAnalysisResult, string, long, long, string>> OutputConsumers =

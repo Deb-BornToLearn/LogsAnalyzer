@@ -1,4 +1,6 @@
-﻿using LogAnalyzer.Infrastructure;
+﻿using LogAnalyzer.Analyzers.Bookings;
+using LogAnalyzer.Analyzers.Bookings.Models;
+using LogAnalyzer.Infrastructure;
 using LogAnalyzer.Infrastructure.Analysis;
 using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure;
@@ -26,7 +28,7 @@ namespace LogAnalyzer.UI.WinForms {
         private BaseLogSourceListController<TreeView> _logSourceListController;
         private BaseLogAnalyzerListController<TreeView> _logAnalyzerListController;
 
-        public List<BaseLogAnalyzer> Analyzers;
+        public List<ILogAnalyzer> Analyzers;
         public List<AnalyzerShortCircuitChain> AnalyzerChains;
 
         public readonly AnalysisArgs AnalysisArgs;
@@ -75,7 +77,7 @@ namespace LogAnalyzer.UI.WinForms {
             return analyzerChains;
         }
 
-        private List<BaseLogAnalyzer> buildAnalyzers(AnalysisArgs analysisArgs) {
+        private List<ILogAnalyzer> buildAnalyzers(AnalysisArgs analysisArgs) {
             var analyzerBuilder = new AnalyzersBuilder(analysisArgs.AnalyzerConfigurations);
             return analyzerBuilder.BuildAnalyzers();
         }
@@ -155,13 +157,46 @@ namespace LogAnalyzer.UI.WinForms {
 
             scrollToTop(resultsTextbox);
 
-            foreach (var a in Analyzers) {
-                foreach (var r in a.Results) {
-                    Debug.Print(r.GetType().ToString());
+            foreach (var analyzer in Analyzers) {
+                var bookingAnalyzer = analyzer as BookingAnalyzer;
+                if (bookingAnalyzer != null) {
+                    if (!bookingAnalyzer.Bookings.Any()) {
+                        addNode(resultsTreeView, null, 
+                                    new TreeNode { 
+                                        Text = "Booking Analyzer Results: None found"
+                                    }
+                            );
+                    }
+                    else {
+                        var rootBookingAnalyzer = new TreeNode {
+                            Text = "Booking Analyzer Results"
+                        };
+                        addNode(resultsTreeView, null, rootBookingAnalyzer);
+                        foreach (var b in bookingAnalyzer.Bookings) {
+                            var renderer = new BookingAnalysisTreeViewRenderer(b);
+                            addNode(resultsTreeView, rootBookingAnalyzer, renderer.Render());
+                        }
+                    }
                 }
             }
 
             FormState = FormStateEnum.Ready;
+        }
+
+        delegate void AddNodeCallback(TreeView treeview, TreeNode parentNode, TreeNode node);
+        private void addNode(TreeView treeview, TreeNode parentNode, TreeNode node) {
+            if (resultsTreeView.InvokeRequired) {
+                var cb = new AddNodeCallback(addNode);
+                Invoke(cb, new object[] { resultsTreeView, parentNode, node });
+            }
+            else {
+                if (parentNode == null) {
+                    treeview.Nodes.Add(node);
+                }
+                else { 
+                   parentNode.Nodes.Add(node);
+                }
+            }
         }
 
         private void LogReader_OnReadProgress(LogReader reader, ReadProgressEventArgs args) {
@@ -227,6 +262,10 @@ namespace LogAnalyzer.UI.WinForms {
 
         private void AnalysisResultsForm_Shown(object sender, EventArgs e) {
             _formShownEvent.Set();
+        }
+
+        private void filterButton_Click(object sender, EventArgs e) {
+
         }
     }
 }

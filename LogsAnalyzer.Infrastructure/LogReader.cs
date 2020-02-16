@@ -12,16 +12,16 @@ namespace LogsAnalyzer.Infrastructure {
         public event ReadProgressEventHandler OnReadProgress;
 
         public List<StatusReport> Reports { get; protected set; }
-        public List<BaseLogAnalyzer> Analyzers { get; protected set; }
+        public List<ILogAnalyzer> Analyzers { get; protected set; }
         public List<AnalyzerShortCircuitChain> AnalyzerShortCircuitChains { get; protected set; }
 
         public LogReader() {
             Reports = new List<StatusReport>();
-            Analyzers = new List<BaseLogAnalyzer>();
+            Analyzers = new List<ILogAnalyzer>();
             AnalyzerShortCircuitChains = new List<AnalyzerShortCircuitChain>();
         }
 
-        public LogReader(List<BaseLogAnalyzer> analyzers) : this() {
+        public LogReader(List<ILogAnalyzer> analyzers) : this() {
             if (analyzers == null) throw new NullAnalyzersException();
 
             Analyzers = analyzers;
@@ -35,7 +35,7 @@ namespace LogsAnalyzer.Infrastructure {
             beginReadAll();
         }
 
-        public LogReader(List<BaseLogAnalyzer> analyzers, List<AnalyzerShortCircuitChain> analyzerShortCircuitChains) : this() {
+        public LogReader(List<ILogAnalyzer> analyzers, List<AnalyzerShortCircuitChain> analyzerShortCircuitChains) : this() {
             if (analyzers == null) throw new NullAnalyzersException();
             if (analyzerShortCircuitChains == null) throw new NullAnalyzerShortCircuitChainException();
 
