@@ -24,3 +24,5 @@ LogsAnalyzer.Analyzers/bin/
 LogsAnalyzer.Infrastructure/bin/
 LogsAnalyzer.UI.WinForms/bin/
 LogsAnalyzer.Tests/bin/
+LogsAnalyzer.Renderers.WinForms/bin/
+LogsAnalyzer.Renderers.WinForms/obj/
