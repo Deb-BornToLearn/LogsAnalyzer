@@ -69,11 +69,14 @@ namespace LogsAnalyzer.Infrastructure.Factory  {
         public FullTypeNameEntry(string fullTypeName) {
             if (string.IsNullOrWhiteSpace(fullTypeName)) throw new MissingTypeNameException();
 
-            var nameParts = fullTypeName.Split(',');
-            if (nameParts.Length != 2) throw new InvalidTypeNameFormatException(fullTypeName, nameParts.Length);
+            var firstCommaPos = fullTypeName.IndexOf(',');
+            //var nameParts = fullTypeName.Split(',');
+            //if (nameParts.Length != 2) throw new InvalidTypeNameFormatException(fullTypeName, nameParts.Length);
 
-            AssemblyName = nameParts[0].Trim();
-            TypeName = nameParts[1].Trim();
+            //AssemblyName = nameParts[0].Trim();
+            //TypeName = nameParts[1].Trim();
+            AssemblyName = fullTypeName.Substring(0, firstCommaPos);
+            TypeName = fullTypeName.Substring(firstCommaPos + 1);
         }
     }
 

@@ -9,8 +9,9 @@ using System.Linq;
 using System.Text;
 
 namespace LogAnalyzer.Analyzers.Bookings {
-    public class BookingAnalyzer : BaseLogAnalyzer {
+    public class BookingAnalyzer<T> : BaseLogAnalyzer<BookingAnalysis> {
         protected List<BookingAnalysis> Bookings = new List<BookingAnalysis>();
+        public override List<BookingAnalysis> Results => Bookings;
 
         protected List<IParser<BaseAnalysisResult>> Parsers = new List<IParser<BaseAnalysisResult>>();
 
@@ -28,6 +29,8 @@ namespace LogAnalyzer.Analyzers.Bookings {
         }
 
         private long _currentLineNumberStart = -1;
+
+
         public override bool Analyze(string lineText, long lineNumber, string sourceName) {
             bool lineProcessed = false;
             foreach (var parser in Parsers) {
@@ -83,7 +86,7 @@ namespace LogAnalyzer.Analyzers.Bookings {
                     theBooking.TransactionId = newAccountCreated.ClientTransactionId;
                 }
                 theBooking.AccountId = newAccountCreated.AccountId;
-                
+
                 newAccountCreated.MiscTraceDataAnalysis.StartLineNumber = currentLineNumber;
                 newAccountCreated.MiscTraceDataAnalysis.EndLineNumber = currentLineNumber;
 
@@ -97,7 +100,7 @@ namespace LogAnalyzer.Analyzers.Bookings {
             if (miscTraceData != null) {
                 miscTraceData.Source = sourceName;
                 miscTraceData.StartLineNumber = currentLineNumber;
-                miscTraceData.EndLineNumber= currentLineNumber;
+                miscTraceData.EndLineNumber = currentLineNumber;
                 var theBooking = Bookings.FirstOrDefault(b => b.AccountId == miscTraceData.AccountId);
                 theBooking?.MiscellaneousTraceData.Add(miscTraceData);
             }

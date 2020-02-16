@@ -2,7 +2,7 @@
 using System.Linq;
 
 namespace LogAnalyzer.Analyzers.Errors {
-    public class ErrorSummarizer : GenericErrorAnalyzer {
+    public class ErrorSummarizer<T> : GenericErrorAnalyzer<T> {
         public List<string> SubstringsToMatch = new List<string>();
 
         public List<long> LineNumbers = new List<long>();

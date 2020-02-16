@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace LogAnalyzer.Analyzers.Errors.Smtp {
-    public class SmtpErrorAnalyzer : ErrorSummarizer {
+    public class SmtpErrorAnalyzer<T> : ErrorSummarizer<T> {
         public override string NoErrorFoundMessage => "No SMTP errors found";
         public SmtpErrorAnalyzer() {
             SubstringsToMatch.Add("Failure sending mail");

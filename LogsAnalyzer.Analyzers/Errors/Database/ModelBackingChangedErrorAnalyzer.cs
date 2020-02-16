@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 
 namespace LogAnalyzer.Analyzers.Errors.Database {
-    public class ModelBackingChangedErrorAnalyzer : ErrorSummarizer {
+    public class ModelBackingChangedErrorAnalyzer<T> : ErrorSummarizer<T> {
 
         public override string NoErrorFoundMessage => "No Model-Backing-Changed errors found";
         public ModelBackingChangedErrorAnalyzer() {

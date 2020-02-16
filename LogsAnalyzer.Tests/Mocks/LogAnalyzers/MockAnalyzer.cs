@@ -1,10 +1,11 @@
-﻿using LogsAnalyzer.Infrastructure;
+﻿using LogAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure;
 using LogsAnalyzer.Infrastructure.Analysis;
 using System;
 using System.Collections.Generic;
 
 namespace LogsAnalyzer.Tests.Mocks.LogAnalyzers {
-    public class MockAnalyzer : BaseLogAnalyzer, IDisposable {
+    public class MockAnalyzer<T> : BaseLogAnalyzer<BaseAnalysisResult>, IDisposable {
         private bool _beginReadAllCalled = false;
         private bool _endReadAllCalled = false;
 
@@ -16,6 +17,9 @@ namespace LogsAnalyzer.Tests.Mocks.LogAnalyzers {
         private string _lastSourceRead;
         public int LinesCount { get; private set; }
         public long LastLineNumberFromReader { get; private set; }
+
+        public override List<BaseAnalysisResult> Results => throw new NotImplementedException();
+
         public override bool Analyze(string lineText, long lineNumber, string sourceName) {
             if (!_beginReadSourceCalled) {
                 throw new InvalidOperationException("Analyze called without invoking BeginRead(source) of MockAnalyzer first");

@@ -1,8 +1,11 @@
 ﻿using LogsAnalyzer.Infrastructure.Analysis;
 using System;
+using System.Collections.Generic;
 
 namespace LogsAnalyzer.Tests.Mocks.LogAnalyzers {
-    public class MockAnalyzerThrowingException : BaseLogAnalyzer {
+    public class MockAnalyzerThrowingException<T> : BaseLogAnalyzer<T> {
+        public override List<T> Results => throw new NotImplementedException();
+
         public override bool Analyze(string lineText, long lineNumber, string sourceName) {
             throw new Exception("Deliberate exception in Analyze that should be handled gracefully");
         }

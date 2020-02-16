@@ -1,4 +1,5 @@
-﻿using LogsAnalyzer.Infrastructure.Analysis;
+﻿using LogAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Configuration;
 using System;
 using System.Collections.Generic;
@@ -12,13 +13,16 @@ namespace LogsAnalyzer.Infrastructure.Factory {
             AnalyzerConfigurations = analyzerConfiguration;
         }
 
-        public List<BaseLogAnalyzer> BuildAnalyzers() {
-            var analyzers = new List<BaseLogAnalyzer>();
+        public List<BaseLogAnalyzer<BaseAnalysisResult>> BuildAnalyzers() {
+            var analyzers = new List<BaseLogAnalyzer<BaseAnalysisResult>>();
             foreach (var config in AnalyzerConfigurations) {
                 var args = config.ConstructorArgs.Select(a => a.Value).ToArray();
                 var typeName = config.TypeActivationName;
-                var analyzer = TypeFactory.CreateInstance<BaseLogAnalyzer>(new FullTypeNameEntry(typeName), args);
-                analyzers.Add(analyzer);
+                var fte = new FullTypeNameEntry(typeName);
+                //var analyzer = TypeFactory.CreateInstance<BaseLogAnalyzer<BaseAnalysisResult>>(new FullTypeNameEntry(typeName), args);
+                var analyzer = Activator.CreateInstance(fte.AssemblyName, fte.TypeName);
+                var x  = analyzer.Unwrap() as BaseLogAnalyzer<BaseAnalysisResult>;
+                analyzers.Add(x);
             }
             return analyzers;
         }

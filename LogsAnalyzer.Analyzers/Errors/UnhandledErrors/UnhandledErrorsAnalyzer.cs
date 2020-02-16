@@ -2,7 +2,7 @@
 using System.Linq;
 
 namespace LogAnalyzer.Analyzers.Errors.UnhandledErrors {
-    public class UnhandledErrorsAnalyzer : GenericErrorAnalyzer {
+    public class UnhandledErrorsAnalyzer<T> : GenericErrorAnalyzer<T> {
         public override string NoErrorFoundMessage => "No unhandled errors found";
 
         public override string AnalysesToString() {

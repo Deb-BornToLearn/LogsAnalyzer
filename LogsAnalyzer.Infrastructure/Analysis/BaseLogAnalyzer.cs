@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace LogsAnalyzer.Infrastructure.Analysis {
-    public abstract class BaseLogAnalyzer : ILogAnalyzer {
-        public List<BaseAnalysisResult> Results { get; protected set; }
+    public abstract class BaseLogAnalyzer<T> : ILogAnalyzer<T> {
+        public abstract List<T> Results { get; }
         public BaseLogAnalyzer() {
-            Results = new List<BaseAnalysisResult>();
         }
         public abstract bool Analyze(string lineText, long lineNumber, string sourceName);
 

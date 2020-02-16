@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 
 namespace LogAnalyzer.Analyzers.Errors.Database {
-    public class UnreachableServerErrorAnalyzer : ErrorSummarizer {
+    public class UnreachableServerErrorAnalyzer<T> : ErrorSummarizer<T> {
         public override string NoErrorFoundMessage => "No unreachable server errors found";
         public UnreachableServerErrorAnalyzer() {
             SubstringsToMatch.Add("SqlException");

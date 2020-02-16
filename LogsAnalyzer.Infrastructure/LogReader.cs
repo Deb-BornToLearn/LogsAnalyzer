@@ -12,16 +12,16 @@ namespace LogsAnalyzer.Infrastructure {
         public event ReadProgressEventHandler OnReadProgress;
 
         public List<StatusReport> Reports { get; protected set; }
-        public List<BaseLogAnalyzer> Analyzers { get; protected set; }
+        public List<BaseLogAnalyzer<BaseAnalysisResult>> Analyzers { get; protected set; }
         public List<AnalyzerShortCircuitChain> AnalyzerShortCircuitChains { get; protected set; }
 
         public LogReader() {
             Reports = new List<StatusReport>();
-            Analyzers = new List<BaseLogAnalyzer>();
+            Analyzers = new List<BaseLogAnalyzer<BaseAnalysisResult>>();
             AnalyzerShortCircuitChains = new List<AnalyzerShortCircuitChain>();
         }
 
-        public LogReader(List<BaseLogAnalyzer> analyzers) : this() {
+        public LogReader(List<BaseLogAnalyzer<BaseAnalysisResult>> analyzers) : this() {
             if (analyzers == null) throw new NullAnalyzersException();
 
             Analyzers = analyzers;
@@ -35,7 +35,7 @@ namespace LogsAnalyzer.Infrastructure {
             beginReadAll();
         }
 
-        public LogReader(List<BaseLogAnalyzer> analyzers, List<AnalyzerShortCircuitChain> analyzerShortCircuitChains) : this() {
+        public LogReader(List<BaseLogAnalyzer<BaseAnalysisResult>> analyzers, List<AnalyzerShortCircuitChain> analyzerShortCircuitChains) : this() {
             if (analyzers == null) throw new NullAnalyzersException();
             if (analyzerShortCircuitChains == null) throw new NullAnalyzerShortCircuitChainException();
 
@@ -84,7 +84,7 @@ namespace LogsAnalyzer.Infrastructure {
         }
 
 
-        private void beginReadAll(ILogAnalyzer a) {
+        private void beginReadAll(ILogAnalyzer<BaseAnalysisResult> a) {
             try {
                 a.BeginReadAll();
             }
@@ -96,7 +96,7 @@ namespace LogsAnalyzer.Infrastructure {
                 });
             }
         }
-        private void endRead(ILogAnalyzer a, string sourceName) {
+        private void endRead(ILogAnalyzer<BaseAnalysisResult> a, string sourceName) {
             try {
                 a.EndRead(sourceName);
             }
@@ -109,7 +109,7 @@ namespace LogsAnalyzer.Infrastructure {
             }
         }
 
-        private bool analyze(ILogAnalyzer a, string line, int lineNumber, string sourceName) {
+        private bool analyze(ILogAnalyzer<BaseAnalysisResult> a, string line, int lineNumber, string sourceName) {
             try {
                 return a.Analyze(line, lineNumber, sourceName);
             }
@@ -119,7 +119,7 @@ namespace LogsAnalyzer.Infrastructure {
             }
         }
 
-        private void beginRead(ILogAnalyzer a, string sourceName) {
+        private void beginRead(ILogAnalyzer<BaseAnalysisResult> a, string sourceName) {
             try {
                 a.BeginRead(sourceName);
             }
@@ -132,7 +132,7 @@ namespace LogsAnalyzer.Infrastructure {
             }
         }
 
-        private void endReadAll(ILogAnalyzer a) {
+        private void endReadAll(ILogAnalyzer<BaseAnalysisResult> a) {
             try {
                 a.EndReadAll();
             }

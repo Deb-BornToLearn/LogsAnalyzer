@@ -1,4 +1,5 @@
 ﻿using LogAnalyzer.Infrastructure;
+using LogAnalyzer.Infrastructure.Analysis;
 using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure.Analysis;
 using LogsAnalyzer.Infrastructure.Configuration;
@@ -101,7 +102,7 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
 
-        private List<BaseLogAnalyzer> loadAnalyzers() {
+        private List<BaseLogAnalyzer<BaseAnalysisResult>> LoadAnalyzers() {
             var analyzerConfigs = _logAnalyzerListController.GetSelectedAnalyzerConfigurations();
             if (!analyzerConfigs.Any()) {
                 MessageBox.Show("Please select one or more log analyzers to run");

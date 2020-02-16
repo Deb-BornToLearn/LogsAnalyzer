@@ -1,5 +1,10 @@
-﻿namespace LogsAnalyzer.Infrastructure.Analysis {
-    public interface ILogAnalyzer {
+﻿using System.Collections.Generic;
+
+namespace LogsAnalyzer.Infrastructure.Analysis {
+    public interface ILogAnalyzer<T> {
+
+        List<T> Results { get; }
+
         string AnalysesToString();
         void BeginReadAll();    
         void BeginRead(string sourceName);

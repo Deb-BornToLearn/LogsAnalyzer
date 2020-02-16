@@ -1,17 +1,20 @@
-﻿using LogsAnalyzer.Infrastructure.Analysis;
+﻿using LogAnalyzer.Analyzers.Bookings.Models;
+using LogsAnalyzer.Infrastructure.Analysis;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace LogAnalyzer.Analyzers.Errors {
-    public class GenericErrorAnalyzer : BaseLogAnalyzer {
+    public class GenericErrorAnalyzer<T> : BaseLogAnalyzer<BookingAnalysis> {
         public const string ERROR_LOG_PATTERN = @"ERROR.*?:\s*(.*)";
         
         public List<GenericErrorAnalysis> Errors = new List<GenericErrorAnalysis>();
 
         public virtual string NoErrorFoundMessage => "No errors found";
-         
+
+        public override List<BookingAnalysis> Results => throw new System.NotImplementedException();
+
         public override bool Analyze(string lineText, long lineNumber, string sourceName) {
             var m = Regex.Match(lineText, ERROR_LOG_PATTERN);
             if (m.Success) {

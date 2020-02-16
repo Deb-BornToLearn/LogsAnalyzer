@@ -1,4 +1,5 @@
-﻿using LogAnalyzer.Infrastructure;
+﻿using LogAnalyzer.Analyzers.Bookings.Models;
+using LogAnalyzer.Infrastructure;
 using LogAnalyzer.Infrastructure.Analysis;
 using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure;
@@ -26,7 +27,7 @@ namespace LogAnalyzer.UI.WinForms {
         private BaseLogSourceListController<TreeView> _logSourceListController;
         private BaseLogAnalyzerListController<TreeView> _logAnalyzerListController;
 
-        public List<BaseLogAnalyzer> Analyzers;
+        public List<BaseLogAnalyzer<BaseAnalysisResult>> Analyzers;
         public List<AnalyzerShortCircuitChain> AnalyzerChains;
 
         public readonly AnalysisArgs AnalysisArgs;
@@ -75,7 +76,7 @@ namespace LogAnalyzer.UI.WinForms {
             return analyzerChains;
         }
 
-        private List<BaseLogAnalyzer> buildAnalyzers(AnalysisArgs analysisArgs) {
+        private List<BaseLogAnalyzer<BaseAnalysisResult>> buildAnalyzers(AnalysisArgs analysisArgs) {
             var analyzerBuilder = new AnalyzersBuilder(analysisArgs.AnalyzerConfigurations);
             return analyzerBuilder.BuildAnalyzers();
         }
