@@ -101,7 +101,7 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
 
-        private List<ILogAnalyzer> loadAnalyzers() {
+        private List<BaseLogAnalyzer> loadAnalyzers() {
             var analyzerConfigs = _logAnalyzerListController.GetSelectedAnalyzerConfigurations();
             if (!analyzerConfigs.Any()) {
                 MessageBox.Show("Please select one or more log analyzers to run");
@@ -115,8 +115,6 @@ namespace LogAnalyzer.UI.WinForms {
         private void removeAllLogsMenuItem_Click(object sender, EventArgs e) {
             _logSourceListController.RemoveAllItems();
         }
-
-
 
         private void addFolderMenuItem_Click(object sender, EventArgs e) {
             var selectFolderDialog = createOpenFolderDialog();

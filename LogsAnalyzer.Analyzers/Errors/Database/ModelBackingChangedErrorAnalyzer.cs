@@ -9,8 +9,8 @@ namespace LogAnalyzer.Analyzers.Errors.Database {
         }
 
         public override string AnalysesToString() {
-            if (LineNumbers.Any()) {
-                return $"Model-Backing-Changed error(s) found: {LineNumbers.Count}, starting at line {LineNumbers.First()}: {ErrorMessage}";
+            if (ErrorSources.Any()) {
+                return $"Model-Backing-Changed error(s) found: {ErrorSources.Count}, starting at line {ErrorSources.First().LineNumber} in {ErrorSources.First().Source}: {ErrorMessage}";
             }
 
             return NoErrorFoundMessage;

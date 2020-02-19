@@ -167,6 +167,11 @@ namespace LogAnalyzer.UI.WinForms.Controllers {
                 }
                 else if (isFolderNode(node)) {
                     logSourceDefinition.SourceFolders.Add(node.Text);
+                    foreach (TreeNode fileNode in node.Nodes) {
+                        if (selectedOnly && !fileNode.Checked) continue;
+
+                        logSourceDefinition.SourceFiles.Add(fileNode.Text);
+                    }
                 }
             }
             return logSourceDefinition;

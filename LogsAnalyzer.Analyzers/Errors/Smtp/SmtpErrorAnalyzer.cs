@@ -10,8 +10,8 @@ namespace LogAnalyzer.Analyzers.Errors.Smtp {
         }
 
         public override string AnalysesToString() {
-            if (LineNumbers.Any()) {
-                return $"SMTP error(s) found: {LineNumbers.Count}, starting at line {LineNumbers.First()}: {ErrorMessage}";
+            if (ErrorSources.Any()) {
+                return $"SMTP error(s) found: {ErrorSources.Count}, starting at line {ErrorSources.First().LineNumber} in {ErrorSources.First().Source}: {ErrorMessage}";
             }
 
             return NoErrorFoundMessage;

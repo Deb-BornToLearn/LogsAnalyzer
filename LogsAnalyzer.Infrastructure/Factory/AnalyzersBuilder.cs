@@ -12,8 +12,8 @@ namespace LogsAnalyzer.Infrastructure.Factory {
             AnalyzerConfigurations = analyzerConfiguration;
         }
 
-        public List<ILogAnalyzer> BuildAnalyzers() {
-            var analyzers = new List<ILogAnalyzer>();
+        public List<BaseLogAnalyzer> BuildAnalyzers() {
+            var analyzers = new List<BaseLogAnalyzer>();
             foreach (var config in AnalyzerConfigurations) {
                 var args = config.ConstructorArgs.Select(a => a.Value).ToArray();
                 var typeName = config.TypeActivationName;

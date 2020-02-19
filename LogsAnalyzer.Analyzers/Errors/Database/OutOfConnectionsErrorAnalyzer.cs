@@ -9,8 +9,8 @@ namespace LogAnalyzer.Analyzers.Errors.Database {
         }
 
         public override string AnalysesToString() {
-            if (LineNumbers.Any()) {
-                return $"All-connections-in-use errors found: {LineNumbers.Count}, starting at line {LineNumbers.First()}: {ErrorMessage}";
+            if (ErrorSources.Any()) {
+                return $"All-connections-in-use errors found: {ErrorSources.Count}, starting at line {ErrorSources.First().LineNumber}: {ErrorMessage}";
             }
 
             return NoErrorFoundMessage;

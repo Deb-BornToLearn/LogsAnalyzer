@@ -4,7 +4,7 @@ using System.IO;
 
 namespace LogsAnalyzer.Infrastructure {
     public interface ILogReader {
-        List<ILogAnalyzer> Analyzers { get; }
+        List<BaseLogAnalyzer> Analyzers { get; }
         void ReadSource(string sourceName, Stream source);
         void EndReadAll();
     }

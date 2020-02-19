@@ -27,6 +27,7 @@
             this.logFilesListMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addLogsCollectionFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.removeLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeAllLogsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,7 +39,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.analyzersList = new System.Windows.Forms.TreeView();
             this.logFilesList = new System.Windows.Forms.TreeView();
-            this.addLogsCollectionFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logFilesListMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,14 +56,14 @@
             this.saveSelectedCollectionFileMenuItem,
             this.saveAllToCollectionMenuItem});
             this.logFilesListMenu.Name = "logFilesListMenu";
-            this.logFilesListMenu.Size = new System.Drawing.Size(259, 192);
+            this.logFilesListMenu.Size = new System.Drawing.Size(259, 170);
             this.logFilesListMenu.Opened += new System.EventHandler(this.logFilesListMenu_Opened);
             // 
             // addLogFileMenuItem
             // 
             this.addLogFileMenuItem.Name = "addLogFileMenuItem";
             this.addLogFileMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.addLogFileMenuItem.Text = "Add file...";
+            this.addLogFileMenuItem.Text = "Add file(s)...";
             this.addLogFileMenuItem.Click += new System.EventHandler(this.addLogFileMenuItem_Click);
             // 
             // addFolderMenuItem
@@ -72,6 +72,13 @@
             this.addFolderMenuItem.Size = new System.Drawing.Size(258, 22);
             this.addFolderMenuItem.Text = "Add folder...";
             this.addFolderMenuItem.Click += new System.EventHandler(this.addFolderMenuItem_Click);
+            // 
+            // addLogsCollectionFileMenuItem
+            // 
+            this.addLogsCollectionFileMenuItem.Name = "addLogsCollectionFileMenuItem";
+            this.addLogsCollectionFileMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.addLogsCollectionFileMenuItem.Text = "Add logs collection file...";
+            this.addLogsCollectionFileMenuItem.Click += new System.EventHandler(this.addLogsCollectionFileMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -166,13 +173,6 @@
             this.logFilesList.Size = new System.Drawing.Size(551, 129);
             this.logFilesList.TabIndex = 8;
             this.logFilesList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.logFilesList_AfterCheck);
-            // 
-            // addLogsCollectionFileMenuItem
-            // 
-            this.addLogsCollectionFileMenuItem.Name = "addLogsCollectionFileMenuItem";
-            this.addLogsCollectionFileMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.addLogsCollectionFileMenuItem.Text = "Add logs collection file...";
-            this.addLogsCollectionFileMenuItem.Click += new System.EventHandler(this.addLogsCollectionFileMenuItem_Click);
             // 
             // Main
             // 

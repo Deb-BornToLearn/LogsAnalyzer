@@ -1,5 +1,8 @@
 ﻿using LogAnalyzer.Analyzers.Bookings;
 using LogAnalyzer.Analyzers.Bookings.Models;
+using LogAnalyzer.Analyzers.Errors;
+using LogAnalyzer.Analyzers.Errors.Database;
+using LogAnalyzer.Analyzers.Errors.Smtp;
 using LogAnalyzer.Infrastructure;
 using LogAnalyzer.Infrastructure.Analysis;
 using LogAnalyzer.UI.WinForms.Controllers;
@@ -17,9 +20,6 @@ using System.Windows.Forms;
 
 namespace LogAnalyzer.UI.WinForms {
     public partial class AnalysisResultsForm : Form {
-        // TODO: Add filtering by selected analyzer(s)
-        // TODO: Add filtering by selected log file(s)
-        // TODO: Create AnalysisResultsPresenter
         public enum FormStateEnum {
             Ready,
             AnalyzingLogsInProgress
@@ -28,18 +28,25 @@ namespace LogAnalyzer.UI.WinForms {
         private BaseLogSourceListController<TreeView> _logSourceListController;
         private BaseLogAnalyzerListController<TreeView> _logAnalyzerListController;
 
-        public List<ILogAnalyzer> Analyzers;
+        public List<BaseLogAnalyzer> Analyzers;
         public List<AnalyzerShortCircuitChain> AnalyzerChains;
 
         public readonly AnalysisArgs AnalysisArgs;
         public readonly LogSourceDefinition LogSources;
 
+        #region Cross-thread callback delegates
         delegate void enableControlCallback(Control control, bool enabled);
         delegate void AppendTextCallback(TextBoxBase textbox, string message);
         delegate void SetTextCallback(TextBoxBase textbox, string message);
         delegate void ScrollToTopCallback(TextBoxBase textbox);
+        delegate void ExpandNodesCallback(TreeView treeView);
+        delegate void AddNodeCallback(TreeView treeview, TreeNode parentNode, TreeNode node);
+        #endregion
 
-        private AutoResetEvent _formShownEvent = new AutoResetEvent(false);
+        private AutoResetEvent _formShownEventDone = new AutoResetEvent(false);
+
+        private Dictionary<Type, Action<BaseLogAnalyzer, TreeView>> _renderers =
+                                      new Dictionary<Type, Action<BaseLogAnalyzer, TreeView>>();
 
         public AnalysisResultsForm(AnalysisArgs analysisArgs, LogSourceDefinition logSources) {
             InitializeComponent();
@@ -57,8 +64,14 @@ namespace LogAnalyzer.UI.WinForms {
             formCaptionTextbox.Text = this.Text;
             FormState = FormStateEnum.Ready;
 
+            _renderers.Add(typeof(BookingAnalyzer), renderBookings);
+            _renderers.Add(typeof(SmtpErrorAnalyzer), renderSmtpError);
+            _renderers.Add(typeof(UnreachableServerErrorAnalyzer), renderUnreachableDbError);
+
             runAnalysisThread();
         }
+
+
 
         private void runAnalysisThread() {
             ThreadStart work = new ThreadStart(() => AnalyzeLogs());
@@ -77,7 +90,7 @@ namespace LogAnalyzer.UI.WinForms {
             return analyzerChains;
         }
 
-        private List<ILogAnalyzer> buildAnalyzers(AnalysisArgs analysisArgs) {
+        private List<BaseLogAnalyzer> buildAnalyzers(AnalysisArgs analysisArgs) {
             var analyzerBuilder = new AnalyzersBuilder(analysisArgs.AnalyzerConfigurations);
             return analyzerBuilder.BuildAnalyzers();
         }
@@ -127,10 +140,11 @@ namespace LogAnalyzer.UI.WinForms {
             LogSources.SourceFolders.ForEach(f => _logSourceListController.AddFolder(f, false));
         }
 
+
         private void AnalyzeLogs() {
             // Wait for form to finish initialization before firing off worker thread;
             // otherwise, intermittent cross-thread errors will crop up.
-            _formShownEvent.WaitOne();
+            _formShownEventDone.WaitOne();
 
             FormState = FormStateEnum.AnalyzingLogsInProgress;
 
@@ -158,44 +172,58 @@ namespace LogAnalyzer.UI.WinForms {
             scrollToTop(resultsTextbox);
 
             foreach (var analyzer in Analyzers) {
-                var bookingAnalyzer = analyzer as BookingAnalyzer;
-                if (bookingAnalyzer != null) {
-                    if (!bookingAnalyzer.Bookings.Any()) {
-                        addNode(resultsTreeView, null, 
-                                    new TreeNode { 
-                                        Text = "Booking Analyzer Results: None found"
-                                    }
-                            );
-                    }
-                    else {
-                        var rootBookingAnalyzer = new TreeNode {
-                            Text = "Booking Analyzer Results"
-                        };
-                        addNode(resultsTreeView, null, rootBookingAnalyzer);
-                        foreach (var b in bookingAnalyzer.Bookings) {
-                            var renderer = new BookingAnalysisTreeViewRenderer(b);
-                            addNode(resultsTreeView, rootBookingAnalyzer, renderer.Render());
-                        }
+                if (_renderers.ContainsKey(analyzer.GetType())) {
+                    _renderers[analyzer.GetType()](analyzer, resultsTreeView);
+                }
+            }
+            foreach (var chain in AnalyzerChains) {
+                foreach (var analyzer in chain.Analyzers) {
+                    if (_renderers.ContainsKey(analyzer.GetType())) {
+                        _renderers[analyzer.GetType()](analyzer, resultsTreeView);
                     }
                 }
             }
-
+            expandNodes(resultsTreeView);
             FormState = FormStateEnum.Ready;
         }
+        private void renderSmtpError(BaseLogAnalyzer analyzer, TreeView treeView) {
+            var renderer = new SmtpErrorTreeViewRenderer();
+            renderer.SetAnalyzer(analyzer);
+            addNode(treeView, null, renderer.Render());
+        }
 
-        delegate void AddNodeCallback(TreeView treeview, TreeNode parentNode, TreeNode node);
+        private void renderBookings(BaseLogAnalyzer analyzer, TreeView treeView) {
+            var renderer = new BookingAnalysisTreeViewRenderer();
+            renderer.SetAnalyzer(analyzer);
+            addNode(treeView, null, renderer.Render());
+        }
+        private void renderUnreachableDbError(BaseLogAnalyzer analyzer, TreeView treeView) {
+            var renderer = new UnreachableDbServerErrorTreeViewRenderer();
+            renderer.SetAnalyzer(analyzer);
+            addNode(treeView, null, renderer.Render());
+        }
+
         private void addNode(TreeView treeview, TreeNode parentNode, TreeNode node) {
-            if (resultsTreeView.InvokeRequired) {
+            if (treeview.InvokeRequired) {
                 var cb = new AddNodeCallback(addNode);
-                Invoke(cb, new object[] { resultsTreeView, parentNode, node });
+                Invoke(cb, new object[] { treeview, parentNode, node });
             }
             else {
                 if (parentNode == null) {
                     treeview.Nodes.Add(node);
                 }
-                else { 
-                   parentNode.Nodes.Add(node);
+                else {
+                    parentNode.Nodes.Add(node);
                 }
+            }
+        }
+        private void expandNodes(TreeView treeview) {
+            if (treeview.InvokeRequired) {
+                var cb = new ExpandNodesCallback(expandNodes);
+                Invoke(cb, new object[] { treeview });
+            }
+            else {
+                treeview.ExpandAll();
             }
         }
 
@@ -261,7 +289,7 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void AnalysisResultsForm_Shown(object sender, EventArgs e) {
-            _formShownEvent.Set();
+            _formShownEventDone.Set();
         }
 
         private void filterButton_Click(object sender, EventArgs e) {
