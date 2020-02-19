@@ -12,7 +12,6 @@ namespace LogsAnalyzer.Renderers.WinForms {
             foreach (var booking in Analyzer.Bookings) {
                 var bookingNode = new TreeNode();
                 bookingNode.Text = $"{booking.CustomerLastName}, {booking.CustomerFirstName}";
-                bookingNode.Nodes.Add(CreateNode($"Distributor: {booking.DistributorShortName}"));
                 bookingNode.Nodes.Add(CreateNode($"Account Id: {booking.AccountId}"));
                 bookingNode.Nodes.Add(CreateNode($"Distributor: {booking.DistributorShortName}"));
                 bookingNode.Nodes.Add(CreateNode($"Provider: {booking.PrimaryProvider}"));

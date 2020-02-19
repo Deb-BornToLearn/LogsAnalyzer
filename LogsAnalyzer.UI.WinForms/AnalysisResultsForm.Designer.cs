@@ -24,7 +24,6 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.resultsTextbox = new System.Windows.Forms.RichTextBox();
             this.closeButton = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -36,12 +35,12 @@
             this.setFormCaptionButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.formCaptionTextbox = new System.Windows.Forms.TextBox();
+            this.clearFilterButton = new System.Windows.Forms.Button();
+            this.filterTextBox = new System.Windows.Forms.TextBox();
+            this.resultsTreeView = new System.Windows.Forms.TreeView();
+            this.filterButton = new System.Windows.Forms.Button();
             this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
-            this.wordWrapCheckbox = new System.Windows.Forms.CheckBox();
-            this.resultsTreeView = new System.Windows.Forms.TreeView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.filterButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -53,22 +52,10 @@
             this.logFileListContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // resultsTextbox
-            // 
-            this.resultsTextbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.resultsTextbox.Location = new System.Drawing.Point(0, 0);
-            this.resultsTextbox.Name = "resultsTextbox";
-            this.resultsTextbox.ReadOnly = true;
-            this.resultsTextbox.ShowSelectionMargin = true;
-            this.resultsTextbox.Size = new System.Drawing.Size(716, 54);
-            this.resultsTextbox.TabIndex = 0;
-            this.resultsTextbox.Text = "";
-            this.resultsTextbox.WordWrap = false;
-            // 
             // closeButton
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeButton.Location = new System.Drawing.Point(619, 396);
+            this.closeButton.Location = new System.Drawing.Point(619, 400);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(102, 30);
             this.closeButton.TabIndex = 1;
@@ -91,9 +78,12 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.resultsTextbox);
-            this.splitContainer1.Size = new System.Drawing.Size(716, 146);
-            this.splitContainer1.SplitterDistance = 88;
+            this.splitContainer1.Panel2.Controls.Add(this.clearFilterButton);
+            this.splitContainer1.Panel2.Controls.Add(this.filterTextBox);
+            this.splitContainer1.Panel2.Controls.Add(this.resultsTreeView);
+            this.splitContainer1.Panel2.Controls.Add(this.filterButton);
+            this.splitContainer1.Size = new System.Drawing.Size(716, 378);
+            this.splitContainer1.SplitterDistance = 112;
             this.splitContainer1.TabIndex = 3;
             // 
             // tabControl1
@@ -105,7 +95,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(716, 88);
+            this.tabControl1.Size = new System.Drawing.Size(716, 112);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
@@ -114,7 +104,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(708, 62);
+            this.tabPage1.Size = new System.Drawing.Size(708, 86);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Analyzers";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -125,7 +115,7 @@
             this.analyzersList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.analyzersList.Location = new System.Drawing.Point(3, 3);
             this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(702, 56);
+            this.analyzersList.Size = new System.Drawing.Size(702, 80);
             this.analyzersList.TabIndex = 0;
             // 
             // tabPage2
@@ -134,17 +124,18 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(708, 62);
+            this.tabPage2.Size = new System.Drawing.Size(708, 86);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Log files";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // logFilesList
             // 
+            this.logFilesList.ContextMenuStrip = this.logFileListContextMenu;
             this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logFilesList.Location = new System.Drawing.Point(3, 3);
             this.logFilesList.Name = "logFilesList";
-            this.logFilesList.Size = new System.Drawing.Size(702, 56);
+            this.logFilesList.Size = new System.Drawing.Size(702, 80);
             this.logFilesList.TabIndex = 0;
             // 
             // tabPage3
@@ -155,7 +146,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(708, 62);
+            this.tabPage3.Size = new System.Drawing.Size(708, 86);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Options";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -186,6 +177,49 @@
             this.formCaptionTextbox.Size = new System.Drawing.Size(264, 20);
             this.formCaptionTextbox.TabIndex = 0;
             // 
+            // clearFilterButton
+            // 
+            this.clearFilterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearFilterButton.Location = new System.Drawing.Point(623, 11);
+            this.clearFilterButton.Name = "clearFilterButton";
+            this.clearFilterButton.Size = new System.Drawing.Size(86, 23);
+            this.clearFilterButton.TabIndex = 8;
+            this.clearFilterButton.Text = "Clear Filter";
+            this.clearFilterButton.UseVisualStyleBackColor = true;
+            this.clearFilterButton.Click += new System.EventHandler(this.clearFilterButton_Click);
+            // 
+            // filterTextBox
+            // 
+            this.filterTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.filterTextBox.Location = new System.Drawing.Point(0, 13);
+            this.filterTextBox.Name = "filterTextBox";
+            this.filterTextBox.Size = new System.Drawing.Size(530, 20);
+            this.filterTextBox.TabIndex = 6;
+            this.filterTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.filterTextBox_KeyUp);
+            // 
+            // resultsTreeView
+            // 
+            this.resultsTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.resultsTreeView.HideSelection = false;
+            this.resultsTreeView.Location = new System.Drawing.Point(0, 40);
+            this.resultsTreeView.Name = "resultsTreeView";
+            this.resultsTreeView.Size = new System.Drawing.Size(709, 222);
+            this.resultsTreeView.TabIndex = 5;
+            // 
+            // filterButton
+            // 
+            this.filterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.filterButton.Location = new System.Drawing.Point(536, 11);
+            this.filterButton.Name = "filterButton";
+            this.filterButton.Size = new System.Drawing.Size(84, 23);
+            this.filterButton.TabIndex = 7;
+            this.filterButton.Text = "Apply Filter";
+            this.filterButton.UseVisualStyleBackColor = true;
+            this.filterButton.Click += new System.EventHandler(this.filterButton_Click);
+            // 
             // logFileListContextMenu
             // 
             this.logFileListContextMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
@@ -202,53 +236,11 @@
             this.openContainingFolderCommand.Text = "Open containing folder";
             this.openContainingFolderCommand.Click += new System.EventHandler(this.openContainingFolderCommand_Click);
             // 
-            // wordWrapCheckbox
-            // 
-            this.wordWrapCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.wordWrapCheckbox.AutoSize = true;
-            this.wordWrapCheckbox.Location = new System.Drawing.Point(12, 396);
-            this.wordWrapCheckbox.Name = "wordWrapCheckbox";
-            this.wordWrapCheckbox.Size = new System.Drawing.Size(81, 17);
-            this.wordWrapCheckbox.TabIndex = 4;
-            this.wordWrapCheckbox.Text = "Word Wrap";
-            this.wordWrapCheckbox.UseVisualStyleBackColor = true;
-            this.wordWrapCheckbox.CheckedChanged += new System.EventHandler(this.wordWrapCheckbox_CheckedChanged);
-            // 
-            // resultsTreeView
-            // 
-            this.resultsTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.resultsTreeView.Location = new System.Drawing.Point(12, 192);
-            this.resultsTreeView.Name = "resultsTreeView";
-            this.resultsTreeView.Size = new System.Drawing.Size(709, 169);
-            this.resultsTreeView.TabIndex = 5;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(12, 165);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(195, 20);
-            this.textBox1.TabIndex = 6;
-            // 
-            // filterButton
-            // 
-            this.filterButton.Location = new System.Drawing.Point(213, 163);
-            this.filterButton.Name = "filterButton";
-            this.filterButton.Size = new System.Drawing.Size(75, 23);
-            this.filterButton.TabIndex = 7;
-            this.filterButton.Text = "Filter";
-            this.filterButton.UseVisualStyleBackColor = true;
-            this.filterButton.Click += new System.EventHandler(this.filterButton_Click);
-            // 
             // AnalysisResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(740, 438);
-            this.Controls.Add(this.filterButton);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.resultsTreeView);
-            this.Controls.Add(this.wordWrapCheckbox);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.closeButton);
             this.Name = "AnalysisResultsForm";
@@ -256,6 +248,7 @@
             this.Shown += new System.EventHandler(this.AnalysisResultsForm_Shown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
@@ -265,16 +258,12 @@
             this.tabPage3.PerformLayout();
             this.logFileListContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.RichTextBox resultsTextbox;
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.CheckBox wordWrapCheckbox;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -287,7 +276,8 @@
         private System.Windows.Forms.TreeView analyzersList;
         private System.Windows.Forms.TreeView logFilesList;
         private System.Windows.Forms.TreeView resultsTreeView;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox filterTextBox;
         private System.Windows.Forms.Button filterButton;
+        private System.Windows.Forms.Button clearFilterButton;
     }
 }

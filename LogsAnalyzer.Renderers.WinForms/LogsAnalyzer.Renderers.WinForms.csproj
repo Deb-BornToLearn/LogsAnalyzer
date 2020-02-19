@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -48,6 +49,7 @@
     <Compile Include="SmtpErrorTreeViewRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringChunker.cs" />
+    <Compile Include="TreeViewFilterer.cs" />
     <Compile Include="UnreachableDbServerErrorTreeViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>

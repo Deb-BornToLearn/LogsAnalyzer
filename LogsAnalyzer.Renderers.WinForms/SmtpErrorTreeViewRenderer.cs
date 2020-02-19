@@ -1,11 +1,29 @@
 ﻿using LogAnalyzer.Analyzers.Errors.Smtp;
-using LogsAnalyzer.Infrastructure.Analysis;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace LogsAnalyzer.Renderers.WinForms {
     public class SmtpErrorTreeViewRenderer : BaseTreeViewRenderer<SmtpErrorAnalyzer> {
+        private ContextMenuStrip _contextMenuStrip = null;
+
+        public ContextMenuStrip ContextMenuStrip {
+            get {
+                return _contextMenuStrip;
+            }
+        }
+
         public override TreeNode Render() {
+            if (_contextMenuStrip == null) {
+                _contextMenuStrip = new ContextMenuStrip();
+                ToolStripMenuItem stripItem = new ToolStripMenuItem();
+                stripItem.Text = "Copy to clipboard";
+                stripItem.Click += (source, args) => {
+                    MessageBox.Show("Copied!");
+                };
+                _contextMenuStrip.Items.Add(stripItem);
+            }
+
             if (!Analyzer.ErrorSources.Any()) {
                 return CreateNode(Analyzer.NoErrorFoundMessage);
             }
@@ -16,7 +34,7 @@ namespace LogsAnalyzer.Renderers.WinForms {
 
             rootNode.Nodes.Add(CreateNode($"Last occurrence at line {Analyzer.ErrorSources.Last().LineNumber} in {Analyzer.ErrorSources.Last().Source}"));
 
-            var errorMessageNode = CreateNode("Error message");
+            TreeNode errorMessageNode = CreateNode("Error message");
             rootNode.Nodes.Add(errorMessageNode);
 
             int minCharsPerLine = 100;
@@ -26,6 +44,10 @@ namespace LogsAnalyzer.Renderers.WinForms {
                 errorMessageNode.Nodes.Add(CreateNode(messageChunk));
             }
             return rootNode;
+        }
+
+        private void copyToClipboard(object sender, EventArgs e) {
+            MessageBox.Show("Copied!");
         }
     }
 }
