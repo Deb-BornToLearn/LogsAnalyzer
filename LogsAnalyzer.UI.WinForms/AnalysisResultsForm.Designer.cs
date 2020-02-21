@@ -31,6 +31,8 @@
             this.analyzersList = new System.Windows.Forms.TreeView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.logFilesList = new System.Windows.Forms.TreeView();
+            this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.setFormCaptionButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -39,8 +41,6 @@
             this.filterTextBox = new System.Windows.Forms.TextBox();
             this.resultsTreeView = new System.Windows.Forms.TreeView();
             this.filterButton = new System.Windows.Forms.Button();
-            this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -48,8 +48,8 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.logFileListContextMenu.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // closeButton
@@ -138,6 +138,22 @@
             this.logFilesList.Size = new System.Drawing.Size(702, 80);
             this.logFilesList.TabIndex = 0;
             // 
+            // logFileListContextMenu
+            // 
+            this.logFileListContextMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
+            this.logFileListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openContainingFolderCommand});
+            this.logFileListContextMenu.Name = "logFileListContextMenu";
+            this.logFileListContextMenu.Size = new System.Drawing.Size(198, 26);
+            this.logFileListContextMenu.Opened += new System.EventHandler(this.logFileListContextMenu_Opened);
+            // 
+            // openContainingFolderCommand
+            // 
+            this.openContainingFolderCommand.Name = "openContainingFolderCommand";
+            this.openContainingFolderCommand.Size = new System.Drawing.Size(197, 22);
+            this.openContainingFolderCommand.Text = "Open containing folder";
+            this.openContainingFolderCommand.Click += new System.EventHandler(this.openContainingFolderCommand_Click);
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.setFormCaptionButton);
@@ -220,22 +236,6 @@
             this.filterButton.UseVisualStyleBackColor = true;
             this.filterButton.Click += new System.EventHandler(this.filterButton_Click);
             // 
-            // logFileListContextMenu
-            // 
-            this.logFileListContextMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
-            this.logFileListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openContainingFolderCommand});
-            this.logFileListContextMenu.Name = "logFileListContextMenu";
-            this.logFileListContextMenu.Size = new System.Drawing.Size(198, 26);
-            this.logFileListContextMenu.Opened += new System.EventHandler(this.logFileListContextMenu_Opened);
-            // 
-            // openContainingFolderCommand
-            // 
-            this.openContainingFolderCommand.Name = "openContainingFolderCommand";
-            this.openContainingFolderCommand.Size = new System.Drawing.Size(197, 22);
-            this.openContainingFolderCommand.Text = "Open containing folder";
-            this.openContainingFolderCommand.Click += new System.EventHandler(this.openContainingFolderCommand_Click);
-            // 
             // AnalysisResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -254,9 +254,9 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.logFileListContextMenu.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            this.logFileListContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

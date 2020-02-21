@@ -140,6 +140,7 @@ namespace LogsAnalyzer.Analyzers.Bookings.Parsers {
             parseProviderAndDistributor(booking, xmlDoc, nsMgr, evPrefix);
             parseProductAndExtras(booking, xmlDoc, nsMgr, evPrefix);
             parseCustomer(booking, xmlDoc, nsMgr, evPrefix);
+            booking.RawXml = bookingText;
             return booking;
         }
 

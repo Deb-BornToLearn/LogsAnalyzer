@@ -7,6 +7,7 @@ using System.Text;
 namespace LogAnalyzer.Analyzers.Bookings.Models {
     public class BookingAnalysis : BaseAnalysisResult {
         public List<MiscellaneousTraceDataAnalysis> MiscellaneousTraceData;
+        public string RawXml { get; set; }
         public BookingAnalysis() {
             Extras = new List<Extra>();
             MiscellaneousTraceData = new List<MiscellaneousTraceDataAnalysis>();

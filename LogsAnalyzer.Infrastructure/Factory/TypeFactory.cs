@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 
 namespace LogsAnalyzer.Infrastructure.Factory  {
-    internal class TypeFactory {
+    public class TypeFactory {
         private static Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
 
         public static bool DoesTypeExistInAssembly(Assembly assembly, string typeName) {

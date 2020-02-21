@@ -1,9 +1,21 @@
 ﻿using LogAnalyzer.Analyzers.Bookings;
+using LogAnalyzer.Analyzers.Bookings.Models;
+using LogsAnalyzer.Infrastructure.Analysis;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace LogsAnalyzer.Renderers.WinForms {
-    public class BookingAnalysisTreeViewRenderer : BaseTreeViewRenderer<BookingAnalyzer> {
+namespace LogsAnalyzer.Renderers.WinForms.TreeView {
+    public class BookingAnalysisTreeViewRenderer : BaseTreeViewRenderer {
+
+        protected BookingAnalyzer Analyzer;
+
+        public override Type AnalyzerType => typeof(BookingAnalyzer);
+
+        public BookingAnalysisTreeViewRenderer() {
+            Analyzer = new BookingAnalyzer();
+        }
+
         public override TreeNode Render() {
             var rootBookingAnalyzer = new TreeNode {
                 Text = $"Booking Analyzer Results ({Analyzer.Bookings.Count})"
@@ -12,6 +24,8 @@ namespace LogsAnalyzer.Renderers.WinForms {
             foreach (var booking in Analyzer.Bookings) {
                 var bookingNode = new TreeNode();
                 bookingNode.Text = $"{booking.CustomerLastName}, {booking.CustomerFirstName}";
+                ContextMenuStrips.Add(bookingNode, createContextMenuForBookingNode(bookingNode, booking));
+
                 bookingNode.Nodes.Add(CreateNode($"Account Id: {booking.AccountId}"));
                 bookingNode.Nodes.Add(CreateNode($"Distributor: {booking.DistributorShortName}"));
                 bookingNode.Nodes.Add(CreateNode($"Provider: {booking.PrimaryProvider}"));
@@ -21,7 +35,9 @@ namespace LogsAnalyzer.Renderers.WinForms {
                 bookingNode.Nodes.Add(CreateNode($"Channel Commission: {booking.ChannelCommission}"));
                 bookingNode.Nodes.Add(CreateNode($"{booking.ProductName} ({booking.ProductId})"));
                 bookingNode.Nodes.Add(CreateNode($"Products: {booking.ProductTotal}, Extras: {booking.ExtrasTotal}"));
-                bookingNode.Nodes.Add(CreateNode($"Source: {booking.Source}"));
+                var logFileNode = CreateNode($"Source: {booking.Source}");
+                ContextMenuStrips.Add(logFileNode, CreateContextMenuItemForLogFile(logFileNode, booking.Source));
+                bookingNode.Nodes.Add(logFileNode);
                 bookingNode.Nodes.Add(CreateNode($"Lines {booking.StartLineNumber} to {booking.EndLineNumber}"));
 
                 if (booking.MiscellaneousTraceData.Any()) {
@@ -31,10 +47,26 @@ namespace LogsAnalyzer.Renderers.WinForms {
                         mtdRootNode.Nodes.Add(CreateNode($"Ln {mtd.StartLineNumber} {mtd.ParsedMiscTraceData}"));
                     }
                 }
-                
+
                 rootBookingAnalyzer.Nodes.Add(bookingNode);
             }
             return rootBookingAnalyzer;
+        }
+
+        private ContextMenuStrip CreateContextMenuItemForLogFile(TreeNode node, string filename) {
+            var contextMenuStrip = CreateCommonContextMenuStrip(node);
+            contextMenuStrip.Items.Add(CreateOpenFileInNotepadPlusMenuItem("Open log file in Notepad++", filename));
+            return contextMenuStrip;
+        }
+
+        private ContextMenuStrip createContextMenuForBookingNode(TreeNode node, BookingAnalysis booking) {
+            var contextMenuStrip = CreateCommonContextMenuStrip(node);
+            contextMenuStrip.Items.Add(CreateCopyToClipboardMenuItem("Copy raw XML to Clipboard", booking.RawXml));
+            return contextMenuStrip;
+        }
+
+        public override void SetAnalyzer(BaseLogAnalyzer analyzer) {
+            Analyzer = analyzer as BookingAnalyzer;
         }
     }
 }

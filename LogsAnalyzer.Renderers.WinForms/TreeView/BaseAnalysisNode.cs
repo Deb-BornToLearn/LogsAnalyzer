@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace LogsAnalyzer.Renderers.WinForms {
+namespace LogsAnalyzer.Renderers.WinForms.TreeView {
     public abstract class BaseAnalysisNode {
         public abstract object GetPropertyGridObject();
         public abstract string DisplayText { get; }

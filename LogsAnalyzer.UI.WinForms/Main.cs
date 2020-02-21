@@ -18,6 +18,7 @@ namespace LogAnalyzer.UI.WinForms {
         private BaseLogAnalyzerListController<TreeView> _logAnalyzerListController;
         private TreeViewAfterCheckController _treeviewAfterCheckController;
 
+        protected string AnalyzersConfigFile { get; set; }
         public Main() {
             InitializeComponent();
             _logSourceListController = new LogSourceTreeViewController<TreeView>(logFilesList);
@@ -40,6 +41,7 @@ namespace LogAnalyzer.UI.WinForms {
             var configFile = Path.Combine(Application.StartupPath, "LogAnalyzer.config");
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(configFile);
+            AnalyzersConfigFile = configFile;
             return new AnalyzerConfigurationXmlSource(xmlDoc);
         }
 
@@ -96,7 +98,7 @@ namespace LogAnalyzer.UI.WinForms {
 
             AnalysisArgs analysisArgs = _logAnalyzerListController.BuildAnalysisArgs();
             var logSources = _logSourceListController.BuildLogSourceDefinitionFromSelection();
-            var resultsForm = new AnalysisResultsForm(analysisArgs, logSources);
+            var resultsForm = new AnalysisResultsForm(analysisArgs, logSources, AnalyzersConfigFile);
             resultsForm.Show();
         }
 
