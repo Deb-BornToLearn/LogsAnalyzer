@@ -58,10 +58,14 @@ namespace LogAnalyzer.UI.WinForms {
                     _logSourceListController.AddFile(filename);
 
                 }
-                if (MessageBox.Show("Start logs analysis now?", "Ready to start analysis",
-                                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
-                    runAnalysis();
-                }
+                displayStartAnalysisPrompt();
+            }
+        }
+
+        private void displayStartAnalysisPrompt() {
+            if (MessageBox.Show("Start logs analysis now?", "Ready to start analysis",
+                                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                runAnalysis();
             }
         }
 
@@ -123,6 +127,7 @@ namespace LogAnalyzer.UI.WinForms {
             if (selectFolderDialog.ShowDialog() == DialogResult.OK) {
                 var folder = Path.GetDirectoryName(selectFolderDialog.FileName);
                 _logSourceListController.AddFolder(folder, true);
+                displayStartAnalysisPrompt();
             }
         }
 
@@ -175,12 +180,13 @@ namespace LogAnalyzer.UI.WinForms {
             };
             var result = openFileDialog.ShowDialog();
             if (result == DialogResult.OK) {
-                var serializer = new XmlSerializer(typeof(LogSourceDefinition));
-                var fileStream = new FileStream(openFileDialog.FileName, FileMode.Open);
-                LogSourceDefinition logDefinition = null;
                 try {
+                    var serializer = new XmlSerializer(typeof(LogSourceDefinition));
+                    var fileStream = new FileStream(openFileDialog.FileName, FileMode.Open);
+                    LogSourceDefinition logDefinition = null;
                     logDefinition = (LogSourceDefinition)serializer.Deserialize(fileStream);
                     _logSourceListController.AddLogSourceDefinition(logDefinition);
+                    displayStartAnalysisPrompt();
                 }
                 catch (Exception exc) {
                     MessageBox.Show($"File {openFileDialog.FileName} is not a valid log source definition file. {exc.Message}.",

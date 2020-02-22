@@ -111,7 +111,6 @@
             // 
             // analyzersList
             // 
-            this.analyzersList.CheckBoxes = true;
             this.analyzersList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.analyzersList.Location = new System.Drawing.Point(3, 3);
             this.analyzersList.Name = "analyzersList";
