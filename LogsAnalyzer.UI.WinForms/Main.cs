@@ -25,7 +25,12 @@ namespace LogAnalyzer.UI.WinForms {
             _logAnalyzerListController = new LogAnalyzerListTreeViewController<TreeView>(analyzersList);
             _treeviewAfterCheckController = new TreeViewAfterCheckController();
 
-            loadAnalyzersToList();
+            try {
+                loadAnalyzersToList();
+            }
+            catch (Exception exc) {
+                MessageBox.Show(exc.Message, "Error Loading Form", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void loadAnalyzersToList() {
@@ -38,11 +43,11 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private IConfigurationSource loadConfigurationSource() {
-            var configFile = Path.Combine(Application.StartupPath, "LogAnalyzer.config");
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(configFile);
-            AnalyzersConfigFile = configFile;
-            return new AnalyzerConfigurationXmlSource(xmlDoc);
+                var configFile = Path.Combine(Application.StartupPath, "LogAnalyzer.config");
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(configFile);
+                AnalyzersConfigFile = configFile;
+                return new AnalyzerConfigurationXmlSource(xmlDoc);
         }
 
         private void addLogFileMenuItem_Click(object sender, EventArgs e) {
