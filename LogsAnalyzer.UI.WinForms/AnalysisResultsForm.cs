@@ -157,6 +157,16 @@ namespace LogAnalyzer.UI.WinForms {
 
             FormState = FormStateEnum.AnalyzingLogsInProgress;
 
+            runAnalyzers();
+            renderResults();
+
+            expandNodes(resultsTreeView);
+            setText(filterTextBox, string.Empty);
+
+            FormState = FormStateEnum.Ready;
+        }
+
+        private void runAnalyzers() {
             var logReader = new LogReader(Analyzers, AnalyzerChains);
             logReader.OnReadProgress += LogReader_OnReadProgress;
             int counter = 1, total = LogSources.SourceFiles.Count;
@@ -172,33 +182,45 @@ namespace LogAnalyzer.UI.WinForms {
                 }
                 counter++;
             }
-
-            foreach (var analyzer in Analyzers) {
-                if (_rendererList.ContainsKey(analyzer.GetType())) {
-                    renderAnalysisResults(_rendererList[analyzer.GetType()], analyzer, resultsTreeView);
-                }
-            }
-            foreach (var chain in AnalyzerChains) {
-                foreach (var analyzer in chain.Analyzers) {
-                    if (_rendererList.ContainsKey(analyzer.GetType())) {
-                        renderAnalysisResults(_rendererList[analyzer.GetType()], analyzer, resultsTreeView);
-                    }
-                }
-            }
-
-            expandNodes(resultsTreeView);
-            setText(filterTextBox, string.Empty);
-
-            FormState = FormStateEnum.Ready;
         }
 
-        private void renderAnalysisResults(BaseTreeViewRenderer renderer, BaseLogAnalyzer analyzer, TreeView treeView) {
+        private List<Type> _analyzersWithoutRenderers = new List<Type>();
+
+        private void renderResults() {
+            _analyzersWithoutRenderers.Clear();
+            
+            Analyzers.ForEach(a => renderAnalysisResults(a));
+            AnalyzerChains.ForEach(ac => ac.Analyzers.ForEach(a => renderAnalysisResults(a)));
+
+            if (_analyzersWithoutRenderers.Any()) {
+                MessageBox.Show("Results for the following analyzer(s) will not be shown because of missing TreeViewRenderer implementation: " + 
+                                Environment.NewLine + 
+                                string.Join(Environment.NewLine, _analyzersWithoutRenderers.Select(a => a.ToString())
+                                                                                           .Select(a => "- " + a.Substring(a.LastIndexOf('.') + 1))
+                                                                                           .ToArray()),
+                                "Missing Analyzer TreeView Renderer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void renderAnalysisResults(BaseLogAnalyzer analyzer) {
+            if (_rendererList.ContainsKey(analyzer.GetType())) {
+                renderAnalysisResults(_rendererList[analyzer.GetType()], analyzer);
+            }
+            else {
+                if (!_analyzersWithoutRenderers.Contains(analyzer.GetType())) {
+                    _analyzersWithoutRenderers.Add(analyzer.GetType());
+
+                }
+            }
+        }
+
+        private void renderAnalysisResults(BaseTreeViewRenderer renderer, BaseLogAnalyzer analyzer) {
             renderer.SetAnalyzer(analyzer);
             var node = renderer.Render();
             foreach (var nodeKey in renderer.ContextMenuStrips.Keys) {
                 nodeKey.ContextMenuStrip = renderer.ContextMenuStrips[nodeKey];
             }
-            addNode(treeView, null, node);
+            addNode(resultsTreeView, null, node);
         }
 
         private void addNode(TreeView treeview, TreeNode parentNode, TreeNode node) {
