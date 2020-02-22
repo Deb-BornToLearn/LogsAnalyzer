@@ -39,7 +39,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.analyzersList = new System.Windows.Forms.TreeView();
             this.logFilesList = new System.Windows.Forms.TreeView();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.logFilesListMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // logFilesListMenu
@@ -121,7 +126,8 @@
             // analyzeButton
             // 
             this.analyzeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.analyzeButton.Location = new System.Drawing.Point(456, 329);
+            this.analyzeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.analyzeButton.Location = new System.Drawing.Point(462, 338);
             this.analyzeButton.Margin = new System.Windows.Forms.Padding(1);
             this.analyzeButton.Name = "analyzeButton";
             this.analyzeButton.Size = new System.Drawing.Size(114, 34);
@@ -133,7 +139,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 13);
+            this.label1.Location = new System.Drawing.Point(0, 2);
             this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
@@ -143,7 +149,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 169);
+            this.label2.Location = new System.Drawing.Point(1, 3);
             this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 13);
@@ -156,39 +162,67 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.analyzersList.CheckBoxes = true;
-            this.analyzersList.Location = new System.Drawing.Point(18, 185);
+            this.analyzersList.Location = new System.Drawing.Point(0, 19);
             this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(552, 138);
+            this.analyzersList.Size = new System.Drawing.Size(567, 137);
             this.analyzersList.TabIndex = 7;
             this.analyzersList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.analyzersList_AfterCheck);
             // 
             // logFilesList
             // 
-            this.logFilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.logFilesList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.logFilesList.CheckBoxes = true;
             this.logFilesList.ContextMenuStrip = this.logFilesListMenu;
-            this.logFilesList.Location = new System.Drawing.Point(19, 29);
+            this.logFilesList.Location = new System.Drawing.Point(0, 17);
             this.logFilesList.Name = "logFilesList";
-            this.logFilesList.Size = new System.Drawing.Size(551, 129);
+            this.logFilesList.Size = new System.Drawing.Size(567, 140);
             this.logFilesList.TabIndex = 8;
             this.logFilesList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.logFilesList_AfterCheck);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.splitContainer1.Location = new System.Drawing.Point(12, 12);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1.Controls.Add(this.logFilesList);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel2.Controls.Add(this.label2);
+            this.splitContainer1.Panel2.Controls.Add(this.analyzersList);
+            this.splitContainer1.Size = new System.Drawing.Size(567, 320);
+            this.splitContainer1.SplitterDistance = 160;
+            this.splitContainer1.TabIndex = 9;
             // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(590, 369);
-            this.Controls.Add(this.logFilesList);
-            this.Controls.Add(this.analyzersList);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(590, 377);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.analyzeButton);
             this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "Main";
             this.Text = "Logs Analyzer";
             this.logFilesListMenu.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -208,6 +242,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.TreeView logFilesList;
         private System.Windows.Forms.ToolStripMenuItem addLogsCollectionFileMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 
