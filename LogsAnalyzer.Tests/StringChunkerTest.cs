@@ -9,7 +9,7 @@ namespace LogAnalyzer.Tests.StringChunkerTests {
             var charsPerChunk = 2;
             var input = "abc def";
 
-            var result = StringChunker.ComputeChunks(input, charsPerChunk);
+            var result = StringChunker.ComputeChunksWithMinCharLimit(input, charsPerChunk);
 
             Assert.AreEqual(2, result.Count);
             foreach (var chunk in result) {
@@ -22,7 +22,7 @@ namespace LogAnalyzer.Tests.StringChunkerTests {
             var charsPerChunk = 2;
             var input = "abc def ghi";
 
-            var result = StringChunker.ComputeChunks(input, charsPerChunk);
+            var result = StringChunker.ComputeChunksWithMinCharLimit(input, charsPerChunk);
 
             Assert.AreEqual(3, result.Count);
             foreach (var chunk in result) {
@@ -35,7 +35,7 @@ namespace LogAnalyzer.Tests.StringChunkerTests {
             var charsPerChunk = 7;
             var input = "abc def";
 
-            var result = StringChunker.ComputeChunks(input, charsPerChunk);
+            var result = StringChunker.ComputeChunksWithMinCharLimit(input, charsPerChunk);
 
             Assert.AreEqual(1, result.Count);
             foreach (var chunk in result) {

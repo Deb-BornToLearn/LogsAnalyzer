@@ -28,7 +28,7 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
         }
 
         protected IEnumerable<TreeNode> CreateChunkedNodesFromString(string text, int charsPerLine = 100) {
-            var chunkDefinitions = StringChunker.ComputeChunks(text, charsPerLine);
+            var chunkDefinitions = StringChunker.ComputeChunksWithMinCharLimit(text, charsPerLine);
             foreach (var chunkDef in chunkDefinitions) {
                 var messageChunk = text.Substring(chunkDef.StartPosition, chunkDef.ChunkLength);
                 yield return CreateNode(messageChunk);

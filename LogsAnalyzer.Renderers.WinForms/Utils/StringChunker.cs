@@ -3,16 +3,9 @@ using System.Collections.Generic;
 
 namespace LogsAnalyzer.Renderers.WinForms {
     public class StringChunker {
-        public static List<ChunkDefinition> ComputeChunks(string input, int charsPerChunk) {
+        public static List<ChunkDefinition> ComputeChunksWithMinCharLimit(string input, int charsPerChunk) {
             var chunkPositions = new List<ChunkDefinition>();
             var inputLength = input.Length;
-
-            if (inputLength <= charsPerChunk) {
-                chunkPositions.Add(new ChunkDefinition(0, inputLength));
-                return chunkPositions;
-            }
-
-            
             int currentStartPos = 0;
             while (true) {
                 int chunkLength = charsPerChunk;
