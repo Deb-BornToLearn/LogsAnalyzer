@@ -19,10 +19,12 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
                                                             Errors = g.ToList()
                                                          });
             foreach (var errorGroup in errorsBySource) { 
-                var errorNode = CreateNode($"{errorGroup.Source}");
+                var errorNode = CreateNode($"{errorGroup.Source} ({errorGroup.Errors.Count})");
                 ContextMenuStrips.Add(errorNode, createContextMenuForLogFile(errorNode, errorGroup.Source));
                 foreach (var error in errorGroup.Errors) {
-                    errorNode.Nodes.Add($"Ln {error.StartLineNumber}: {error.ErrorMessage}");
+                    var errorMessageNode = CreateNode($"Ln {error.StartLineNumber}: {error.ErrorMessage}");
+                    ContextMenuStrips.Add(errorMessageNode, CreateCommonContextMenuStrip(errorMessageNode));
+                    errorNode.Nodes.Add(errorMessageNode);
                 }
                 rootNode.Nodes.Add(errorNode);
             }
