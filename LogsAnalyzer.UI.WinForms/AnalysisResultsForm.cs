@@ -234,7 +234,7 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void LogReader_OnReadProgress(LogReader reader, ReadProgressEventArgs args) {
-            if (args.LineNumber % 1000 == 0) {
+            if (args.LineNumber % 5000 == 0) {
                 setText(filterTextBox, $"Analyzing line {args.LineNumber} ...{Environment.NewLine}");
             }
         }
@@ -275,6 +275,9 @@ namespace LogAnalyzer.UI.WinForms {
             if (_treeViewFilterer == null) _treeViewFilterer = new TreeViewFilterer(resultsTreeView);
 
             _treeViewFilterer.Filter(filterTextBox.Text);
+            if (!string.IsNullOrEmpty(filterTextBox.Text)) {
+                resultsTreeView.ExpandAll();
+            }
         }
 
         private void filterTextBox_KeyUp(object sender, KeyEventArgs e) {
