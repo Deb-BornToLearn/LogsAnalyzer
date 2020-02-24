@@ -44,7 +44,10 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
                     var mtdRootNode = CreateNode($"Miscellaneous trace data");
                     bookingNode.Nodes.Add(mtdRootNode);
                     foreach (var mtd in booking.MiscellaneousTraceData) {
-                        mtdRootNode.Nodes.Add(CreateNode($"Ln {mtd.StartLineNumber} {mtd.ParsedMiscTraceData}"));
+                        var mtdNode = CreateNode($"Ln {mtd.StartLineNumber} {mtd.ParsedMiscTraceData}");
+                        var contextMenu = CreateContextMenuItemForLogFile(mtdNode, mtd.Source);
+                        ContextMenuStrips.Add(mtdNode, contextMenu);
+                        mtdRootNode.Nodes.Add(mtdNode);
                     }
                 }
 
