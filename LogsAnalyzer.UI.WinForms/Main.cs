@@ -187,11 +187,12 @@ namespace LogAnalyzer.UI.WinForms {
             if (result == DialogResult.OK) {
                 try {
                     var serializer = new XmlSerializer(typeof(LogSourceDefinition));
-                    var fileStream = new FileStream(openFileDialog.FileName, FileMode.Open);
-                    LogSourceDefinition logDefinition = null;
-                    logDefinition = (LogSourceDefinition)serializer.Deserialize(fileStream);
-                    _logSourceListController.AddLogSourceDefinition(logDefinition);
-                    displayStartAnalysisPrompt();
+                    using (var fileStream = new FileStream(openFileDialog.FileName, FileMode.Open)) {
+                        LogSourceDefinition logDefinition = null;
+                        logDefinition = (LogSourceDefinition)serializer.Deserialize(fileStream);
+                        _logSourceListController.AddLogSourceDefinition(logDefinition);
+                        displayStartAnalysisPrompt();
+                    }
                 }
                 catch (Exception exc) {
                     MessageBox.Show($"File {openFileDialog.FileName} is not a valid log source definition file. {exc.Message}.",
