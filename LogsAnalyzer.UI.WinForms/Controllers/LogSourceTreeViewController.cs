@@ -92,19 +92,27 @@ namespace LogAnalyzer.UI.WinForms.Controllers {
             return ListView.Nodes.OfType<TreeNode>().Any(n => n.Text == folder);
         }
 
-        internal override bool HasFile() {
+        internal override bool HasAny() {
             return ListView.Nodes.Count > 0;
         }
 
-        internal override bool HasSelectedFile() {
+
+        internal override bool HasSelectedAny() {
             foreach (TreeNode node in ListView.Nodes) {
-                if (node.Checked && isFileNode(node)) return true;
+                if (node.Checked) return true;
                 foreach (TreeNode fileNode in node.Nodes) {
                     if (fileNode.Checked) return true;
                 }
             }
             return false;
         }
+
+        internal override bool IsSelectedItemFolder() {
+            if (ListView.SelectedNode == null) return false;
+
+            return isFolderNode(ListView.SelectedNode);
+        }
+
 
         private bool isFileNode(TreeNode node) {
             return (ItemType)node.Tag == ItemType.File;

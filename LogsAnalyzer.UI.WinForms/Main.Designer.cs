@@ -40,6 +40,7 @@
             this.analyzersList = new System.Windows.Forms.TreeView();
             this.logFilesList = new System.Windows.Forms.TreeView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.checkFolderOnlyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logFilesListMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -55,13 +56,14 @@
             this.addFolderMenuItem,
             this.addLogsCollectionFileMenuItem,
             this.toolStripMenuItem2,
+            this.checkFolderOnlyMenuItem,
             this.removeLogFileMenuItem,
             this.removeAllLogsMenuItem,
             this.toolStripMenuItem1,
             this.saveSelectedCollectionFileMenuItem,
             this.saveAllToCollectionMenuItem});
             this.logFilesListMenu.Name = "logFilesListMenu";
-            this.logFilesListMenu.Size = new System.Drawing.Size(259, 170);
+            this.logFilesListMenu.Size = new System.Drawing.Size(259, 214);
             this.logFilesListMenu.Opened += new System.EventHandler(this.logFilesListMenu_Opened);
             // 
             // addLogFileMenuItem
@@ -206,6 +208,13 @@
             this.splitContainer1.SplitterDistance = 160;
             this.splitContainer1.TabIndex = 9;
             // 
+            // checkFolderOnlyMenuItem
+            // 
+            this.checkFolderOnlyMenuItem.Name = "checkFolderOnlyMenuItem";
+            this.checkFolderOnlyMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.checkFolderOnlyMenuItem.Text = "Check folder only";
+            this.checkFolderOnlyMenuItem.Click += new System.EventHandler(this.checkFolderOnlyMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -243,6 +252,7 @@
         private System.Windows.Forms.TreeView logFilesList;
         private System.Windows.Forms.ToolStripMenuItem addLogsCollectionFileMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ToolStripMenuItem checkFolderOnlyMenuItem;
     }
 }
 

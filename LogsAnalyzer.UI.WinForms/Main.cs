@@ -43,11 +43,11 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private IConfigurationSource loadConfigurationSource() {
-                var configFile = Path.Combine(Application.StartupPath, "LogAnalyzer.config");
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(configFile);
-                AnalyzersConfigFile = configFile;
-                return new AnalyzerConfigurationXmlSource(xmlDoc);
+            var configFile = Path.Combine(Application.StartupPath, "LogAnalyzer.config");
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(configFile);
+            AnalyzersConfigFile = configFile;
+            return new AnalyzerConfigurationXmlSource(xmlDoc);
         }
 
         private void addLogFileMenuItem_Click(object sender, EventArgs e) {
@@ -75,13 +75,15 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void logFilesListMenu_Opened(object sender, EventArgs e) {
-            var hasFile = _logSourceListController.HasFile();
-            var hasSelectedFile = _logSourceListController.HasSelectedFile();
+            var hasAny = _logSourceListController.HasAny();
+            var hasSelectedAny = _logSourceListController.HasSelectedAny();
+            var isSelectedItemFolder = _logSourceListController.IsSelectedItemFolder();
 
-            removeLogFileMenuItem.Enabled = hasSelectedFile;
-            removeAllLogsMenuItem.Enabled = hasFile;
-            saveSelectedCollectionFileMenuItem.Enabled = hasSelectedFile;
-            saveAllToCollectionMenuItem.Enabled = hasFile;
+            removeLogFileMenuItem.Enabled = hasSelectedAny;
+            removeAllLogsMenuItem.Enabled = hasAny;
+            checkFolderOnlyMenuItem.Enabled = isSelectedItemFolder;
+            saveSelectedCollectionFileMenuItem.Enabled = hasSelectedAny;
+            saveAllToCollectionMenuItem.Enabled = hasAny;
         }
 
         private void removeLogFileMenuItem_Click(object sender, EventArgs e) {
@@ -93,7 +95,7 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void runAnalysis() {
-            if (!_logSourceListController.HasSelectedFile()) {
+            if (!_logSourceListController.HasSelectedAny()) {
                 MessageBox.Show("Please check one or more log files to analyze, or add files/folders by right-clicking on Log files list",
                                 "No log file to analyze", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -198,6 +200,15 @@ namespace LogAnalyzer.UI.WinForms {
                     MessageBox.Show($"File {openFileDialog.FileName} is not a valid log source definition file. {exc.Message}.",
                                      "Invalid log source definition file", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
+                }
+            }
+        }
+
+        private void checkFolderOnlyMenuItem_Click(object sender, EventArgs e) {
+            if (logFilesList.SelectedNode != null) {
+                logFilesList.SelectedNode.Checked = true;
+                foreach (TreeNode child in logFilesList.SelectedNode.Nodes) {
+                    child.Checked = false;
                 }
             }
         }
