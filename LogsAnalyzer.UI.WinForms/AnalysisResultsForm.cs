@@ -157,10 +157,16 @@ namespace LogAnalyzer.UI.WinForms {
 
             FormState = FormStateEnum.AnalyzingLogsInProgress;
 
-            runAnalyzers();
-            renderResults();
+            try {
+                runAnalyzers();
+                renderResults();
+                expandNodes(resultsTreeView);
+            }
+            catch(Exception exc) {
+                MessageBox.Show($"Error occurred while analyzing logs or rendering analysis results: {Environment.NewLine}{exc.Message}", "Error", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
-            expandNodes(resultsTreeView);
             setText(filterTextBox, string.Empty);
 
             FormState = FormStateEnum.Ready;
@@ -188,13 +194,13 @@ namespace LogAnalyzer.UI.WinForms {
 
         private void renderResults() {
             _analyzersWithoutRenderers.Clear();
-            
+
             Analyzers.ForEach(a => renderAnalysisResults(a));
             AnalyzerChains.ForEach(ac => ac.Analyzers.ForEach(a => renderAnalysisResults(a)));
 
             if (_analyzersWithoutRenderers.Any()) {
-                MessageBox.Show("Results for the following analyzer(s) will not be shown because of missing TreeViewRenderer implementation: " + 
-                                Environment.NewLine + 
+                MessageBox.Show("Results for the following analyzer(s) will not be shown because of missing TreeViewRenderer implementation: " +
+                                Environment.NewLine +
                                 string.Join(Environment.NewLine, _analyzersWithoutRenderers.Select(a => a.ToString())
                                                                                            .Select(a => "- " + a.Substring(a.LastIndexOf('.') + 1))
                                                                                            .ToArray()),
@@ -207,9 +213,11 @@ namespace LogAnalyzer.UI.WinForms {
                 renderAnalysisResults(_rendererList[analyzer.GetType()], analyzer);
             }
             else {
-                if (!_analyzersWithoutRenderers.Contains(analyzer.GetType())) {
+                if (_rendererList.ContainsKey(typeof(BaseLogAnalyzer))) {
+                    renderAnalysisResults(_rendererList[typeof(BaseLogAnalyzer)], analyzer);
+                }
+                else { 
                     _analyzersWithoutRenderers.Add(analyzer.GetType());
-
                 }
             }
         }
