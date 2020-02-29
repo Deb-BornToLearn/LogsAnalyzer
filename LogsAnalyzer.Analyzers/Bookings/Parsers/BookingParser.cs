@@ -1,15 +1,11 @@
 ﻿using LogAnalyzer.Analyzers.Bookings.Models;
 using LogAnalyzer.Analyzers.Bookings.Parsers;
 using LogAnalyzer.Infrastructure.Analysis;
-using LogsAnalyzer.Infrastructure.Analysis;
-using System;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace LogsAnalyzer.Analyzers.Bookings.Parsers {
 
-    public class BookingParser : IParser<BaseAnalysisResult>{
+    public class BookingParser : IParser<BaseAnalysisResult> {
         public class XmlTokens {
             public const string ROOT_ELEMENT = "UTSv_ProductTypeReservationRQ";
             public const string CLIENT_TRANSACTION_ID = "ClientTransactionId";
@@ -43,87 +39,23 @@ namespace LogsAnalyzer.Analyzers.Bookings.Parsers {
 
         public BookingAnalysis BookingAnalysis { get; internal set; }
 
-        //public AnalysisResult Output => BookingAnalysis;
-
         public BaseAnalysisResult Output => BookingAnalysis;
-
-        private StringBuilder _bookingInputBuffer = null;
 
         private const string NO_VALUE = "<not specified>";
 
-        private BookingAnalysis _lastBookingParsed = null;
-
-        private const string MISC_LOG_PATTERN = @"\[MTD:.+?\](.*)";
-
-        private readonly string SELF_CLOSING_ROOT_ELEMENT_PATTERN = $"<{XmlTokens.ROOT_ELEMENT}[^>]*\\s*/>";
+        private XmlParser _xmlParser = new XmlParser(XmlTokens.ROOT_ELEMENT);
 
         public bool Parse(string lineText) {
             BookingAnalysis = null;
-            BookingAnalysis temp;
-            if (tryParseBookingOnSameLine(lineText, out temp)) {
-                BookingAnalysis = temp;
-                _lastBookingParsed = BookingAnalysis;
-            }
-            else if (isBookingStartTag(lineText)) {
-                _bookingInputBuffer = new StringBuilder();
-                _bookingInputBuffer.AppendLine(lineText);
-            }
-            else if (isBookingEndTag(lineText)) {
-                var bookingText = _bookingInputBuffer.AppendLine(lineText).ToString();
-                BookingAnalysis = parseBooking(bookingText);
-                _lastBookingParsed = BookingAnalysis;
-                _bookingInputBuffer = null;
-            }
-            else {
-                if (_bookingInputBuffer != null) {
-                    _bookingInputBuffer.AppendLine(lineText);
-                }
-                else {
-                    if (_lastBookingParsed == null) return false;
-
-                    string parsedMiscTraceData;
-                    if (tryParseMiscellaneousTraceData(lineText, out parsedMiscTraceData)) {
-                        //_lastBookingParsed.MiscellaneousTraceData.Add(parsedMiscTraceData);
-                        return true;
-                    }
-                    return false;
+            bool parsingDone;
+            var parsed = _xmlParser.Parse(lineText, out parsingDone);
+            if (parsed) {
+                if (parsingDone) {
+                    BookingAnalysis = parseBooking(_xmlParser.OutputXmlString);
+                    _xmlParser.Reset();
                 }
             }
-            return true;
-        }
-
-
-        private bool tryParseMiscellaneousTraceData(string lineText, out string parsedMiscTraceData) {
-            parsedMiscTraceData = lineText;
-            var m = Regex.Match(lineText, MISC_LOG_PATTERN);
-            if (m.Success && m.Groups.Count > 1) {
-                // Check below needed to remove duplicate log entries;
-                // much faster than doing via RegEx: .*^(?!.*Rezobx\+EASWebService).*\[MTD:.+?\](.*)
-                if (parsedMiscTraceData.Contains(@"Rezobx+EASWebService")) {
-                    return false;
-                }
-                parsedMiscTraceData = $"{m.Groups[1].Value}";
-            }
-            return m.Success;
-        }
-
-        private bool tryParseBookingOnSameLine(string lineText, out BookingAnalysis outputBooking) {
-            var m = Regex.Match(lineText, SELF_CLOSING_ROOT_ELEMENT_PATTERN);
-            outputBooking = m.Success ? parseBooking(m.Groups[0].Value) : null;
-            if (m.Success) return true;
-
-            var openCloseTagSameOnSameLinePattern = $"<{XmlTokens.ROOT_ELEMENT}>.*?</{XmlTokens.ROOT_ELEMENT}>";
-            m = Regex.Match(lineText, openCloseTagSameOnSameLinePattern);
-            outputBooking = m.Success ? parseBooking(m.Groups[0].Value) : null;
-            return m.Success;
-        }
-
-        private bool isBookingStartTag(string lineText) {
-            return Regex.Match(lineText, $"<{XmlTokens.ROOT_ELEMENT}.*>").Success;
-        }
-
-        private bool isBookingEndTag(string lineText) {
-            return Regex.Match(lineText, $"</{XmlTokens.ROOT_ELEMENT}>").Success;
+            return parsed;
         }
 
         private BookingAnalysis parseBooking(string bookingText) {

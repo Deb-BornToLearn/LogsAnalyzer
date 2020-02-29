@@ -48,6 +48,7 @@
     <Compile Include="Bookings\Models\Extra.cs" />
     <Compile Include="Bookings\Parsers\IParser.cs" />
     <Compile Include="Bookings\Parsers\NewBookingCreatedParser.cs" />
+    <Compile Include="Bookings\Parsers\XmlParser.cs" />
     <Compile Include="Errors\Database\ModelBackingChangedErrorAnalyzer.cs" />
     <Compile Include="Errors\Database\OutOfConnectionsErrorAnalyzer.cs" />
     <Compile Include="Errors\Database\UnreachableServerErrorAnalyzer.cs" />
