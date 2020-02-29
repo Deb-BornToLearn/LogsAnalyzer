@@ -52,7 +52,6 @@ namespace LogsAnalyzer.Analyzers.Bookings.Parsers {
             if (parsed) {
                 if (parsingDone) {
                     BookingAnalysis = parseBooking(_xmlParser.OutputXmlString);
-                    _xmlParser.Reset();
                 }
             }
             return parsed;

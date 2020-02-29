@@ -33,6 +33,7 @@ namespace LogAnalyzer.Analyzers.Bookings.Parsers {
             else if (isEndTag(input)) {
                 _buffer.AppendLine(input);
                 OutputXmlString = _buffer.ToString();
+                _buffer = null;
                 done = true;
                 return true;
             }
@@ -43,10 +44,6 @@ namespace LogAnalyzer.Analyzers.Bookings.Parsers {
                 }
             }
             return false;
-        }
-        public void Reset() {
-            _buffer = null;
-            OutputXmlString = string.Empty;
         }
 
         private bool isEndTag(string input) {
