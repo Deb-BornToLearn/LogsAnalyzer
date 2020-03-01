@@ -15,8 +15,13 @@ namespace LogAnalyzer.Analyzers.Bookings.Parsers {
         public bool Parse(string text) {
             if (_foundConfirmReservationStart) {
                 var foundConfirmationData = tryParseReservationConfirmationData(text);
+                if (foundConfirmationData) {
+                    // Reset for any matches that follow
+                    _foundConfirmReservationStart = false;
+                }
                 return foundConfirmationData;
-            } else if (isReservationConfirmationStart(text)) {
+            }
+            else if (isReservationConfirmationStart(text)) {
                 _foundConfirmReservationStart = true;
                 return true;
             }
