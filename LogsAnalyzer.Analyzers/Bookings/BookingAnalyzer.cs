@@ -51,10 +51,7 @@ namespace LogAnalyzer.Analyzers.Bookings {
                                         long currentLineNumberStart, long currentLineNumber, string sourceName) {
             if (output == null) return;
 
-            var outputConsumer = OutputConsumers[output.GetType()];
-            if (outputConsumer != null) {
-                outputConsumer(output, rawText, currentLineNumberStart, currentLineNumber, sourceName);
-            }
+            OutputConsumers[output.GetType()]?.Invoke(output, rawText, currentLineNumberStart, currentLineNumber, sourceName);
         }
 
         private void consumeBookingAnalysis(BaseAnalysisResult output, string rawText,
