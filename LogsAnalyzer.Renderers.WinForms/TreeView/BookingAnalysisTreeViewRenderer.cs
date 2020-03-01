@@ -26,15 +26,18 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
                 bookingNode.Text = $"{booking.CustomerLastName}, {booking.CustomerFirstName}";
                 ContextMenuStrips.Add(bookingNode, createContextMenuForBookingNode(bookingNode, booking));
 
-                bookingNode.Nodes.Add(CreateNode($"Account Id: {booking.AccountId}"));
-                bookingNode.Nodes.Add(CreateNode($"Distributor: {booking.DistributorShortName}"));
-                bookingNode.Nodes.Add(CreateNode($"Provider: {booking.PrimaryProvider}"));
-                bookingNode.Nodes.Add(CreateNode($"Commences: {booking.StartDateUTC}, Concludes: {booking.EndDateUTC}"));
-                bookingNode.Nodes.Add(CreateNode($"Payment Amount: {booking.AmountPaid}"));
-                bookingNode.Nodes.Add(CreateNode($"Payment Option: {booking.PaymentOption}"));
-                bookingNode.Nodes.Add(CreateNode($"Channel Commission: {booking.ChannelCommission}"));
-                bookingNode.Nodes.Add(CreateNode($"{booking.ProductName} ({booking.ProductId})"));
+                bookingNode.Nodes.Add(CreateNodeWithCommonContextMenuStrip($"Account Id: {booking.AccountId}"));
+                bookingNode.Nodes.Add(CreateNodeWithCommonContextMenuStrip($"Distributor: {booking.DistributorShortName}"));
+                bookingNode.Nodes.Add(CreateNodeWithCommonContextMenuStrip($"Provider: {booking.PrimaryProvider}"));
+                bookingNode.Nodes.Add(CreateNodeWithCommonContextMenuStrip($"Commences: {booking.StartDateUTC}, Concludes: {booking.EndDateUTC}"));
+                bookingNode.Nodes.Add(CreateNodeWithCommonContextMenuStrip($"Payment Amount: {booking.AmountPaid}"));
+                bookingNode.Nodes.Add(CreateNodeWithCommonContextMenuStrip($"Payment Option: {booking.PaymentOption}"));
+                bookingNode.Nodes.Add(CreateNodeWithCommonContextMenuStrip($"Channel Commission: {booking.ChannelCommission}"));
+                bookingNode.Nodes.Add(CreateNodeWithCommonContextMenuStrip($"{booking.ProductName} ({booking.ProductId})"));
                 bookingNode.Nodes.Add(CreateNode($"Products: {booking.ProductTotal}, Extras: {booking.ExtrasTotal}"));
+
+                createConfirmationNodes(booking, bookingNode);
+
                 var logFileNode = CreateNode($"Source: {booking.Source}");
                 ContextMenuStrips.Add(logFileNode, CreateContextMenuItemForLogFile(logFileNode, booking.Source));
                 bookingNode.Nodes.Add(logFileNode);
@@ -54,6 +57,22 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
                 rootBookingAnalyzer.Nodes.Add(bookingNode);
             }
             return rootBookingAnalyzer;
+        }
+
+        private void createConfirmationNodes(BookingAnalysis booking, TreeNode bookingNode) {
+            if (booking.Confirmation != null) {
+                var referenceNode = CreateNodeWithCommonContextMenuStrip($"Reference: {booking.Confirmation.Reference}");
+                bookingNode.Nodes.Add(referenceNode);
+
+                var obxRefNode = CreateNode($"OBX Ref: {booking.Confirmation.ObxReference}");
+                if (!string.IsNullOrWhiteSpace(booking.Confirmation.ObxReference)) {
+                    ContextMenuStrips.Add(obxRefNode, CreateCommonContextMenuStrip(obxRefNode));
+                }
+                bookingNode.Nodes.Add(obxRefNode);
+            }
+            else {
+                bookingNode.Nodes.Add(CreateNode("No reservation confirmation data found"));
+            }
         }
 
         private ContextMenuStrip CreateContextMenuItemForLogFile(TreeNode node, string filename) {

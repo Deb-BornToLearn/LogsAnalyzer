@@ -44,10 +44,12 @@
     <Compile Include="Bookings\Models\MiscellaneousTraceDataAnalysis.cs" />
     <Compile Include="Bookings\Models\NewBookingCreatedAnalysis.cs" />
     <Compile Include="Bookings\Models\NewBookingInfo.cs" />
+    <Compile Include="Bookings\Models\ReservationConfirmationAnalysis.cs" />
     <Compile Include="Bookings\Parsers\MiscBookingTraceDataParser.cs" />
     <Compile Include="Bookings\Models\Extra.cs" />
     <Compile Include="Bookings\Parsers\IParser.cs" />
     <Compile Include="Bookings\Parsers\NewBookingCreatedParser.cs" />
+    <Compile Include="Bookings\Parsers\ReservationConfirmationParser.cs" />
     <Compile Include="Bookings\Parsers\XmlParser.cs" />
     <Compile Include="Errors\Database\ModelBackingChangedErrorAnalyzer.cs" />
     <Compile Include="Errors\Database\OutOfConnectionsErrorAnalyzer.cs" />

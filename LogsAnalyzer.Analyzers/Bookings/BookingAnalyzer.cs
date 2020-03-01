@@ -20,10 +20,12 @@ namespace LogAnalyzer.Analyzers.Bookings {
             Parsers.Add(new BookingParser());
             Parsers.Add(new NewBookingCreatedParser());
             Parsers.Add(new MiscBookingTraceDataParser());
+            Parsers.Add(new ReservationConfirmationParser());
 
             OutputConsumers.Add(typeof(BookingAnalysis), consumeBookingAnalysis);
             OutputConsumers.Add(typeof(NewBookingCreatedAnalysis), newBookingCreatedAnalysis);
             OutputConsumers.Add(typeof(MiscellaneousTraceDataAnalysis), miscTraceDataAnalysis);
+            OutputConsumers.Add(typeof(ReservationConfirmationAnalysis), reservationConfirmationAnalysis);
         }
 
         private long _currentLineNumberStart = -1;
@@ -82,7 +84,7 @@ namespace LogAnalyzer.Analyzers.Bookings {
                     theBooking.TransactionId = newAccountCreated.ClientTransactionId;
                 }
                 theBooking.AccountId = newAccountCreated.AccountId;
-                
+
                 newAccountCreated.MiscTraceDataAnalysis.StartLineNumber = currentLineNumber;
                 newAccountCreated.MiscTraceDataAnalysis.EndLineNumber = currentLineNumber;
 
@@ -96,9 +98,23 @@ namespace LogAnalyzer.Analyzers.Bookings {
             if (miscTraceData != null) {
                 miscTraceData.Source = sourceName;
                 miscTraceData.StartLineNumber = currentLineNumber;
-                miscTraceData.EndLineNumber= currentLineNumber;
+                miscTraceData.EndLineNumber = currentLineNumber;
                 var theBooking = Bookings.FirstOrDefault(b => b.AccountId == miscTraceData.AccountId);
                 theBooking?.MiscellaneousTraceData.Add(miscTraceData);
+            }
+        }
+
+        private void reservationConfirmationAnalysis(BaseAnalysisResult output, string rawText,
+                                                    long currentLineNumberStart, long currentLineNumber, string sourceName) {
+            var reservationConfirmation = output as ReservationConfirmationAnalysis;
+            if (reservationConfirmation != null) {
+                var theBooking = Bookings.FirstOrDefault(b => b.AccountId == reservationConfirmation.AccountId);
+                if (theBooking != null) {
+                    reservationConfirmation.Source = sourceName;
+                    reservationConfirmation.StartLineNumber = currentLineNumber;
+                    reservationConfirmation.EndLineNumber = currentLineNumber;
+                    theBooking.Confirmation = reservationConfirmation;
+                }
             }
         }
 
