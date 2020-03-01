@@ -18,6 +18,15 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
                 Text = text
             };
         }
+
+        protected TreeNode CreateNodeWithCommonContextMenuStrip(string text) {
+            var theNode = new TreeNode {
+                Text = text
+            };
+            ContextMenuStrips.Add(theNode, CreateCommonContextMenuStrip(theNode));
+            return theNode;
+        }
+
         protected ToolStripMenuItem CreateCopyToClipboardMenuItem(string menuText, string textToCopy) {
             ToolStripMenuItem menuItem = new ToolStripMenuItem();
             menuItem.Text = menuText;
