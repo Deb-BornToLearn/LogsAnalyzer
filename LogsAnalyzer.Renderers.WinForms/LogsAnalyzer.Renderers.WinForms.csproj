@@ -47,6 +47,7 @@
     <Compile Include="TreeView\BaseAnalysisNode.cs" />
     <Compile Include="TreeView\BaseTreeViewRenderer.cs" />
     <Compile Include="TreeView\BookingAnalysisTreeViewRenderer.cs" />
+    <Compile Include="TreeView\DailyInventoryCacheUpdateAnalysisTreeViewRenderer.cs" />
     <Compile Include="TreeView\DefaultAnalysisTreeViewRenderer.cs" />
     <Compile Include="TreeView\ModelBackingChangedTreeViewRenderer.cs" />
     <Compile Include="TreeView\OutOfDbConnectionsErrorTreeViewRenderer.cs" />

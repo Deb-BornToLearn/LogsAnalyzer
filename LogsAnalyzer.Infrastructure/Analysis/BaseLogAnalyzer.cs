@@ -1,12 +1,13 @@
 ﻿using LogAnalyzer.Infrastructure.Analysis;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace LogsAnalyzer.Infrastructure.Analysis {
     public abstract class BaseLogAnalyzer : ILogAnalyzer {
         public virtual List<BaseAnalysisResult> Results { get; }
         public BaseLogAnalyzer() {
-        
+            Results = new List<BaseAnalysisResult>();
         }
         public abstract bool Analyze(string lineText, long lineNumber, string sourceName);
 
@@ -20,10 +21,14 @@ namespace LogsAnalyzer.Infrastructure.Analysis {
 
         public virtual string AnalysesToString() {
             var sb = new StringBuilder();
-            foreach (var a in Results) {
-                sb.AppendLine(a.ToString());
+            if (Results.Any()) {
+                foreach (var a in Results) {
+                    sb.AppendLine(a.ToString());
+                }
+                return sb.ToString();
             }
-            return sb.ToString();
+
+            return "No analysis to display from Results collection";
         }
     }
 }
