@@ -264,8 +264,8 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void LogReader_OnReadProgress(LogReader reader, ReadProgressEventArgs args) {
-            if (args.LineNumber % 5000 == 0) {
-                setText(filterTextBox, $"Analyzing line {args.LineNumber} ...{Environment.NewLine}");
+            if (args.LineNumber % 10000 == 0) {
+                setText(filterTextBox, $"Analyzing line {args.LineNumber} of {args.SourceName} ...{Environment.NewLine}");
             }
         }
 
