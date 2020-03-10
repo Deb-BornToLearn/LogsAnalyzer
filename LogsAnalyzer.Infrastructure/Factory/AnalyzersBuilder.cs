@@ -18,6 +18,7 @@ namespace LogsAnalyzer.Infrastructure.Factory {
                 var args = config.ConstructorArgs.Select(a => a.Value).ToArray();
                 var typeName = config.TypeActivationName;
                 var analyzer = TypeFactory.CreateInstance<BaseLogAnalyzer>(new FullTypeNameEntry(typeName), args);
+                analyzer.DisplayName = config.DisplayName;
                 analyzers.Add(analyzer);
             }
             return analyzers;
