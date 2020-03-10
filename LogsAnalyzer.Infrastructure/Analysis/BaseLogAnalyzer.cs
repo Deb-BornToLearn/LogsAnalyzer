@@ -5,6 +5,7 @@ using System.Text;
 
 namespace LogsAnalyzer.Infrastructure.Analysis {
     public abstract class BaseLogAnalyzer : ILogAnalyzer {
+        public string DisplayName { get; set; }
         public virtual List<BaseAnalysisResult> Results { get; }
         public BaseLogAnalyzer() {
             Results = new List<BaseAnalysisResult>();
