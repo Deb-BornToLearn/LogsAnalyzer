@@ -162,8 +162,8 @@ namespace LogAnalyzer.UI.WinForms {
                 renderResults();
                 expandNodes(resultsTreeView);
             }
-            catch(Exception exc) {
-                MessageBox.Show($"Error occurred while analyzing logs or rendering analysis results: {Environment.NewLine}{exc.Message}", "Error", 
+            catch (Exception exc) {
+                MessageBox.Show($"Error occurred while analyzing logs or rendering analysis results: {Environment.NewLine}{exc.Message}", "Error",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -216,7 +216,7 @@ namespace LogAnalyzer.UI.WinForms {
                 if (_rendererList.ContainsKey(typeof(BaseLogAnalyzer))) {
                     renderAnalysisResults(_rendererList[typeof(BaseLogAnalyzer)], analyzer);
                 }
-                else { 
+                else {
                     _analyzersWithoutRenderers.Add(analyzer.GetType());
                 }
             }
@@ -264,10 +264,30 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private int _logInterval = 100;
+
+        private DateTime _lastStatusUpdate = DateTime.MinValue;
         private void LogReader_OnReadProgress(LogReader reader, ReadProgressEventArgs args) {
             if (args.LineNumber % _logInterval == 0) {
                 setText(filterTextBox, $"Analyzing line {args.LineNumber} of {args.SourceName} ...{Environment.NewLine}");
+                adjustLogIntervalIfNeeded();
             }
+
+        }
+
+        private void adjustLogIntervalIfNeeded() {
+            if (_lastStatusUpdate != DateTime.MinValue) {
+                var secondsDiff = DateTime.Now.Subtract(_lastStatusUpdate).TotalSeconds;
+                if (secondsDiff < 5) {
+                    _logInterval += 100;
+                    if (_logInterval > 10000) {
+                        _logInterval = 10000;
+                    }
+                }
+                else if (secondsDiff > 5) {
+                    _logInterval = 5;
+                }
+            }
+            _lastStatusUpdate = DateTime.Now;
         }
 
         private void closeButton_Click(object sender, EventArgs e) {
