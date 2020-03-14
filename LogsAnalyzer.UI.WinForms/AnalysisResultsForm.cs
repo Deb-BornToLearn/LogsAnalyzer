@@ -1,4 +1,5 @@
-﻿using LogAnalyzer.Infrastructure;
+﻿using LogAnalyzer.Analyzers.PatternMatch;
+using LogAnalyzer.Infrastructure;
 using LogAnalyzer.Infrastructure.Analysis;
 using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure;
@@ -88,7 +89,23 @@ namespace LogAnalyzer.UI.WinForms {
 
         private List<BaseLogAnalyzer> buildAnalyzers(AnalysisArgs analysisArgs) {
             var analyzerBuilder = new AnalyzersBuilder(analysisArgs.AnalyzerConfigurations);
-            return analyzerBuilder.BuildAnalyzers();
+            var analyzers = analyzerBuilder.BuildAnalyzers();
+            addAdHocRegexAnalyzerIfNeeded(analyzers);
+            return analyzers;
+        }
+
+        private void addAdHocRegexAnalyzerIfNeeded(List<BaseLogAnalyzer> analyzers) {
+            if (!string.IsNullOrWhiteSpace(AnalysisArgs.AdhocRegExpression)) {
+                try {
+                    var regExAnalyzer = new RegexPatternMatchAnalyzer(AnalysisArgs.AdhocRegExpression);
+                    regExAnalyzer.DisplayName = "Ad hoc Regex Analyzer";
+                    analyzers.Add(regExAnalyzer);
+                }
+                catch (Exception exc) {
+                    MessageBox.Show($"Error occurred while trying to create Ad hoc RegEx Analyzer: {exc.Message}",
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private FormStateEnum _formState;
@@ -138,6 +155,9 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void populateLists() {
+            if (!string.IsNullOrWhiteSpace(AnalysisArgs.AdhocRegExpression)) {
+
+            }
             _logAnalyzerListController.AddAnalyzers(AnalysisArgs.AnalyzerConfigurations);
             _logAnalyzerListController.AddAnalyzerChains(AnalysisArgs.AnalyzerChainConfigurations);
 

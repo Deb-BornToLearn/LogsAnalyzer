@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace LogAnalyzer.UI.WinForms {
     public class AnalysisArgs {
+        public string AdhocRegExpression { get; set; }
         public List<AnalyzerConfiguration> AnalyzerConfigurations { get; protected set; }
         public List<AnalyzerChainConfiguration> AnalyzerChainConfigurations { get; protected set; }
         public AnalysisArgs() {

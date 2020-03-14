@@ -13,9 +13,9 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
 
         public override TreeNode Render() {
             if (!Analyzer.Results.Any()) {
-                return CreateNode($"No matches found for {Analyzer.DisplayName}");
+                return CreateNode($"No matches found for {Analyzer.DisplayName} using pattern \"{Analyzer.RegexPattern}\"");
             }
-            var rootNode = CreateNode($"{Analyzer.DisplayName} matches found: {Analyzer.Results.Count}");
+            var rootNode = CreateNode($"{Analyzer.DisplayName} matches found using pattern \"{Analyzer.RegexPattern}\": {Analyzer.Results.Count}");
             var matchesBySource = Analyzer.Results.GroupBy(e => e.Source,
                                                          (key, g) => new {
                                                              Source = key,

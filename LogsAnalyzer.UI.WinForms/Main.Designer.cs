@@ -29,6 +29,7 @@
             this.addFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addLogsCollectionFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.checkFolderOnlyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeAllLogsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -40,7 +41,8 @@
             this.analyzersList = new System.Windows.Forms.TreeView();
             this.logFilesList = new System.Windows.Forms.TreeView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.checkFolderOnlyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.adhocRegexTextbox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.logFilesListMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -63,7 +65,7 @@
             this.saveSelectedCollectionFileMenuItem,
             this.saveAllToCollectionMenuItem});
             this.logFilesListMenu.Name = "logFilesListMenu";
-            this.logFilesListMenu.Size = new System.Drawing.Size(259, 214);
+            this.logFilesListMenu.Size = new System.Drawing.Size(259, 192);
             this.logFilesListMenu.Opened += new System.EventHandler(this.logFilesListMenu_Opened);
             // 
             // addLogFileMenuItem
@@ -91,6 +93,13 @@
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(255, 6);
+            // 
+            // checkFolderOnlyMenuItem
+            // 
+            this.checkFolderOnlyMenuItem.Name = "checkFolderOnlyMenuItem";
+            this.checkFolderOnlyMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.checkFolderOnlyMenuItem.Text = "Check folder only";
+            this.checkFolderOnlyMenuItem.Click += new System.EventHandler(this.checkFolderOnlyMenuItem_Click);
             // 
             // removeLogFileMenuItem
             // 
@@ -129,7 +138,7 @@
             // 
             this.analyzeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.analyzeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.analyzeButton.Location = new System.Drawing.Point(462, 338);
+            this.analyzeButton.Location = new System.Drawing.Point(722, 431);
             this.analyzeButton.Margin = new System.Windows.Forms.Padding(1);
             this.analyzeButton.Name = "analyzeButton";
             this.analyzeButton.Size = new System.Drawing.Size(114, 34);
@@ -166,7 +175,7 @@
             this.analyzersList.CheckBoxes = true;
             this.analyzersList.Location = new System.Drawing.Point(0, 19);
             this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(567, 137);
+            this.analyzersList.Size = new System.Drawing.Size(827, 184);
             this.analyzersList.TabIndex = 7;
             this.analyzersList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.analyzersList_AfterCheck);
             // 
@@ -179,7 +188,7 @@
             this.logFilesList.ContextMenuStrip = this.logFilesListMenu;
             this.logFilesList.Location = new System.Drawing.Point(0, 17);
             this.logFilesList.Name = "logFilesList";
-            this.logFilesList.Size = new System.Drawing.Size(567, 140);
+            this.logFilesList.Size = new System.Drawing.Size(827, 186);
             this.logFilesList.TabIndex = 8;
             this.logFilesList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.logFilesList_AfterCheck);
             // 
@@ -204,21 +213,35 @@
             this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.analyzersList);
-            this.splitContainer1.Size = new System.Drawing.Size(567, 320);
-            this.splitContainer1.SplitterDistance = 160;
+            this.splitContainer1.Size = new System.Drawing.Size(827, 413);
+            this.splitContainer1.SplitterDistance = 206;
             this.splitContainer1.TabIndex = 9;
             // 
-            // checkFolderOnlyMenuItem
+            // adhocRegexTextbox
             // 
-            this.checkFolderOnlyMenuItem.Name = "checkFolderOnlyMenuItem";
-            this.checkFolderOnlyMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.checkFolderOnlyMenuItem.Text = "Check folder only";
-            this.checkFolderOnlyMenuItem.Click += new System.EventHandler(this.checkFolderOnlyMenuItem_Click);
+            this.adhocRegexTextbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.adhocRegexTextbox.Location = new System.Drawing.Point(94, 439);
+            this.adhocRegexTextbox.Name = "adhocRegexTextbox";
+            this.adhocRegexTextbox.Size = new System.Drawing.Size(474, 20);
+            this.adhocRegexTextbox.TabIndex = 10;
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(13, 442);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(75, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Ad hoc Regex";
             // 
             // Main
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(590, 377);
+            this.ClientSize = new System.Drawing.Size(850, 470);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.adhocRegexTextbox);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.analyzeButton);
             this.Margin = new System.Windows.Forms.Padding(1);
@@ -232,6 +255,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -253,6 +277,8 @@
         private System.Windows.Forms.ToolStripMenuItem addLogsCollectionFileMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem checkFolderOnlyMenuItem;
+        private System.Windows.Forms.TextBox adhocRegexTextbox;
+        private System.Windows.Forms.Label label3;
     }
 }
 

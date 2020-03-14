@@ -101,29 +101,30 @@ namespace LogAnalyzer.UI.WinForms {
                 return;
             }
 
-            if (!_logAnalyzerListController.IsAnyAnalyzerSelected()) {
-                MessageBox.Show("Please check one or more analyzers to run",
+            if (!_logAnalyzerListController.IsAnyAnalyzerSelected() && string.IsNullOrWhiteSpace(adhocRegexTextbox.Text)) {
+                MessageBox.Show("Please check one or more analyzers to run, or enter adhoc Regex pattern",
                                 "Select analyzer(s)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             AnalysisArgs analysisArgs = _logAnalyzerListController.BuildAnalysisArgs();
+            analysisArgs.AdhocRegExpression = adhocRegexTextbox.Text;
             var logSources = _logSourceListController.BuildLogSourceDefinitionFromSelection();
             var resultsForm = new AnalysisResultsForm(analysisArgs, logSources, AnalyzersConfigFile);
             resultsForm.Show();
         }
 
 
-        private List<BaseLogAnalyzer> loadAnalyzers() {
-            var analyzerConfigs = _logAnalyzerListController.GetSelectedAnalyzerConfigurations();
-            if (!analyzerConfigs.Any()) {
-                MessageBox.Show("Please select one or more log analyzers to run");
-                return null;
-            }
+        //private List<BaseLogAnalyzer> loadAnalyzers() {
+        //    var analyzerConfigs = _logAnalyzerListController.GetSelectedAnalyzerConfigurations();
+        //    if (!analyzerConfigs.Any()) {
+        //        MessageBox.Show("Please select one or more log analyzers to run");
+        //        return null;
+        //    }
 
-            var analyzerBuilder = new AnalyzersBuilder(analyzerConfigs);
-            return analyzerBuilder.BuildAnalyzers();
-        }
+        //    var analyzerBuilder = new AnalyzersBuilder(analyzerConfigs);
+        //    return analyzerBuilder.BuildAnalyzers();
+        //}
 
         private void removeAllLogsMenuItem_Click(object sender, EventArgs e) {
             _logSourceListController.RemoveAllItems();
