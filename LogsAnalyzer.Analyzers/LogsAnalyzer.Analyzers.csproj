@@ -59,6 +59,8 @@
     <Compile Include="Errors\GenericErrorAnalysis.cs" />
     <Compile Include="Errors\Smtp\SmtpErrorAnalyzer.cs" />
     <Compile Include="Errors\UnhandledErrors\UnhandledErrorsAnalyzer.cs" />
+    <Compile Include="Inventory\ClosedForCheckoutAnalysis.cs" />
+    <Compile Include="Inventory\ClosedForCheckoutAnalyzer.cs" />
     <Compile Include="Inventory\DailyInventoryCacheUpdateAnalysis.cs" />
     <Compile Include="Inventory\DailyInventoryCacheUpdateAnalyzer.cs" />
     <Compile Include="PatternMatch\RegexPatternMatchAnalyzer.cs" />
