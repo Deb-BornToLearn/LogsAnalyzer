@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -106,12 +107,27 @@ namespace LogAnalyzer.UI.WinForms {
                                 "Select analyzer(s)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            if (!adhocRegexIsValid()) {
+                return;
+            }
 
             AnalysisArgs analysisArgs = _logAnalyzerListController.BuildAnalysisArgs();
             analysisArgs.AdhocRegExpression = adhocRegexTextbox.Text;
             var logSources = _logSourceListController.BuildLogSourceDefinitionFromSelection();
             var resultsForm = new AnalysisResultsForm(analysisArgs, logSources, AnalyzersConfigFile);
             resultsForm.Show();
+        }
+
+        private bool adhocRegexIsValid() {
+            try {
+                _ = new Regex(adhocRegexTextbox.Text);
+                return true;
+            }
+            catch (Exception exc) {
+                MessageBox.Show($"Regex expression \"{adhocRegexTextbox.Text}\" is not valid: {exc.Message}","Invalid Regex", 
+                                MessageBoxButtons.OK,MessageBoxIcon.Error);
+                return false;
+            }
         }
 
 
