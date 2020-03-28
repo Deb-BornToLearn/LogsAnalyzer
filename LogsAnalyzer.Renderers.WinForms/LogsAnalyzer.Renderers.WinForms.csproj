@@ -52,6 +52,7 @@
     <Compile Include="TreeView\DefaultAnalysisTreeViewRenderer.cs" />
     <Compile Include="TreeView\ModelBackingChangedTreeViewRenderer.cs" />
     <Compile Include="TreeView\OutOfDbConnectionsErrorTreeViewRenderer.cs" />
+    <Compile Include="TreeView\R2RPlusMigrationTreeViewRenderer.cs" />
     <Compile Include="TreeView\RegexPatternAnalysisTreeViewRenderer.cs" />
     <Compile Include="TreeView\SmtpErrorTreeViewRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

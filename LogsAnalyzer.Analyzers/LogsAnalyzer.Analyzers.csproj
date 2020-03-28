@@ -63,6 +63,8 @@
     <Compile Include="Inventory\ClosedForCheckoutAnalyzer.cs" />
     <Compile Include="Inventory\DailyInventoryCacheUpdateAnalysis.cs" />
     <Compile Include="Inventory\DailyInventoryCacheUpdateAnalyzer.cs" />
+    <Compile Include="Migration\R2RPlus\R2RPlusMigrationAnalysis.cs" />
+    <Compile Include="Migration\R2RPlus\R2RPlusMigrationAnalyzer.cs" />
     <Compile Include="PatternMatch\RegexPatternMatchAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bookings\Models\BookingAnalysis.cs" />
