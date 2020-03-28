@@ -20,13 +20,13 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
         public readonly List<DeletedRPlusData> DeletedRatePlanLines = new List<DeletedRPlusData>();
         public readonly List<DeletedRPlusData> DeletedAccommodationInventories = new List<DeletedRPlusData>();
         public readonly List<DeletedRPlusData> DeletedAccommodationInventoryDailyCache = new List<DeletedRPlusData>();
-        public readonly List<InsertedData> InsertedProducts = new List<InsertedData>();
-        public readonly List<InsertedData> InsertedInventory = new List<InsertedData>();
-        public readonly List<InsertedData> InsertedProductInventory = new List<InsertedData>();
-        public readonly List<InsertedData> InsertedRatePlans = new List<InsertedData>();
-        public readonly List<InsertedData> InsertedAccommodationBookingExtras = new List<InsertedData>();
-        public readonly List<InsertedData> InsertedAccommodationRatePlanBookingExtras = new List<InsertedData>();
-        public readonly List<InsertedData> InsertedBookings = new List<InsertedData>();
+        public readonly List<InsertedRPlusData> InsertedProducts = new List<InsertedRPlusData>();
+        public readonly List<InsertedRPlusData> InsertedInventory = new List<InsertedRPlusData>();
+        public readonly List<InsertedRPlusData> InsertedProductInventory = new List<InsertedRPlusData>();
+        public readonly List<InsertedRPlusData> InsertedRatePlans = new List<InsertedRPlusData>();
+        public readonly List<InsertedRPlusData> InsertedAccommodationBookingExtras = new List<InsertedRPlusData>();
+        public readonly List<InsertedRPlusData> InsertedAccommodationRatePlanBookingExtras = new List<InsertedRPlusData>();
+        public readonly List<InsertedRPlusData> InsertedBookings = new List<InsertedRPlusData>();
 
         public R2RPlusMigrationAnalysis(Match regExMatch) {
             LogId = regExMatch.Groups[5].Value;
@@ -39,12 +39,15 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
     public class DeletedRPlusData {
         public string Id { get; set; }
         public string Name { get; set; }
+        public long LineNumber { get; set; }
     }
-    public class InsertedData {
+    public class InsertedRPlusData {
         public string RId { get; set; }
         public string RPlusId { get; set; }
         public string Name { get; set; }
         public bool IsOk { get; set; }
         public string StatusMessage { get; set; }
+        public long LineNumber { get; set; }
+
     }
 }

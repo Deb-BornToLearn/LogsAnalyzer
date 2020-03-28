@@ -29,7 +29,7 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
             return rootResult;
         }
 
-        private void renderInsertedBookings(TreeNode parentNode, List<InsertedData> insertedBookings) {
+        private void renderInsertedBookings(TreeNode parentNode, List<InsertedRPlusData> insertedBookings) {
             var failed = insertedBookings.Where(b => !b.IsOk).Count();
             var insertedBookingsNode = CreateNodeWithCommonContextMenuStrip($"Inserted bookings (Failed: {failed} | Total: {insertedBookings.Count})");
             foreach (var b in insertedBookings) {
