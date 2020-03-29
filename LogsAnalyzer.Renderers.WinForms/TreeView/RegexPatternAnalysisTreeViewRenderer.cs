@@ -1,5 +1,5 @@
-﻿using LogAnalyzer.Analyzers.PatternMatch;
-using LogsAnalyzer.Infrastructure.Analysis;
+﻿using LogsAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure.Analysis.PatternMatch;
 using System;
 using System.Linq;
 using System.Windows.Forms;

@@ -1,9 +1,8 @@
 ﻿using LogAnalyzer.Infrastructure.Analysis;
-using LogsAnalyzer.Infrastructure.Analysis;
 using System;
 using System.Text.RegularExpressions;
 
-namespace LogAnalyzer.Analyzers.PatternMatch {
+namespace LogsAnalyzer.Infrastructure.Analysis.PatternMatch {
     public class RegexPatternMatchAnalyzer : BaseLogAnalyzer {
         private const int REGEX_MATCH_TIMEOUT = 3;
         public readonly string RegexPattern;

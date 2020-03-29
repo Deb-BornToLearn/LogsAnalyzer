@@ -56,6 +56,7 @@
     <Compile Include="LogReader.cs" />
     <Compile Include="LogSourceDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Analysis\PatternMatch\RegExPatternMatchAnalyzer.cs" />
     <Compile Include="StatusReport.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
