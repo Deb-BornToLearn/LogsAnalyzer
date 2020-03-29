@@ -1,9 +1,9 @@
-﻿using LogAnalyzer.Analyzers.PatternMatch;
-using LogAnalyzer.Infrastructure;
+﻿using LogAnalyzer.Infrastructure;
 using LogAnalyzer.Infrastructure.Analysis;
 using LogAnalyzer.UI.WinForms.Controllers;
 using LogsAnalyzer.Infrastructure;
 using LogsAnalyzer.Infrastructure.Analysis;
+using LogsAnalyzer.Infrastructure.Analysis.PatternMatch;
 using LogsAnalyzer.Infrastructure.Factory;
 using LogsAnalyzer.Renderers.WinForms.Factory;
 using LogsAnalyzer.Renderers.WinForms.TreeView;
@@ -23,7 +23,6 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private BaseLogSourceListController<TreeView> _logSourceListController;
-        private BaseLogAnalyzerListController<TreeView> _logAnalyzerListController;
 
         public List<BaseLogAnalyzer> Analyzers;
         public List<AnalyzerShortCircuitChain> AnalyzerChains;
@@ -48,7 +47,6 @@ namespace LogAnalyzer.UI.WinForms {
             InitializeComponent();
 
             _logSourceListController = new LogSourceTreeViewController<TreeView>(logFilesList);
-            _logAnalyzerListController = new LogAnalyzerListTreeViewController<TreeView>(analyzersList);
 
             AnalysisArgs = analysisArgs;
             LogSources = logSources;
@@ -158,8 +156,6 @@ namespace LogAnalyzer.UI.WinForms {
             if (!string.IsNullOrWhiteSpace(AnalysisArgs.AdhocRegExpression)) {
 
             }
-            _logAnalyzerListController.AddAnalyzers(AnalysisArgs.AnalyzerConfigurations);
-            _logAnalyzerListController.AddAnalyzerChains(AnalysisArgs.AnalyzerChainConfigurations);
 
             LogSources.SourceFiles.ForEach(f => _logSourceListController.AddFile(f));
             addSourceFoldersWithoutGettingFilesFromFileSystem();

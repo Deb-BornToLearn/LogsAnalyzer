@@ -26,30 +26,27 @@
             this.components = new System.ComponentModel.Container();
             this.closeButton = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.analyzersList = new System.Windows.Forms.TreeView();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.logFilesList = new System.Windows.Forms.TreeView();
             this.logFileListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openContainingFolderCommand = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.setFormCaptionButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.formCaptionTextbox = new System.Windows.Forms.TextBox();
             this.clearFilterButton = new System.Windows.Forms.Button();
             this.filterTextBox = new System.Windows.Forms.TextBox();
             this.resultsTreeView = new System.Windows.Forms.TreeView();
             this.filterButton = new System.Windows.Forms.Button();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.formCaptionTextbox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.setFormCaptionButton = new System.Windows.Forms.Button();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.logFilesList = new System.Windows.Forms.TreeView();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.logFileListContextMenu.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
             // closeButton
@@ -89,57 +86,6 @@
             this.splitContainer1.SplitterDistance = 112;
             this.splitContainer1.TabIndex = 3;
             // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(716, 112);
-            this.tabControl1.TabIndex = 3;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.analyzersList);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(708, 86);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Analyzers";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // analyzersList
-            // 
-            this.analyzersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.analyzersList.Location = new System.Drawing.Point(3, 3);
-            this.analyzersList.Name = "analyzersList";
-            this.analyzersList.Size = new System.Drawing.Size(702, 80);
-            this.analyzersList.TabIndex = 0;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.logFilesList);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(708, 86);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Log files";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // logFilesList
-            // 
-            this.logFilesList.ContextMenuStrip = this.logFileListContextMenu;
-            this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logFilesList.Location = new System.Drawing.Point(3, 3);
-            this.logFilesList.Name = "logFilesList";
-            this.logFilesList.Size = new System.Drawing.Size(702, 80);
-            this.logFilesList.TabIndex = 0;
-            // 
             // logFileListContextMenu
             // 
             this.logFileListContextMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
@@ -155,45 +101,6 @@
             this.openContainingFolderCommand.Size = new System.Drawing.Size(197, 22);
             this.openContainingFolderCommand.Text = "Open containing folder";
             this.openContainingFolderCommand.Click += new System.EventHandler(this.openContainingFolderCommand_Click);
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.setFormCaptionButton);
-            this.tabPage3.Controls.Add(this.label1);
-            this.tabPage3.Controls.Add(this.formCaptionTextbox);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(708, 86);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Options";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // setFormCaptionButton
-            // 
-            this.setFormCaptionButton.Location = new System.Drawing.Point(276, 27);
-            this.setFormCaptionButton.Name = "setFormCaptionButton";
-            this.setFormCaptionButton.Size = new System.Drawing.Size(75, 23);
-            this.setFormCaptionButton.TabIndex = 2;
-            this.setFormCaptionButton.Text = "Set";
-            this.setFormCaptionButton.UseVisualStyleBackColor = true;
-            this.setFormCaptionButton.Click += new System.EventHandler(this.setFormCaptionButton_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Form caption";
-            // 
-            // formCaptionTextbox
-            // 
-            this.formCaptionTextbox.Location = new System.Drawing.Point(6, 29);
-            this.formCaptionTextbox.Name = "formCaptionTextbox";
-            this.formCaptionTextbox.Size = new System.Drawing.Size(264, 20);
-            this.formCaptionTextbox.TabIndex = 0;
             // 
             // clearFilterButton
             // 
@@ -238,6 +145,76 @@
             this.filterButton.UseVisualStyleBackColor = true;
             this.filterButton.Click += new System.EventHandler(this.filterButton_Click);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.setFormCaptionButton);
+            this.tabPage3.Controls.Add(this.label1);
+            this.tabPage3.Controls.Add(this.formCaptionTextbox);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(708, 86);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Options";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // formCaptionTextbox
+            // 
+            this.formCaptionTextbox.Location = new System.Drawing.Point(6, 29);
+            this.formCaptionTextbox.Name = "formCaptionTextbox";
+            this.formCaptionTextbox.Size = new System.Drawing.Size(264, 20);
+            this.formCaptionTextbox.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(68, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Form caption";
+            // 
+            // setFormCaptionButton
+            // 
+            this.setFormCaptionButton.Location = new System.Drawing.Point(276, 27);
+            this.setFormCaptionButton.Name = "setFormCaptionButton";
+            this.setFormCaptionButton.Size = new System.Drawing.Size(75, 23);
+            this.setFormCaptionButton.TabIndex = 2;
+            this.setFormCaptionButton.Text = "Set";
+            this.setFormCaptionButton.UseVisualStyleBackColor = true;
+            this.setFormCaptionButton.Click += new System.EventHandler(this.setFormCaptionButton_Click);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.logFilesList);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(708, 86);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Log files";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // logFilesList
+            // 
+            this.logFilesList.ContextMenuStrip = this.logFileListContextMenu;
+            this.logFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logFilesList.Location = new System.Drawing.Point(3, 3);
+            this.logFilesList.Name = "logFilesList";
+            this.logFilesList.Size = new System.Drawing.Size(702, 80);
+            this.logFilesList.TabIndex = 0;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(716, 112);
+            this.tabControl1.TabIndex = 3;
+            // 
             // AnalysisResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,12 +230,11 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
             this.logFileListContextMenu.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -266,20 +242,18 @@
         #endregion
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button setFormCaptionButton;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox formCaptionTextbox;
         private System.Windows.Forms.ContextMenuStrip logFileListContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderCommand;
-        private System.Windows.Forms.TreeView analyzersList;
-        private System.Windows.Forms.TreeView logFilesList;
         private System.Windows.Forms.TreeView resultsTreeView;
         private System.Windows.Forms.TextBox filterTextBox;
         private System.Windows.Forms.Button filterButton;
         private System.Windows.Forms.Button clearFilterButton;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TreeView logFilesList;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button setFormCaptionButton;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox formCaptionTextbox;
     }
 }
