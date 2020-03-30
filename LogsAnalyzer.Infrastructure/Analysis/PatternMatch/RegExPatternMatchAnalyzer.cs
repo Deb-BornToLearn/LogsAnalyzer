@@ -12,12 +12,25 @@ namespace LogsAnalyzer.Infrastructure.Analysis.PatternMatch {
             _regex = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromSeconds(REGEX_MATCH_TIMEOUT));
         }
         public override bool Analyze(string lineText, long lineNumber, string sourceName) {
-            bool matched = false;
+            Match m = null;
             try {
-                matched = _regex.IsMatch(lineText);
-                if (matched) {
+                m = _regex.Match(lineText);
+                if (m.Success) {
+                    string outputText = string.Empty;
+                    if (m.Groups.Count == 1) {
+                        outputText = m.Groups[0].Value;
+                    }
+                    else {
+                        for (int j = 1; j < m.Groups.Count; j++) {
+                            outputText += m.Groups[j].Value;
+                            if (j + 1 < m.Groups.Count) {
+                                outputText += "|";
+                            }
+                        }
+                    }
+
                     Results.Add(new BaseAnalysisResult {
-                        Text = lineText,
+                        Text = outputText,
                         Source = sourceName,
                         StartLineNumber = lineNumber,
                         EndLineNumber = lineNumber
@@ -40,7 +53,7 @@ namespace LogsAnalyzer.Infrastructure.Analysis.PatternMatch {
                     EndLineNumber = lineNumber
                 });
             }
-            return matched;
+            return (m != null && m.Success);
         }
     }
 }
