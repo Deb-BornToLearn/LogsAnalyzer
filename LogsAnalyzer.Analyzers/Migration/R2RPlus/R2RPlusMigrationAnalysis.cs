@@ -27,6 +27,7 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
         public readonly List<InsertedRPlusData> InsertedAccommodationBookingExtras = new List<InsertedRPlusData>();
         public readonly List<InsertedRPlusData> InsertedAccommodationRatePlanBookingExtras = new List<InsertedRPlusData>();
         public readonly List<InsertedRPlusData> InsertedBookings = new List<InsertedRPlusData>();
+        public readonly List<InsertedInactiveProduct> InsertedInactiveProducts = new List<InsertedInactiveProduct>();
 
         public R2RPlusMigrationAnalysis(Match regExMatch) {
             LogId = regExMatch.Groups[5].Value;
@@ -50,4 +51,13 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
         public long LineNumber { get; set; }
 
     }
+    public class InsertedInactiveProduct {
+        public string RId { get; set; }
+        public string RPlusId { get; set; }
+        public string RatePlanName { get; set; }
+        public string RatePlanId { get; set; }
+        public long LineNumber { get; set; }
+
+    }
+
 }
