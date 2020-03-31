@@ -225,15 +225,16 @@ namespace LogAnalyzer.UI.WinForms {
         }
 
         private void renderAnalysisResults(BaseLogAnalyzer analyzer) {
-            if (_rendererList.ContainsKey(analyzer.GetType())) {
-                renderAnalysisResults(_rendererList[analyzer.GetType()], analyzer);
+            var analyzerType = analyzer.GetType();
+            if (_rendererList.ContainsKey(analyzerType)) {
+                renderAnalysisResults(_rendererList[analyzerType], analyzer);
             }
             else {
                 if (_rendererList.ContainsKey(typeof(BaseLogAnalyzer))) {
                     renderAnalysisResults(_rendererList[typeof(BaseLogAnalyzer)], analyzer);
                 }
                 else {
-                    _analyzersWithoutRenderers.Add(analyzer.GetType());
+                    _analyzersWithoutRenderers.Add(analyzerType);
                 }
             }
         }

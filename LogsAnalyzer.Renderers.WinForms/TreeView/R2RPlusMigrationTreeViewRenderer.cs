@@ -26,24 +26,55 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
                 resultRootNode.Nodes.Add(CreateNode($"Lines {r.StartLineNumber} to {r.EndLineNumber}"));
                 renderInsertedBookings(resultRootNode, r.InsertedBookings);
                 renderInsertedProducts(resultRootNode, r.InsertedProducts, r.InsertedInactiveProducts);
+                renderInsertedInventories(resultRootNode, r.InsertedInventory);
+                renderInsertedProductInventories(resultRootNode, r.InsertedProductInventory);
                 renderInsertedRatePlans(resultRootNode, r.InsertedRatePlans);
+                renderInsertedExtras(resultRootNode, r.InsertedAccommodationBookingExtras);
                 rootResult.Nodes.Add(resultRootNode);
             }
 
             return rootResult;
         }
 
-        private void renderInsertedRatePlans(TreeNode parentNode, List<InsertedRPlusData> insertedRatePlans) {
-            //var failed = insertedRatePlans.Where(b => !b.IsOk).Count();
-            //var insertedBookingsNode = CreateNodeWithCommonContextMenuStrip($"Inserted rate plans (Failed: {failed} | Total: {insertedRatePlans.Count})");
-            //foreach (var b in insertedRatePlans) {
-            //    var ok = b.IsOk ? "OK" : "FAILED";
-            //    var msg = string.IsNullOrEmpty(b.StatusMessage) ? "" : $"({b.StatusMessage})";
-            //    var node = CreateNodeWithCommonContextMenuStrip($"R Id: {b.RId} | R+ Id: {b.RPlusId} | {ok} {msg}");
-            //    insertedBookingsNode.Nodes.Add(node);
-            //}
-            //parentNode.Nodes.Add(insertedBookingsNode);
+        private void renderInsertedExtras(TreeNode parentNode, List<InsertedRPlusData> insertedExtras) {
+            var failed = insertedExtras.Where(b => !b.IsOk).Count();
+            var insertedSummaryNode = CreateNodeWithCommonContextMenuStrip($"Inserted extras (Failed: {failed} | Total: {insertedExtras.Count})");
+            foreach (var p in insertedExtras) {
+                var ok = p.IsOk ? "OK" : "FAILED";
+                var extraNode = CreateNodeWithCommonContextMenuStrip($"{p.Name} | {ok}");
+                var node = CreateNodeWithCommonContextMenuStrip($"R Id {p.RId} | R+ Id: {p.RPlusId}");
+                extraNode.Nodes.Add(node);
+                insertedSummaryNode.Nodes.Add(extraNode);
+            }
+            parentNode.Nodes.Add(insertedSummaryNode);
+        }
 
+        private void renderInsertedProductInventories(TreeNode parentNode, List<InsertedRPlusData> insertedProductInventory) {
+            var failed = insertedProductInventory.Where(b => !b.IsOk).Count();
+            var insertedSummaryNode = CreateNodeWithCommonContextMenuStrip($"Inserted product inventory (Failed: {failed} | Total: {insertedProductInventory.Count})");
+            foreach (var p in insertedProductInventory) {
+                var ok = p.IsOk ? "OK" : "FAILED";
+                var productNode = CreateNodeWithCommonContextMenuStrip($"{p.RPlusId} | {ok}");
+                insertedSummaryNode.Nodes.Add(productNode);
+            }
+            parentNode.Nodes.Add(insertedSummaryNode);
+        }
+
+        private void renderInsertedInventories(TreeNode parentNode, List<InsertedRPlusData> insertedInventories) {
+            var failed = insertedInventories.Where(b => !b.IsOk).Count();
+            var insertedSummaryNode = CreateNodeWithCommonContextMenuStrip($"Inserted inventory/product (Failed: {failed} | Total: {insertedInventories.Count})");
+            foreach (var p in insertedInventories) {
+                var ok = p.IsOk ? "OK" : "FAILED";
+                var msg = string.IsNullOrEmpty(p.StatusMessage) ? "" : $"| ({p.StatusMessage})";
+                var productNode = CreateNodeWithCommonContextMenuStrip($"{p.Name} | {ok}");
+                var node = CreateNodeWithCommonContextMenuStrip($"R Id: {p.RId} | R+ Id: {p.RPlusId} {msg}");
+                productNode.Nodes.Add(node);
+                insertedSummaryNode.Nodes.Add(productNode);
+            }
+            parentNode.Nodes.Add(insertedSummaryNode);
+        }
+
+        private void renderInsertedRatePlans(TreeNode parentNode, List<InsertedRPlusData> insertedRatePlans) {
             var failed = insertedRatePlans.Where(b => !b.IsOk).Count();
             var insertedSummaryNode = CreateNodeWithCommonContextMenuStrip($"Inserted rate plans (Failed: {failed} | Total: {insertedRatePlans.Count})");
             foreach (var p in insertedRatePlans) {
@@ -57,10 +88,10 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
             parentNode.Nodes.Add(insertedSummaryNode);
         }
 
-        private void renderInsertedProducts(TreeNode parentNode, List<InsertedRPlusData> insertedProducts, List<InsertedInactiveProduct> insertedInactiveProducts) {
+        private void renderInsertedProducts(TreeNode parentNode, List<InsertedRPlusProduct> insertedProducts, List<InsertedInactiveProduct> insertedInactiveProducts) {
             var failed = insertedProducts.Where(b => !b.IsOk).Count();
             var summaryText = $"Inserted products (Failed: {failed} | ";
-            if (insertedInactiveProducts.Any()) { 
+            if (insertedInactiveProducts.Any()) {
                 summaryText += $"Inactive: {insertedInactiveProducts.Count} | ";
             }
             summaryText += $"Total: {insertedProducts.Count + insertedInactiveProducts.Count})";
@@ -74,10 +105,16 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
 
             foreach (var p in insertedProducts) {
                 var ok = p.IsOk ? "OK" : "FAILED";
-                var msg = string.IsNullOrEmpty(p.StatusMessage) ? "" : $"({p.StatusMessage})";
+                var msg = string.IsNullOrEmpty(p.StatusMessage) ? "" : $"| ({p.StatusMessage})";
                 var productNode = CreateNodeWithCommonContextMenuStrip($"{p.Name} | {ok}");
-                var node = CreateNodeWithCommonContextMenuStrip($"R Id: {p.RId} | R+ Id: {p.RPlusId} | {msg}");
+                var node = CreateNodeWithCommonContextMenuStrip($"R Id: {p.RId} | R+ Id: {p.RPlusId} {msg}");
                 productNode.Nodes.Add(node);
+                var inventorySummaryNode = CreateNodeWithCommonContextMenuStrip($"Inventories ({p.InsertedInventories.Count})");
+                foreach (var i in p.InsertedInventories) {
+                    var invNode = CreateNodeWithCommonContextMenuStrip($"R+ Id: {i.RPlusId}");
+                    inventorySummaryNode.Nodes.Add(invNode);
+                }
+                productNode.Nodes.Add(inventorySummaryNode);
                 insertedSummaryNode.Nodes.Add(productNode);
             }
             parentNode.Nodes.Add(insertedSummaryNode);

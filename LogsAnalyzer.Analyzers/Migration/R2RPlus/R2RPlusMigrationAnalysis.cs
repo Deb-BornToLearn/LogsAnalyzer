@@ -20,7 +20,7 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
         public readonly List<DeletedRPlusData> DeletedRatePlanLines = new List<DeletedRPlusData>();
         public readonly List<DeletedRPlusData> DeletedAccommodationInventories = new List<DeletedRPlusData>();
         public readonly List<DeletedRPlusData> DeletedAccommodationInventoryDailyCache = new List<DeletedRPlusData>();
-        public readonly List<InsertedRPlusData> InsertedProducts = new List<InsertedRPlusData>();
+        public readonly List<InsertedRPlusProduct> InsertedProducts = new List<InsertedRPlusProduct>();
         public readonly List<InsertedRPlusData> InsertedInventory = new List<InsertedRPlusData>();
         public readonly List<InsertedRPlusData> InsertedProductInventory = new List<InsertedRPlusData>();
         public readonly List<InsertedRPlusData> InsertedRatePlans = new List<InsertedRPlusData>();
@@ -51,6 +51,10 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
         public long LineNumber { get; set; }
 
     }
+    public class InsertedRPlusProduct : InsertedRPlusData {
+        public readonly List<InsertedRPlusData> InsertedInventories = new List<InsertedRPlusData>(); 
+    }
+
     public class InsertedInactiveProduct {
         public string RId { get; set; }
         public string RPlusId { get; set; }

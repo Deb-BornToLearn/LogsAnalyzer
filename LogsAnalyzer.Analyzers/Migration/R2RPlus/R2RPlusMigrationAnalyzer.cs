@@ -9,6 +9,13 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
         public readonly List<R2RPlusMigrationAnalysis> R2RPlusMigrationResults = new List<R2RPlusMigrationAnalysis>();
         private readonly List<Func<string, R2RPlusMigrationAnalysis, bool>> _logParsers = new List<Func<string, R2RPlusMigrationAnalysis, bool>>();
 
+        private readonly List<Func<string, long, string, bool>> _preParsers = new List<Func<string, long, string, bool>>();
+
+        private readonly List<BaseEntity> _parsedExtras = new List<BaseEntity>();
+        private readonly List<BaseEntity> _parsedProducts = new List<BaseEntity>();
+        private readonly List<ProductInventory> _parsedProductInventories = new List<ProductInventory>();
+
+
         private const string MIG_LOG_MARKER = @"\[MIG:(.*?)\|(.*?)\|(.*?)\|(.*?)\|(.*?)\]";
 
         private string _lastInsertedBookingError;
@@ -23,6 +30,23 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
             }
         }
 
+        private class BaseEntity {
+            public readonly string Id;
+            public readonly string Name;
+            public BaseEntity(string id, string name) {
+                Id = id;
+                Name = name;
+            }
+        }
+
+        private class ProductInventory : BaseEntity {
+            public readonly string ProductId;
+            public ProductInventory(string id, string name, string productId) : base(id, name) {
+                ProductId = productId;
+            }
+        }
+
+
         public R2RPlusMigrationAnalyzer() {
             _logParsers.Add(tryParseStartMigration);
             _logParsers.Add(tryParseEndMigration);
@@ -31,10 +55,25 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
             _logParsers.Add(tryParseInsertProduct);
             _logParsers.Add(tryParseInsertRatePlan);
             _logParsers.Add(tryParseInsertInactiveProduct);
+            _logParsers.Add(tryParseInsertInventory);
+            _logParsers.Add(tryParseInsertProductInventory);
+            _logParsers.Add(tryParseInsertExtra);
+
+            _preParsers.Add(tryParseBookingControllerPostLastError);
+            _preParsers.Add(tryParseRatePlan);
+            _preParsers.Add(tryParseExtra);
+            //_preParsers.Add(tryParseProduct);
+            _preParsers.Add(tryParseProductInventory);
         }
+
+
+
         public override bool Analyze(string lineText, long lineNumber, string sourceName) {
-            tryParseBookingControllerPostLastError(lineText, lineNumber, sourceName);
-            tryParseInsertedRatePlan(lineText, lineNumber, sourceName);
+            foreach (var preParser in _preParsers) {
+                if (preParser(lineText, lineNumber, sourceName)) {
+                    break;
+                }
+            }
 
             R2RPlusMigrationAnalysis analysis;
             string logMessage;
@@ -50,11 +89,46 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
             return false;
         }
 
-        private void tryParseInsertedRatePlan(string lineText, long lineNumber, string sourceName) {
+        private bool tryParseProduct(string lineText, long lineNumber, string sourceName) {
+            var m = Regex.Match(lineText, "\"Name\":\"(.*?)\".*ProductTypeId.*AccommodationProductType.*Id\":\"(.*?)\"");
+            if (m.Success) {
+                var id = m.Groups[2].Value.Trim();
+                if (!_parsedProducts.Any(e => e.Id == id)) {
+                    _parsedProducts.Add(new BaseEntity(id, m.Groups[1].Value.Trim()));
+                }
+            }
+            return m.Success;
+        }
+
+        private bool tryParseProductInventory(string lineText, long lineNumber, string sourceName) {
+            var m = Regex.Match(lineText, "AccommodationProductId\":\"(.*?)\".*Id\":\"(.*?)\"");
+            if (m.Success) {
+                var inventoryId = m.Groups[2].Value.Trim();
+                if (!_parsedProductInventories.Any(p => p.Id == inventoryId)) {
+                    _parsedProductInventories.Add(new ProductInventory(inventoryId, string.Empty, m.Groups[1].Value.Trim()));
+                }
+
+            }
+            return m.Success;
+        }
+
+        private bool tryParseExtra(string lineText, long lineNumber, string sourceName) {
+            var m = Regex.Match(lineText, "\"Name\":\"(.*?)\",.*BookingExtraTypeId.*Id\":\"(.*?)\"");
+            if (m.Success) {
+                var id = m.Groups[2].Value.Trim();
+                if (!_parsedExtras.Any(e => e.Id == id)) {
+                    _parsedExtras.Add(new BaseEntity(id, m.Groups[1].Value.Trim()));
+                }
+            }
+            return m.Success;
+        }
+
+        private bool tryParseRatePlan(string lineText, long lineNumber, string sourceName) {
             var m = Regex.Match(lineText, "{\"ProductId\".*\"Name\":\"(.*?)\".*\"Code\":\"(.*?)\"");
             if (m.Success) {
                 _lastInsertedRatePlan = new InsertedRatePlan(m.Groups[1].Value, m.Groups[2].Value);
             }
+            return m.Success;
         }
 
 
@@ -99,9 +173,7 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
             if (m.Success) {
                 _lastInsertedBookingError = m.Groups[1].Value;
             }
-            // Always return false because this parser is only for buffering the last potential error message 
-            // of failed inserted bookings.
-            return false;
+            return m.Success;
         }
 
         private bool tryParseBusinessUpdate(string logMessage, R2RPlusMigrationAnalysis analysis) {
@@ -145,7 +217,7 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
                 var theAnalysis = R2RPlusMigrationResults.LastOrDefault(a => a.LogId == analysis.LogId);
                 if (theAnalysis != null) {
                     var isOk = m.Groups[4].Value.ToUpper() == "TRUE";
-                    var inserted = new InsertedRPlusData {
+                    var inserted = new InsertedRPlusProduct {
                         RId = m.Groups[1].Value,
                         Name = m.Groups[2].Value,
                         RPlusId = m.Groups[3].Value,
@@ -159,12 +231,12 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
             return m.Success;
         }
 
-         private bool tryParseInsertInactiveProduct(string logMessage, R2RPlusMigrationAnalysis analysis) {
+        private bool tryParseInsertInactiveProduct(string logMessage, R2RPlusMigrationAnalysis analysis) {
             var m = Regex.Match(logMessage, $@"Created R\+ inactive product \[(.*?)\] for.*?\[(.*?)\((.*)\)\].*\[(.*?)\]");
             if (m.Success) {
                 var theAnalysis = R2RPlusMigrationResults.LastOrDefault(a => a.LogId == analysis.LogId);
                 if (theAnalysis != null) {
-                    var inserted = new InsertedInactiveProduct { 
+                    var inserted = new InsertedInactiveProduct {
                         RId = m.Groups[4].Value,
                         RPlusId = m.Groups[1].Value,
                         RatePlanId = m.Groups[3].Value,
@@ -199,6 +271,87 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
             return m.Success;
         }
 
+        private bool tryParseInsertInventory(string logMessage, R2RPlusMigrationAnalysis analysis) {
+            var m = Regex.Match(logMessage, $@"Insert result of R Inventory/Product \[(.*?)\|(.*?)\].*via \[(.*?)\].*\[(.*)\]");
+            if (m.Success) {
+                var theAnalysis = R2RPlusMigrationResults.LastOrDefault(a => a.LogId == analysis.LogId);
+                if (theAnalysis != null) {
+                    var isOk = m.Groups[4].Value.ToUpper() == "TRUE";
+                    var inserted = new InsertedRPlusData {
+                        RId = m.Groups[1].Value,
+                        Name = m.Groups[2].Value,
+                        RPlusId = m.Groups[3].Value,
+                        IsOk = isOk,
+                        LineNumber = analysis.StartLineNumber
+                    };
+                    inserted.StatusMessage = m.Groups[5].Value;
+                    theAnalysis.InsertedInventory.Add(inserted);
+                }
+            }
+            return m.Success;
+        }
+
+        private bool tryParseInsertProductInventory(string logMessage, R2RPlusMigrationAnalysis analysis) {
+            // Unmatched closing square bracket in ID is sort of a bug; correct when logging code is modified.
+            var m = Regex.Match(logMessage, $@"Insert result of product inventory \[(.*?): \[(.*?)\]");
+            if (m.Success) {
+                var theAnalysis = R2RPlusMigrationResults.LastOrDefault(a => a.LogId == analysis.LogId);
+                if (theAnalysis != null) {
+                    var invRId = m.Groups[1].Value.Trim();
+                    var inventory = _parsedProductInventories.FirstOrDefault(i => i.Id == invRId);
+                    if (inventory != null) {
+                        //var insertedProduct = theAnalysis.InsertedProducts.FirstOrDefault(p => p.RPlusId == inventory.ProductId);
+                        //if (insertedProduct != null) {
+                            
+                            
+                            //var isInvOk = m.Groups[2].Value.ToUpper() == "TRUE";
+                            //var newInv = new InsertedRPlusData {
+                            //    Name = m.Groups[2].Value,
+                            //    RPlusId = invRId,
+                            //    IsOk = isInvOk,
+                            //    LineNumber = analysis.StartLineNumber
+                            //};
+                            //insertedProduct.InsertedInventories.Add(newInv);
+                        //}
+
+                        // TODO: Remove InsertedInventories from InsertedProduct
+                        // TODO: Lookup productName in _parsedProducts via inventory.ProductId, then attach info to
+                        // InsertedProductInventory
+                    }
+
+                    var isOk = m.Groups[2].Value.ToUpper() == "TRUE";
+                    var inserted = new InsertedRPlusData {
+                        RPlusId = m.Groups[1].Value,
+                        IsOk = isOk,
+                        LineNumber = analysis.StartLineNumber
+                    };
+                    theAnalysis.InsertedProductInventory.Add(inserted);
+                }
+            }
+            return m.Success;
+        }
+
+        private bool tryParseInsertExtra(string logMessage, R2RPlusMigrationAnalysis analysis) {
+            var m = Regex.Match(logMessage, $@"Insert result of AccommodationBookingExtra Id \[(.*?)\] with Id \[(.*?)\]: \[(.*?)\]");
+            if (m.Success) {
+                var theAnalysis = R2RPlusMigrationResults.LastOrDefault(a => a.LogId == analysis.LogId);
+                if (theAnalysis != null) {
+                    var isOk = m.Groups[3].Value.ToUpper() == "TRUE";
+                    var inserted = new InsertedRPlusData {
+                        RId = m.Groups[1].Value,
+                        RPlusId = m.Groups[2].Value,
+                        IsOk = isOk,
+                        LineNumber = analysis.StartLineNumber
+                    };
+                    var extra = _parsedExtras.FirstOrDefault(e => e.Id == inserted.RPlusId);
+                    if (extra != null) {
+                        inserted.Name = extra.Name;
+                    }
+                    theAnalysis.InsertedAccommodationBookingExtras.Add(inserted);
+                }
+            }
+            return m.Success;
+        }
         #endregion
     }
 }
