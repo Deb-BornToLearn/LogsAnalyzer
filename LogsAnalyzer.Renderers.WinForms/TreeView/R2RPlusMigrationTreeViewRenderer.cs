@@ -54,7 +54,7 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
             var insertedSummaryNode = CreateNodeWithCommonContextMenuStrip($"Inserted product inventory (Failed: {failed} | Total: {insertedProductInventory.Count})");
             foreach (var p in insertedProductInventory) {
                 var ok = p.IsOk ? "OK" : "FAILED";
-                var productNode = CreateNodeWithCommonContextMenuStrip($"{p.RPlusId} | {ok}");
+                var productNode = CreateNodeWithCommonContextMenuStrip($"R+ Id {p.RPlusId} for product [{p.Name}] | {ok}");
                 insertedSummaryNode.Nodes.Add(productNode);
             }
             parentNode.Nodes.Add(insertedSummaryNode);
@@ -88,7 +88,7 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
             parentNode.Nodes.Add(insertedSummaryNode);
         }
 
-        private void renderInsertedProducts(TreeNode parentNode, List<InsertedRPlusProduct> insertedProducts, List<InsertedInactiveProduct> insertedInactiveProducts) {
+        private void renderInsertedProducts(TreeNode parentNode, List<InsertedRPlusData> insertedProducts, List<InsertedInactiveProduct> insertedInactiveProducts) {
             var failed = insertedProducts.Where(b => !b.IsOk).Count();
             var summaryText = $"Inserted products (Failed: {failed} | ";
             if (insertedInactiveProducts.Any()) {
@@ -109,12 +109,6 @@ namespace LogsAnalyzer.Renderers.WinForms.TreeView {
                 var productNode = CreateNodeWithCommonContextMenuStrip($"{p.Name} | {ok}");
                 var node = CreateNodeWithCommonContextMenuStrip($"R Id: {p.RId} | R+ Id: {p.RPlusId} {msg}");
                 productNode.Nodes.Add(node);
-                var inventorySummaryNode = CreateNodeWithCommonContextMenuStrip($"Inventories ({p.InsertedInventories.Count})");
-                foreach (var i in p.InsertedInventories) {
-                    var invNode = CreateNodeWithCommonContextMenuStrip($"R+ Id: {i.RPlusId}");
-                    inventorySummaryNode.Nodes.Add(invNode);
-                }
-                productNode.Nodes.Add(inventorySummaryNode);
                 insertedSummaryNode.Nodes.Add(productNode);
             }
             parentNode.Nodes.Add(insertedSummaryNode);

@@ -217,7 +217,7 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
                 var theAnalysis = R2RPlusMigrationResults.LastOrDefault(a => a.LogId == analysis.LogId);
                 if (theAnalysis != null) {
                     var isOk = m.Groups[4].Value.ToUpper() == "TRUE";
-                    var inserted = new InsertedRPlusProduct {
+                    var inserted = new InsertedRPlusData {
                         RId = m.Groups[1].Value,
                         Name = m.Groups[2].Value,
                         RPlusId = m.Groups[3].Value,
@@ -299,29 +299,18 @@ namespace LogAnalyzer.Analyzers.Migration.R2RPlus {
                 if (theAnalysis != null) {
                     var invRId = m.Groups[1].Value.Trim();
                     var inventory = _parsedProductInventories.FirstOrDefault(i => i.Id == invRId);
+                    string productName = "Unknown";
                     if (inventory != null) {
-                        //var insertedProduct = theAnalysis.InsertedProducts.FirstOrDefault(p => p.RPlusId == inventory.ProductId);
-                        //if (insertedProduct != null) {
-                            
-                            
-                            //var isInvOk = m.Groups[2].Value.ToUpper() == "TRUE";
-                            //var newInv = new InsertedRPlusData {
-                            //    Name = m.Groups[2].Value,
-                            //    RPlusId = invRId,
-                            //    IsOk = isInvOk,
-                            //    LineNumber = analysis.StartLineNumber
-                            //};
-                            //insertedProduct.InsertedInventories.Add(newInv);
-                        //}
-
-                        // TODO: Remove InsertedInventories from InsertedProduct
-                        // TODO: Lookup productName in _parsedProducts via inventory.ProductId, then attach info to
-                        // InsertedProductInventory
+                        var insertedProduct = theAnalysis.InsertedProducts.FirstOrDefault(p => p.RPlusId == inventory.ProductId);
+                        if (insertedProduct != null) {
+                            productName = insertedProduct.Name;
+                        }
                     }
 
                     var isOk = m.Groups[2].Value.ToUpper() == "TRUE";
                     var inserted = new InsertedRPlusData {
                         RPlusId = m.Groups[1].Value,
+                        Name = productName,
                         IsOk = isOk,
                         LineNumber = analysis.StartLineNumber
                     };
