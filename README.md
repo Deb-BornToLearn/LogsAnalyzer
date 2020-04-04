@@ -7,4 +7,4 @@ Remember that production issue that you debugged last week by poring through the
 
 ## Two ways to leverage this repository
 1. Use the Logs Analyzer client (Windows Forms) as-is. In this case, the application is no different from basic log-viewing applications where you can load the log file(s) while filtering the entries using Regular Expressions. While this is the path of least resistance, its main use is for initial investigation and discovery of new issues that have been recorded in the logs. Once the pattern had been established, it is recommended that you write your own LogsAnalyzer component and plug it into the framework.
-2. Use the Logs Analyzer client and roll out your own LogsAnalyzer component. This is the recommended usage of this repo as it maximizes the framework's capabilities while providing the most insightful analysis of log entries.
+2. Use the Logs Analyzer client and create-and-plug-in your own LogsAnalyzer component. This is the recommended usage of this repo as it maximizes the framework's capabilities while providing the most insightful analysis of log entries.
